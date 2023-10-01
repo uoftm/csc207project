@@ -16,7 +16,6 @@ Java code example output:
 ![IntelliJ IDEA run output](assets/Running%20Program.png)
 
 We have not faced any technical problems so far. The following are some of our runner up project ideas:
-- A messaging app
 - Cryptocurrency wallet
 - 2FA helper app
 - Malware
