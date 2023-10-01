@@ -13,6 +13,8 @@ Below is an image of us trying it out in postman below:
 
 Java code example output:
 
+![IntelliJ IDEA run output](assets/Running%20Program.png)
+
 We have not faced any technical problems so far. The following are some of our runner up project ideas:
 - A messaging app
 - Cryptocurrency wallet
