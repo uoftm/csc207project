@@ -1,10 +1,13 @@
+package app;
+
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Main {
+public class Main2 {
     static OkHttpClient client = new OkHttpClient();
 
     public static void main(String[] args) {
@@ -12,9 +15,9 @@ public class Main {
         System.out.print("Enter message > ");
 
         String message = myObj.nextLine();
-        Main.sendMessage(message);
+        Main2.sendMessage(message);
 
-        System.out.println("Messages: " + Main.getMessages());
+        System.out.println("Messages: " + Main2.getMessages());
 
         System.out.println("Hello World!");
     }
