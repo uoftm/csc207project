@@ -20,3 +20,10 @@ We have not faced any technical problems so far. The following are some of our r
 - 2FA helper app
 - Malware
 - VPN
+
+
+## VSCode
+
+1. `mvn package`
+2. `java -cp target/csc207project-1.0-SNAPSHOT.jar app.Main`
+3. `mvn com.spotify.fmt:fmt-maven-plugin:format`

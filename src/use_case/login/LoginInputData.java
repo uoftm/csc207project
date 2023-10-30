@@ -2,20 +2,19 @@ package use_case.login;
 
 public class LoginInputData {
 
-    final private String username;
-    final private String password;
+  private final String username;
+  private final String password;
 
-    public LoginInputData(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+  public LoginInputData(String username, String password) {
+    this.username = username;
+    this.password = password;
+  }
 
-    String getUsername() {
-        return username;
-    }
+  String getUsername() {
+    return username;
+  }
 
-    String getPassword() {
-        return password;
-    }
-
+  String getPassword() {
+    return password;
+  }
 }

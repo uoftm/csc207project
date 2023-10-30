@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 public interface User {
 
-    String getName();
+  String getName();
 
-    String getPassword();
+  String getPassword();
 
-    LocalDateTime getCreationTime();
+  LocalDateTime getCreationTime();
 }
