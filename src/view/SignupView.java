@@ -24,6 +24,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
   private final JButton cancel;
 
   public SignupView(SignupController controller, SignupViewModel signupViewModel) {
+    // TODO: extract this color (and the Color.red below) to another file
     this.setBackground(Color.YELLOW);
 
     this.signupController = controller;
