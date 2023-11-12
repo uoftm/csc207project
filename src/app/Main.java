@@ -6,6 +6,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
@@ -45,6 +46,8 @@ public class Main {
       throw new RuntimeException(e);
     }
 
+    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+
     SignupView signupView =
         SignupUseCaseFactory.create(
             viewManagerModel, loginViewModel, signupViewModel, userDataAccessObject);
@@ -52,7 +55,11 @@ public class Main {
 
     LoginView loginView =
         LoginUseCaseFactory.create(
-            viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);
+            viewManagerModel,
+            loginViewModel,
+            loggedInViewModel,
+            userDataAccessObject,
+            switchViewController);
     views.add(loginView, loginView.viewName);
 
     ChatView chatView = new ChatView();
