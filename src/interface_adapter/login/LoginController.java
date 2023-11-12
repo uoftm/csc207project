@@ -10,7 +10,8 @@ public class LoginController {
   final LoginInputBoundary loginUseCaseInteractor;
   private final SwitchViewInputBoundary switchViewInteractor;
 
-  public LoginController(LoginInputBoundary loginUseCaseInteractor, SwitchViewInputBoundary switchViewInteractor) {
+  public LoginController(
+      LoginInputBoundary loginUseCaseInteractor, SwitchViewInputBoundary switchViewInteractor) {
     this.loginUseCaseInteractor = loginUseCaseInteractor;
     this.switchViewInteractor = switchViewInteractor;
   }

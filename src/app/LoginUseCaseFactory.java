@@ -16,7 +16,6 @@ import use_case.login.LoginUserDataAccessInterface;
 import use_case.switch_view.SwitchViewInputBoundary;
 import use_case.switch_view.SwitchViewInteractor;
 import use_case.switch_view.SwitchViewOutputBoundary;
-import use_case.switch_view.SwitchViewUserDataAccessInterface;
 import view.LoginView;
 
 public class LoginUseCaseFactory {
@@ -25,15 +24,15 @@ public class LoginUseCaseFactory {
   private LoginUseCaseFactory() {}
 
   public static LoginView create(
-          ViewManagerModel viewManagerModel,
-          LoginViewModel loginViewModel,
-          LoggedInViewModel loggedInViewModel,
-          LoginUserDataAccessInterface userDataAccessObject) {
+      ViewManagerModel viewManagerModel,
+      LoginViewModel loginViewModel,
+      LoggedInViewModel loggedInViewModel,
+      LoginUserDataAccessInterface userDataAccessObject) {
 
     try {
       LoginController loginController =
-              createLoginUseCase(
-                      viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);
+          createLoginUseCase(
+              viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);
       return new LoginView(loginViewModel, loginController);
     } catch (IOException e) {
       JOptionPane.showMessageDialog(null, "Could not open user data file.");
@@ -43,24 +42,25 @@ public class LoginUseCaseFactory {
   }
 
   private static LoginController createLoginUseCase(
-          ViewManagerModel viewManagerModel,
-          LoginViewModel loginViewModel,
-          LoggedInViewModel loggedInViewModel,
-          LoginUserDataAccessInterface userDataAccessObject)
-          throws IOException {
+      ViewManagerModel viewManagerModel,
+      LoginViewModel loginViewModel,
+      LoggedInViewModel loggedInViewModel,
+      LoginUserDataAccessInterface userDataAccessObject)
+      throws IOException {
 
     // Notice how we pass this method's parameters to the Presenter.
     LoginOutputBoundary loginOutputBoundary =
-            new LoginPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
+        new LoginPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
 
     UserFactory userFactory = new CommonUserFactory();
 
     LoginInputBoundary loginInteractor =
-            new LoginInteractor(userDataAccessObject, loginOutputBoundary);
+        new LoginInteractor(userDataAccessObject, loginOutputBoundary);
 
-    SwitchViewOutputBoundary switchViewOutputBoundary = (SwitchViewOutputBoundary) loginOutputBoundary;
+    SwitchViewOutputBoundary switchViewOutputBoundary =
+        (SwitchViewOutputBoundary) loginOutputBoundary;
     SwitchViewInputBoundary switchViewInteractor =
-            new SwitchViewInteractor(switchViewOutputBoundary);
+        new SwitchViewInteractor(switchViewOutputBoundary);
 
     return new LoginController(loginInteractor, switchViewInteractor);
   }
