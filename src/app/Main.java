@@ -9,9 +9,7 @@ import interface_adapter.signup.SignupViewModel;
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
-import view.LoggedInView;
-import view.SignupView;
-import view.ViewManager;
+import view.*;
 
 public class Main {
   public static void main(String[] args) {
@@ -52,7 +50,13 @@ public class Main {
             viewManagerModel, loginViewModel, signupViewModel, userDataAccessObject);
     views.add(signupView, signupView.viewName);
 
-    LoggedInView loggedInView = new LoggedInView(loggedInViewModel);
+    LoginView loginView =
+        LoginUseCaseFactory.create(
+            viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);
+    views.add(loginView, loginView.viewName);
+
+    ChatView chatView = new ChatView();
+    LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView);
     views.add(loggedInView, loggedInView.viewName);
 
     viewManagerModel.setActiveView(signupView.viewName);

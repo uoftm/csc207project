@@ -15,7 +15,6 @@ import javax.swing.*;
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
   public final String viewName = "sign up";
 
-  private final SignupViewModel signupViewModel;
   private final JTextField usernameInputField = new JTextField(15);
   private final JPasswordField passwordInputField = new JPasswordField(15);
   private final JPasswordField repeatPasswordInputField = new JPasswordField(15);
@@ -25,13 +24,26 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
   private final JButton cancel;
 
   public SignupView(SignupController controller, SignupViewModel signupViewModel) {
+    // TODO: extract this color (and the Color.red below) to another file
+    this.setBackground(Color.YELLOW);
 
     this.signupController = controller;
-    this.signupViewModel = signupViewModel;
     signupViewModel.addPropertyChangeListener(this);
 
+    JPanel body = new JPanel();
+    body.setBackground(Color.RED);
+    body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+    // It seems the y-axis is ignored here
+    body.setMaximumSize(new Dimension(400, 300));
+
+    body.setAlignmentX(CENTER_ALIGNMENT);
+    body.setAlignmentY(CENTER_ALIGNMENT);
+
+    JPanel titlePanel = new JPanel();
     JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
+    titlePanel.add(title);
+    titlePanel.setBackground(body.getBackground());
 
     LabelTextPanel usernameInfo =
         new LabelTextPanel(new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
@@ -40,8 +52,12 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     LabelTextPanel repeatPasswordInfo =
         new LabelTextPanel(
             new JLabel(SignupViewModel.REPEAT_PASSWORD_LABEL), repeatPasswordInputField);
+    usernameInfo.setBackground(body.getBackground());
+    passwordInfo.setBackground(body.getBackground());
+    repeatPasswordInfo.setBackground(body.getBackground());
 
     JPanel buttons = new JPanel();
+    buttons.setBackground(body.getBackground());
     signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
     buttons.add(signUp);
     cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
@@ -90,7 +106,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
           @Override
           public void keyTyped(KeyEvent e) {
             SignupState currentState = signupViewModel.getState();
-            currentState.setPassword(passwordInputField.getText() + e.getKeyChar());
+            currentState.setPassword(
+                String.valueOf(passwordInputField.getPassword()) + e.getKeyChar());
             signupViewModel.setState(currentState);
           }
 
@@ -106,7 +123,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
           @Override
           public void keyTyped(KeyEvent e) {
             SignupState currentState = signupViewModel.getState();
-            currentState.setRepeatPassword(repeatPasswordInputField.getText() + e.getKeyChar());
+            currentState.setRepeatPassword(
+                String.valueOf(repeatPasswordInputField.getPassword()) + e.getKeyChar());
             signupViewModel.setState(currentState); // Hmm, is this necessary?
           }
 
@@ -117,13 +135,18 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
           public void keyReleased(KeyEvent e) {}
         });
 
-    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    body.add(titlePanel);
+    body.add(usernameInfo);
+    body.add(passwordInfo);
+    body.add(repeatPasswordInfo);
+    body.add(buttons);
 
-    this.add(title);
-    this.add(usernameInfo);
-    this.add(passwordInfo);
-    this.add(repeatPasswordInfo);
-    this.add(buttons);
+    this.add(Box.createGlue());
+    this.add(body);
+    this.add(Box.createGlue());
+
+    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    this.setPreferredSize(new Dimension(800, 600));
   }
 
   /** React to a button click that results in evt. */
