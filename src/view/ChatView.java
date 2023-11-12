@@ -6,8 +6,6 @@ import javax.swing.*;
 public class ChatView extends JPanel {
 
   public ChatView() {
-    JLabel title = new JLabel("Send Messages");
-
     JPanel paneInternals = new JPanel();
     paneInternals.setLayout(new BoxLayout(paneInternals, BoxLayout.Y_AXIS));
 
@@ -26,7 +24,6 @@ public class ChatView extends JPanel {
     messagePanel.add(message);
     messagePanel.add(send);
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    this.add(title);
     this.add(scrollPane);
     this.add(messagePanel);
   }

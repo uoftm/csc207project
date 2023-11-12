@@ -14,7 +14,7 @@ import javax.swing.*;
 
 public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
 
-  public final String viewName = "log in";
+  public static final String viewName = "log in";
   private final LoginViewModel loginViewModel;
 
   final JTextField usernameInputField = new JTextField(15);
@@ -28,18 +28,31 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
   private final LoginController loginController;
 
   public LoginView(LoginViewModel loginViewModel, LoginController controller) {
+    this.setBackground(Colors.background);
 
     this.loginController = controller;
     this.loginViewModel = loginViewModel;
     this.loginViewModel.addPropertyChangeListener(this);
 
+    JPanel body = new JPanel();
+    body.setBackground(Colors.panel);
+    body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+    // It seems the y-axis is ignored here
+    body.setMaximumSize(new Dimension(400, 300));
+    body.setAlignmentX(CENTER_ALIGNMENT);
+    body.setAlignmentY(CENTER_ALIGNMENT);
+
     JLabel title = new JLabel("Login Screen");
+    title.setBackground(Colors.panel);
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     LabelTextPanel usernameInfo = new LabelTextPanel(new JLabel("Username"), usernameInputField);
     LabelTextPanel passwordInfo = new LabelTextPanel(new JLabel("Password"), passwordInputField);
+    usernameInfo.setBackground(body.getBackground());
+    passwordInfo.setBackground(body.getBackground());
 
     JPanel buttons = new JPanel();
+    buttons.setBackground(body.getBackground());
     logIn = new JButton(LoginViewModel.LOGIN_BUTTON_LABEL);
     buttons.add(logIn);
     cancel = new JButton(LoginViewModel.CANCEL_BUTTON_LABEL);
@@ -92,12 +105,19 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
           public void keyReleased(KeyEvent e) {}
         });
 
-    this.add(title);
-    this.add(usernameInfo);
-    this.add(usernameErrorField);
-    this.add(passwordInfo);
-    this.add(passwordErrorField);
-    this.add(buttons);
+    body.add(title);
+    body.add(usernameInfo);
+    body.add(usernameErrorField);
+    body.add(passwordInfo);
+    body.add(passwordErrorField);
+    body.add(buttons);
+
+    this.add(Box.createGlue());
+    this.add(body);
+    this.add(Box.createGlue());
+
+    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    this.setPreferredSize(new Dimension(800, 600));
   }
 
   /** React to a button click that results in evt. */

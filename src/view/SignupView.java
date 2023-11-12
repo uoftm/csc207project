@@ -13,7 +13,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
-  public final String viewName = "sign up";
+  public static final String viewName = "sign up";
 
   private final JTextField usernameInputField = new JTextField(15);
   private final JPasswordField passwordInputField = new JPasswordField(15);
@@ -24,14 +24,13 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
   private final JButton cancel;
 
   public SignupView(SignupController controller, SignupViewModel signupViewModel) {
-    // TODO: extract this color (and the Color.red below) to another file
-    this.setBackground(Color.YELLOW);
+    this.setBackground(Colors.background);
 
     this.signupController = controller;
     signupViewModel.addPropertyChangeListener(this);
 
     JPanel body = new JPanel();
-    body.setBackground(Color.RED);
+    body.setBackground(Colors.panel);
     body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
     // It seems the y-axis is ignored here
     body.setMaximumSize(new Dimension(400, 300));
