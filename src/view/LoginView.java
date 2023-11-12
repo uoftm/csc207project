@@ -3,6 +3,7 @@ package view;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,14 +26,20 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
   final JButton logIn;
   final JButton cancel;
+  final JButton switchToSignup;
   private final LoginController loginController;
+  private final SwitchViewController switchViewController;
 
-  public LoginView(LoginViewModel loginViewModel, LoginController controller) {
+  public LoginView(
+      LoginViewModel loginViewModel,
+      LoginController controller,
+      SwitchViewController switchViewController) {
     this.setBackground(Colors.background);
 
     this.loginController = controller;
     this.loginViewModel = loginViewModel;
     this.loginViewModel.addPropertyChangeListener(this);
+    this.switchViewController = switchViewController;
 
     JPanel body = new JPanel();
     body.setBackground(Colors.panel);
@@ -57,6 +64,8 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     buttons.add(logIn);
     cancel = new JButton(LoginViewModel.CANCEL_BUTTON_LABEL);
     buttons.add(cancel);
+    switchToSignup = new JButton("Sign Up");
+    buttons.add(switchToSignup);
 
     logIn.addActionListener(
         // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -71,6 +80,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
     cancel.addActionListener(this);
+
+    switchToSignup.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            switchViewController.switchTo("sign up");
+          }
+        });
 
     usernameInputField.addKeyListener(
         new KeyListener() {
