@@ -4,7 +4,6 @@ import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,7 +30,10 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
   private final LoginController loginController;
   private final SwitchViewController switchViewController;
 
-  public LoginView(LoginViewModel loginViewModel, LoginController controller, SwitchViewController switchViewController) {
+  public LoginView(
+      LoginViewModel loginViewModel,
+      LoginController controller,
+      SwitchViewController switchViewController) {
 
     this.loginController = controller;
     this.loginViewModel = loginViewModel;
@@ -67,15 +69,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     cancel.addActionListener(this);
 
     switchToSignup.addActionListener(
-          new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent e) {
-                  switchViewController.switchTo("sign up");
-              }
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            switchViewController.switchTo("sign up");
           }
-    );
+        });
 
-  cancel.addActionListener(this);
+    cancel.addActionListener(this);
 
     usernameInputField.addKeyListener(
         new KeyListener() {

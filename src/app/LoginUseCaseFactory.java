@@ -6,6 +6,8 @@ import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.switch_view.SwitchViewController;
+import java.io.IOException;
+import javax.swing.*;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -15,22 +17,20 @@ import use_case.switch_view.SwitchViewInteractor;
 import use_case.switch_view.SwitchViewOutputBoundary;
 import view.LoginView;
 
-import javax.swing.*;
-import java.io.IOException;
-
 public class LoginUseCaseFactory {
 
   /** Prevent instantiation. */
   private LoginUseCaseFactory() {}
 
   public static LoginView create(
-          ViewManagerModel viewManagerModel,
-          LoginViewModel loginViewModel,
-          LoggedInViewModel loggedInViewModel,
-          LoginUserDataAccessInterface userDataAccessObject) {
+      ViewManagerModel viewManagerModel,
+      LoginViewModel loginViewModel,
+      LoggedInViewModel loggedInViewModel,
+      LoginUserDataAccessInterface userDataAccessObject) {
 
     try {
-      LoginController loginController = createLoginController(
+      LoginController loginController =
+          createLoginController(
               viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);
 
       SwitchViewController switchViewController = createSwitchViewController(viewManagerModel);
@@ -43,24 +43,26 @@ public class LoginUseCaseFactory {
   }
 
   private static LoginController createLoginController(
-          ViewManagerModel viewManagerModel,
-          LoginViewModel loginViewModel,
-          LoggedInViewModel loggedInViewModel,
-          LoginUserDataAccessInterface userDataAccessObject) throws IOException {
+      ViewManagerModel viewManagerModel,
+      LoginViewModel loginViewModel,
+      LoggedInViewModel loggedInViewModel,
+      LoginUserDataAccessInterface userDataAccessObject)
+      throws IOException {
 
     LoginOutputBoundary loginOutputBoundary =
-            new LoginPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
+        new LoginPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
     LoginInputBoundary loginInteractor =
-            new LoginInteractor(userDataAccessObject, loginOutputBoundary);
+        new LoginInteractor(userDataAccessObject, loginOutputBoundary);
 
     return new LoginController(loginInteractor);
   }
 
-  private static SwitchViewController createSwitchViewController(ViewManagerModel viewManagerModel) {
+  private static SwitchViewController createSwitchViewController(
+      ViewManagerModel viewManagerModel) {
     SwitchViewOutputBoundary switchViewOutputBoundary =
-            (SwitchViewOutputBoundary) new LoginPresenter(viewManagerModel, null, null);
+        (SwitchViewOutputBoundary) new LoginPresenter(viewManagerModel, null, null);
     SwitchViewInputBoundary switchViewInteractor =
-            new SwitchViewInteractor(switchViewOutputBoundary);
+        new SwitchViewInteractor(switchViewOutputBoundary);
 
     return new SwitchViewController(switchViewInteractor);
   }
