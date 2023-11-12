@@ -5,17 +5,19 @@ import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
+import use_case.switch_view.SwitchViewOutputBoundary;
+import use_case.switch_view.SwitchViewOutputData;
 
-public class LoginPresenter implements LoginOutputBoundary {
+public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoundary {
 
   private final LoginViewModel loginViewModel;
   private final LoggedInViewModel loggedInViewModel;
   private final ViewManagerModel viewManagerModel;
 
   public LoginPresenter(
-      ViewManagerModel viewManagerModel,
-      LoggedInViewModel loggedInViewModel,
-      LoginViewModel loginViewModel) {
+          ViewManagerModel viewManagerModel,
+          LoggedInViewModel loggedInViewModel,
+          LoginViewModel loginViewModel) {
     this.viewManagerModel = viewManagerModel;
     this.loggedInViewModel = loggedInViewModel;
     this.loginViewModel = loginViewModel;
@@ -39,5 +41,12 @@ public class LoginPresenter implements LoginOutputBoundary {
     LoginState loginState = loginViewModel.getState();
     loginState.setUsernameError(error);
     loginViewModel.firePropertyChanged();
+  }
+
+  @Override
+  public void present(SwitchViewOutputData outputData) {
+    // Logic to handle view switching
+    this.viewManagerModel.setActiveView(outputData.getViewName());
+    this.viewManagerModel.firePropertyChanged();
   }
 }
