@@ -12,9 +12,6 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginUserDataAccessInterface;
-import use_case.switch_view.SwitchViewInputBoundary;
-import use_case.switch_view.SwitchViewInteractor;
-import use_case.switch_view.SwitchViewOutputBoundary;
 import view.LoginView;
 
 public class LoginUseCaseFactory {
@@ -26,14 +23,13 @@ public class LoginUseCaseFactory {
       ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,
       LoggedInViewModel loggedInViewModel,
-      LoginUserDataAccessInterface userDataAccessObject) {
+      LoginUserDataAccessInterface userDataAccessObject,
+      SwitchViewController switchViewController) {
 
     try {
       LoginController loginController =
           createLoginController(
               viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);
-
-      SwitchViewController switchViewController = createSwitchViewController(viewManagerModel);
 
       return new LoginView(loginViewModel, loginController, switchViewController);
     } catch (IOException e) {
@@ -55,15 +51,5 @@ public class LoginUseCaseFactory {
         new LoginInteractor(userDataAccessObject, loginOutputBoundary);
 
     return new LoginController(loginInteractor);
-  }
-
-  private static SwitchViewController createSwitchViewController(
-      ViewManagerModel viewManagerModel) {
-    SwitchViewOutputBoundary switchViewOutputBoundary =
-        (SwitchViewOutputBoundary) new LoginPresenter(viewManagerModel, null, null);
-    SwitchViewInputBoundary switchViewInteractor =
-        new SwitchViewInteractor(switchViewOutputBoundary);
-
-    return new SwitchViewController(switchViewInteractor);
   }
 }
