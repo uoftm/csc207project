@@ -50,7 +50,11 @@ public class Main {
 
     SignupView signupView =
         SignupUseCaseFactory.create(
-            viewManagerModel, loginViewModel, signupViewModel, userDataAccessObject);
+            viewManagerModel,
+            loginViewModel,
+            signupViewModel,
+            userDataAccessObject,
+            switchViewController);
     views.add(signupView, SignupView.viewName);
 
     LoginView loginView =
@@ -62,7 +66,7 @@ public class Main {
             switchViewController);
     views.add(loginView, loginView.viewName);
 
-    WelcomeView welcomeView = new WelcomeView(viewManagerModel);
+    WelcomeView welcomeView = new WelcomeView(viewManagerModel, switchViewController);
     views.add(welcomeView, WelcomeView.viewName);
 
     ChatView chatView = new ChatView();

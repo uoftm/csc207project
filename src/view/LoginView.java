@@ -13,7 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
-public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
+public class LoginView extends JPanel implements PropertyChangeListener {
 
   public static final String viewName = "log in";
   private final LoginViewModel loginViewModel;
@@ -26,7 +26,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
   final JButton logIn;
   final JButton cancel;
-  final JButton switchToSignup;
   private final LoginController loginController;
   private final SwitchViewController switchViewController;
 
@@ -64,8 +63,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     buttons.add(logIn);
     cancel = new JButton(LoginViewModel.CANCEL_BUTTON_LABEL);
     buttons.add(cancel);
-    switchToSignup = new JButton("Sign Up");
-    buttons.add(switchToSignup);
 
     logIn.addActionListener(
         // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -79,13 +76,13 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
           }
         });
 
-    cancel.addActionListener(this);
-
-    switchToSignup.addActionListener(
+    cancel.addActionListener(
         new ActionListener() {
           @Override
-          public void actionPerformed(ActionEvent e) {
-            switchViewController.switchTo("sign up");
+          public void actionPerformed(ActionEvent evt) {
+            if (evt.getSource().equals(cancel)) {
+              switchViewController.switchTo(WelcomeView.viewName);
+            }
           }
         });
 
@@ -135,11 +132,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     this.setPreferredSize(new Dimension(800, 600));
-  }
-
-  /** React to a button click that results in evt. */
-  public void actionPerformed(ActionEvent evt) {
-    System.out.println("Click " + evt.getActionCommand());
   }
 
   @Override

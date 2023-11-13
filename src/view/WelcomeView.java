@@ -1,6 +1,7 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +12,7 @@ public class WelcomeView extends JPanel {
   private final JButton login;
   private final JButton signUp;
 
-  public WelcomeView(ViewManagerModel viewManagerModel) {
+  public WelcomeView(ViewManagerModel viewManagerModel, SwitchViewController switchViewController) {
     this.setBackground(Colors.background);
 
     JPanel body = new JPanel();
@@ -33,8 +34,7 @@ public class WelcomeView extends JPanel {
           @Override
           public void actionPerformed(ActionEvent evt) {
             if (evt.getSource().equals(signUp)) {
-              viewManagerModel.setActiveView(SignupView.viewName);
-              viewManagerModel.firePropertyChanged();
+              switchViewController.switchTo(SignupView.viewName);
             }
           }
         });
@@ -44,8 +44,7 @@ public class WelcomeView extends JPanel {
           @Override
           public void actionPerformed(ActionEvent evt) {
             if (evt.getSource().equals(login)) {
-              viewManagerModel.setActiveView(LoginView.viewName);
-              viewManagerModel.firePropertyChanged();
+              switchViewController.switchTo(LoginView.viewName);
             }
           }
         });

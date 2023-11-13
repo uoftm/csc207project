@@ -3,6 +3,7 @@ package view;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +24,10 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
   private final JButton signUp;
   private final JButton cancel;
 
-  public SignupView(SignupController controller, SignupViewModel signupViewModel) {
+  public SignupView(
+      SignupController controller,
+      SignupViewModel signupViewModel,
+      SwitchViewController switchViewController) {
     this.setBackground(Colors.background);
 
     this.signupController = controller;
@@ -77,7 +81,15 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
           }
         });
 
-    cancel.addActionListener(this);
+    cancel.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent evt) {
+            if (evt.getSource().equals(cancel)) {
+              switchViewController.switchTo(WelcomeView.viewName);
+            }
+          }
+        });
 
     // This makes a new KeyListener implementing class, instantiates it, and
     // makes it listen to keystrokes in the usernameInputField.
