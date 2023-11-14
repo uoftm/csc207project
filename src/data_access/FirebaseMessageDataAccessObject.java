@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -50,8 +49,7 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
             .build();
 
     try {
-      JSONObject response =
-          new JSONObject(client.newCall(request).execute().body().string());
+      JSONObject response = new JSONObject(client.newCall(request).execute().body().string());
       var out = new ArrayList<Message>();
       var x = response.keys();
       for (Iterator<String> it = x; it.hasNext(); ) {

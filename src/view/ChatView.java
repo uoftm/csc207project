@@ -3,7 +3,6 @@ package view;
 import entity.Message;
 import interface_adapter.chat.ChatController;
 import interface_adapter.chat.ChatViewModel;
-
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

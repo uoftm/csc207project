@@ -15,7 +15,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
-
 import okhttp3.OkHttpClient;
 import use_case.chat.ChatInteractor;
 import view.*;
