@@ -12,7 +12,7 @@ public class WelcomeView extends JPanel {
   private final JButton login;
   private final JButton signUp;
 
-  public WelcomeView(ViewManagerModel viewManagerModel, SwitchViewController switchViewController) {
+  public WelcomeView(SwitchViewController switchViewController) {
     this.setBackground(Colors.background);
 
     JPanel body = new JPanel();

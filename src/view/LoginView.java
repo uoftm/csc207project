@@ -27,9 +27,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
   final JButton logIn;
   final JButton cancel;
   private final LoginController loginController;
-  private final SwitchViewController switchViewController;
 
-  public LoginView(
+    public LoginView(
       LoginViewModel loginViewModel,
       LoginController controller,
       SwitchViewController switchViewController) {
@@ -38,9 +37,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     this.loginController = controller;
     this.loginViewModel = loginViewModel;
     this.loginViewModel.addPropertyChangeListener(this);
-    this.switchViewController = switchViewController;
 
-    JPanel body = new JPanel();
+        JPanel body = new JPanel();
     body.setBackground(Colors.panel);
     body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
     // It seems the y-axis is ignored here

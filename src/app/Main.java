@@ -66,7 +66,7 @@ public class Main {
             switchViewController);
     views.add(loginView, loginView.viewName);
 
-    WelcomeView welcomeView = new WelcomeView(viewManagerModel, switchViewController);
+    WelcomeView welcomeView = new WelcomeView(switchViewController);
     views.add(welcomeView, WelcomeView.viewName);
 
     ChatView chatView = new ChatView();
