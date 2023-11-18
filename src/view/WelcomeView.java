@@ -1,6 +1,5 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,13 +12,13 @@ public class WelcomeView extends JPanel {
   private final JButton signUp;
 
   public WelcomeView(SwitchViewController switchViewController) {
-    this.setBackground(Colors.background);
+    this.setBackground(ViewConstants.background);
 
     JPanel body = new JPanel();
-    body.setBackground(Colors.panel);
+    body.setBackground(ViewConstants.panel);
     body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
     // It seems the y-axis is ignored here
-    body.setMaximumSize(new Dimension(400, 300));
+    body.setMaximumSize(ViewConstants.paneSize);
     body.setAlignmentX(CENTER_ALIGNMENT);
     body.setAlignmentY(CENTER_ALIGNMENT);
 
@@ -58,6 +57,6 @@ public class WelcomeView extends JPanel {
     this.add(Box.createGlue());
 
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    this.setPreferredSize(new Dimension(800, 600));
+    this.setPreferredSize(ViewConstants.windowSize);
   }
 }

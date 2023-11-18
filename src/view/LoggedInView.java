@@ -20,7 +20,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
 
   /** A window with a title and a JButton. */
   public LoggedInView(LoggedInViewModel loggedInViewModel, ChatView chatView) {
-    this.setBackground(Colors.background);
+    this.setBackground(ViewConstants.background);
 
     this.loggedInViewModel = loggedInViewModel;
     this.loggedInViewModel.addPropertyChangeListener(this);

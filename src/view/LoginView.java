@@ -28,26 +28,25 @@ public class LoginView extends JPanel implements PropertyChangeListener {
   final JButton cancel;
   private final LoginController loginController;
 
-    public LoginView(
+  public LoginView(
       LoginViewModel loginViewModel,
       LoginController controller,
       SwitchViewController switchViewController) {
-    this.setBackground(Colors.background);
+    this.setBackground(ViewConstants.background);
 
     this.loginController = controller;
     this.loginViewModel = loginViewModel;
     this.loginViewModel.addPropertyChangeListener(this);
 
-        JPanel body = new JPanel();
-    body.setBackground(Colors.panel);
+    JPanel body = new JPanel();
     body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
     // It seems the y-axis is ignored here
-    body.setMaximumSize(new Dimension(400, 300));
+    body.setMaximumSize(ViewConstants.paneSize);
+    body.setBackground(ViewConstants.panel);
     body.setAlignmentX(CENTER_ALIGNMENT);
     body.setAlignmentY(CENTER_ALIGNMENT);
 
     JLabel title = new JLabel("Login Screen");
-    title.setBackground(Colors.panel);
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     LabelTextPanel usernameInfo = new LabelTextPanel(new JLabel("Username"), usernameInputField);
@@ -129,7 +128,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     this.add(Box.createGlue());
 
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    this.setPreferredSize(new Dimension(800, 600));
+    this.setPreferredSize(ViewConstants.windowSize);
   }
 
   @Override

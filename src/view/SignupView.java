@@ -28,16 +28,16 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
       SignupController controller,
       SignupViewModel signupViewModel,
       SwitchViewController switchViewController) {
-    this.setBackground(Colors.background);
+    this.setBackground(ViewConstants.background);
 
     this.signupController = controller;
     signupViewModel.addPropertyChangeListener(this);
 
     JPanel body = new JPanel();
-    body.setBackground(Colors.panel);
+    body.setBackground(ViewConstants.panel);
     body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
     // It seems the y-axis is ignored here
-    body.setMaximumSize(new Dimension(400, 300));
+    body.setMaximumSize(ViewConstants.paneSize);
 
     body.setAlignmentX(CENTER_ALIGNMENT);
     body.setAlignmentY(CENTER_ALIGNMENT);
@@ -157,7 +157,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     this.add(Box.createGlue());
 
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    this.setPreferredSize(new Dimension(800, 600));
+    this.setPreferredSize(ViewConstants.windowSize);
   }
 
   /** React to a button click that results in evt. */
