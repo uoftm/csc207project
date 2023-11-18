@@ -20,6 +20,8 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
 
   /** A window with a title and a JButton. */
   public LoggedInView(LoggedInViewModel loggedInViewModel, ChatView chatView) {
+    this.setBackground(ViewConstants.background);
+
     this.loggedInViewModel = loggedInViewModel;
     this.loggedInViewModel.addPropertyChangeListener(this);
 
@@ -27,7 +29,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JPanel usernameGroup = new JPanel();
-    JLabel usernameInfo = new JLabel("Currently logged in: ");
+    JLabel usernameInfo = new JLabel("Currently logged in as: ");
     username = new JLabel();
     usernameGroup.add(usernameInfo);
     usernameGroup.add(username);
@@ -35,6 +37,7 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     JPanel buttons = new JPanel();
     logOut = new JButton(LoggedInViewModel.LOGOUT_BUTTON_LABEL);
     buttons.add(logOut);
+    usernameGroup.add(buttons);
 
     logOut.addActionListener(this);
 
@@ -43,7 +46,6 @@ public class LoggedInView extends JPanel implements ActionListener, PropertyChan
     this.add(title);
     this.add(usernameGroup);
     this.add(chatView);
-    this.add(buttons);
   }
 
   /** React to a button click that results in evt. */

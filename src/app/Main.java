@@ -50,8 +50,12 @@ public class Main {
 
     SignupView signupView =
         SignupUseCaseFactory.create(
-            viewManagerModel, loginViewModel, signupViewModel, userDataAccessObject);
-    views.add(signupView, signupView.viewName);
+            viewManagerModel,
+            loginViewModel,
+            signupViewModel,
+            userDataAccessObject,
+            switchViewController);
+    views.add(signupView, SignupView.viewName);
 
     LoginView loginView =
         LoginUseCaseFactory.create(
@@ -62,11 +66,14 @@ public class Main {
             switchViewController);
     views.add(loginView, loginView.viewName);
 
+    WelcomeView welcomeView = new WelcomeView(switchViewController);
+    views.add(welcomeView, WelcomeView.viewName);
+
     ChatView chatView = new ChatView();
     LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView);
     views.add(loggedInView, loggedInView.viewName);
 
-    viewManagerModel.setActiveView(signupView.viewName);
+    viewManagerModel.setActiveView(WelcomeView.viewName);
     viewManagerModel.firePropertyChanged();
 
     application.pack();

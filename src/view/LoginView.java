@@ -13,9 +13,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
-public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
+public class LoginView extends JPanel implements PropertyChangeListener {
 
-  public final String viewName = "log in";
+  public static final String viewName = "log in";
   private final LoginViewModel loginViewModel;
 
   final JTextField usernameInputField = new JTextField(15);
@@ -26,33 +26,40 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
   final JButton logIn;
   final JButton cancel;
-  final JButton switchToSignup;
   private final LoginController loginController;
-  private final SwitchViewController switchViewController;
 
   public LoginView(
       LoginViewModel loginViewModel,
       LoginController controller,
       SwitchViewController switchViewController) {
+    this.setBackground(ViewConstants.background);
 
     this.loginController = controller;
     this.loginViewModel = loginViewModel;
     this.loginViewModel.addPropertyChangeListener(this);
-    this.switchViewController = switchViewController;
+
+    JPanel body = new JPanel();
+    body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+    // It seems the y-axis is ignored here
+    body.setMaximumSize(ViewConstants.paneSize);
+    body.setBackground(ViewConstants.panel);
+    body.setAlignmentX(CENTER_ALIGNMENT);
+    body.setAlignmentY(CENTER_ALIGNMENT);
 
     JLabel title = new JLabel("Login Screen");
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     LabelTextPanel usernameInfo = new LabelTextPanel(new JLabel("Username"), usernameInputField);
     LabelTextPanel passwordInfo = new LabelTextPanel(new JLabel("Password"), passwordInputField);
+    usernameInfo.setBackground(body.getBackground());
+    passwordInfo.setBackground(body.getBackground());
 
     JPanel buttons = new JPanel();
+    buttons.setBackground(body.getBackground());
     logIn = new JButton(LoginViewModel.LOGIN_BUTTON_LABEL);
     buttons.add(logIn);
     cancel = new JButton(LoginViewModel.CANCEL_BUTTON_LABEL);
     buttons.add(cancel);
-    switchToSignup = new JButton("Sign Up");
-    buttons.add(switchToSignup);
 
     logIn.addActionListener(
         // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -66,13 +73,13 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
           }
         });
 
-    cancel.addActionListener(this);
-
-    switchToSignup.addActionListener(
+    cancel.addActionListener(
         new ActionListener() {
           @Override
-          public void actionPerformed(ActionEvent e) {
-            switchViewController.switchTo("sign up");
+          public void actionPerformed(ActionEvent evt) {
+            if (evt.getSource().equals(cancel)) {
+              switchViewController.switchTo(WelcomeView.viewName);
+            }
           }
         });
 
@@ -109,17 +116,19 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
           public void keyReleased(KeyEvent e) {}
         });
 
-    this.add(title);
-    this.add(usernameInfo);
-    this.add(usernameErrorField);
-    this.add(passwordInfo);
-    this.add(passwordErrorField);
-    this.add(buttons);
-  }
+    body.add(title);
+    body.add(usernameInfo);
+    body.add(usernameErrorField);
+    body.add(passwordInfo);
+    body.add(passwordErrorField);
+    body.add(buttons);
 
-  /** React to a button click that results in evt. */
-  public void actionPerformed(ActionEvent evt) {
-    System.out.println("Click " + evt.getActionCommand());
+    this.add(Box.createGlue());
+    this.add(body);
+    this.add(Box.createGlue());
+
+    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    this.setPreferredSize(ViewConstants.windowSize);
   }
 
   @Override

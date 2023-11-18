@@ -7,6 +7,7 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.switch_view.SwitchViewController;
 import java.io.IOException;
 import javax.swing.*;
 import use_case.signup.SignupInputBoundary;
@@ -24,13 +25,14 @@ public class SignupUseCaseFactory {
       ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,
       SignupViewModel signupViewModel,
-      SignupUserDataAccessInterface userDataAccessObject) {
+      SignupUserDataAccessInterface userDataAccessObject,
+      SwitchViewController switchViewController) {
 
     try {
       SignupController signupController =
           createUserSignupUseCase(
               viewManagerModel, signupViewModel, loginViewModel, userDataAccessObject);
-      return new SignupView(signupController, signupViewModel);
+      return new SignupView(signupController, signupViewModel, switchViewController);
     } catch (IOException e) {
       JOptionPane.showMessageDialog(null, "Could not open user data file.");
     }
