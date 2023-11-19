@@ -16,7 +16,7 @@ public class FirebaseUserDataAccessObject
   public User get(String username) {
     Request request =
         new Request.Builder()
-            .url("https://csc207-830a5-default-rtdb.firebaseio.com/users/" + username + ".json")
+            .url(Constants.FIREBASE_URL + "users/" + username + ".json")
             .method("GET", null)
             .build();
 

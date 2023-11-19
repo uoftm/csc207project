@@ -25,10 +25,7 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
 
     Request request =
         new Request.Builder()
-            .url(
-                "https://csc207-830a5-default-rtdb.firebaseio.com/messages/"
-                    + new Date().getTime()
-                    + ".json")
+            .url(Constants.FIREBASE_URL + "messages/" + new Date().getTime() + ".json")
             .method("POST", RequestBody.create(stringified, MediaType.get("application/json")))
             .build();
 
@@ -42,7 +39,7 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
   public List<Message> getAllMessages() {
     Request request =
         new Request.Builder()
-            .url("https://csc207-830a5-default-rtdb.firebaseio.com/messages.json")
+            .url(Constants.FIREBASE_URL + "messages.json")
             .method("GET", null)
             .build();
 
