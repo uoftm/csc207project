@@ -1,6 +1,7 @@
 package app;
 
 import data_access.FileUserDataAccessObject;
+import data_access.FirebaseMessageDataAccessObject;
 import entity.CommonUserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
@@ -10,6 +11,7 @@ import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
+import okhttp3.OkHttpClient;
 import view.*;
 
 public class Main {
@@ -69,7 +71,10 @@ public class Main {
     WelcomeView welcomeView = new WelcomeView(switchViewController);
     views.add(welcomeView, WelcomeView.viewName);
 
-    ChatView chatView = new ChatView();
+    OkHttpClient client = new OkHttpClient();
+    var messageDataAccessObject = new FirebaseMessageDataAccessObject(client);
+
+    ChatView chatView = ChatUseCaseFactory.create(messageDataAccessObject);
     LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView);
     views.add(loggedInView, loggedInView.viewName);
 
