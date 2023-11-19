@@ -2,11 +2,20 @@ package view;
 
 import entity.Message;
 import interface_adapter.chat.ChatController;
+import interface_adapter.chat.ChatState;
 import interface_adapter.chat.ChatViewModel;
+import interface_adapter.login.LoginState;
+import interface_adapter.signup.SignupState;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 
@@ -35,8 +44,36 @@ public class ChatView extends JPanel implements PropertyChangeListener {
     this.add(scrollPane);
     this.add(messagePanel);
 
+    send.addActionListener(
+      // This creates an anonymous subclass of ActionListener and instantiates it.
+      new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+          if (evt.getSource().equals(send)) {
+            ChatState currentState = viewModel.getState();
+
+            Message newMessage = new Message(Instant.now(), currentState.message);
+            chatController.sendMessage(newMessage);
+          }
+        }
+      });
+      message.addKeyListener(
+          new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+              ChatState currentState = viewModel.getState();
+              String text = message.getText() + e.getKeyChar();
+              currentState.message = text;
+              viewModel.setState(currentState);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+          });
+
     chatController.loadAllMessages();
-    chatController.sendMessage(new Message(Instant.EPOCH, "Test from ChatView"));
   }
 
   @Override
