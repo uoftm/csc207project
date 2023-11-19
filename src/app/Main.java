@@ -18,7 +18,12 @@ public class Main {
     // various cards, and the layout, and stitch them together.
 
     // The main application window.
-    JFrame application = new JFrame("Login Example");
+    JFrame application = new JFrame("MSGR");
+    // Load main window icon
+    ImageIcon icon = new ImageIcon("assets/images/MSGR_Icon.png");
+    Image image = icon.getImage();
+    application.setIconImage(image);
+
     application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     CardLayout cardLayout = new CardLayout();
