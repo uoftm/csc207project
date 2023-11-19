@@ -41,8 +41,8 @@ public class ChatView extends JPanel implements PropertyChangeListener {
   public void propertyChange(PropertyChangeEvent evt) {
     var state = (List<Message>) evt.getNewValue();
     for (var message : state) {
-      var tmp = new MessageView(message.content);
-      paneInternals.add(tmp);
+      var messageView = new MessageView(message.content);
+      paneInternals.add(messageView);
     }
   }
 }

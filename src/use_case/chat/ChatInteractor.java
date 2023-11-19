@@ -1,6 +1,5 @@
 package use_case.chat;
 
-
 public class ChatInteractor implements ChatInputBoundary {
   final ChatOutputBoundary outputBoundary;
   final ChatMessageDataAccessInterface dataAccessInterface;

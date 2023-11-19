@@ -2,10 +2,8 @@ package data_access;
 
 import entity.Message;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,11 +50,13 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
       JSONObject response = new JSONObject(client.newCall(request).execute().body().string());
       var out = new ArrayList<Message>();
       var x = response.keys();
-      for (Iterator<String> it = x; it.hasNext(); ) {
-        var key = it.next();
-        var value = response.getJSONObject(key);
-        out.add(new Message(value.getString("content")));
+      while (x.hasNext()) {
+        var key = x.next();
+        var value = response.getJSONObject(key).getString("content");
+        var time = Instant.ofEpochMilli(Long.parseLong(key));
+        out.add(new Message(time, value));
       }
+      out.sort(Comparator.comparing(a -> a.timestamp));
 
       return out;
     } catch (IOException e) {
