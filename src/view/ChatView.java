@@ -6,6 +6,7 @@ import interface_adapter.chat.ChatViewModel;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.Instant;
 import java.util.List;
 import javax.swing.*;
 
@@ -35,6 +36,7 @@ public class ChatView extends JPanel implements PropertyChangeListener {
     this.add(messagePanel);
 
     chatController.loadAllMessages();
+    chatController.sendMessage(new Message(Instant.EPOCH, "Test from ChatView"));
   }
 
   @Override

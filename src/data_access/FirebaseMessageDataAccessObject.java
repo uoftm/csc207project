@@ -26,7 +26,7 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
     Request request =
         new Request.Builder()
             .url(Constants.FIREBASE_URL + "messages/" + new Date().getTime() + ".json")
-            .method("POST", RequestBody.create(stringified, MediaType.get("application/json")))
+            .method("PUT", RequestBody.create(stringified, MediaType.get("application/json")))
             .build();
 
     try {
@@ -48,10 +48,14 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
       var out = new ArrayList<Message>();
       var x = response.keys();
       while (x.hasNext()) {
-        var key = x.next();
-        var value = response.getJSONObject(key).getString("content");
-        var time = Instant.ofEpochMilli(Long.parseLong(key));
-        out.add(new Message(time, value));
+        try {
+          var key = x.next();
+          var value = response.getJSONObject(key).getString("content");
+          var time = Instant.ofEpochMilli(Long.parseLong(key));
+          out.add(new Message(time, value));
+        } catch (RuntimeException e) {
+          // TODO: Handle this invalid message
+        }
       }
       out.sort(Comparator.comparing(a -> a.timestamp));
 
