@@ -1,14 +1,17 @@
 package app;
 
 import data_access.FileUserDataAccessObject;
+import data_access.FirebaseMessageDataAccessObject;
 import entity.CommonUserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
+import okhttp3.OkHttpClient;
 import view.*;
 
 public class Main {
@@ -17,7 +20,12 @@ public class Main {
     // various cards, and the layout, and stitch them together.
 
     // The main application window.
-    JFrame application = new JFrame("Login Example");
+    JFrame application = new JFrame("MSGR");
+    // Load main window icon
+    ImageIcon icon = new ImageIcon("assets/images/MSGR_Icon.png");
+    Image image = icon.getImage();
+    application.setIconImage(image);
+
     application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     CardLayout cardLayout = new CardLayout();
@@ -45,21 +53,37 @@ public class Main {
       throw new RuntimeException(e);
     }
 
+    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+
     SignupView signupView =
         SignupUseCaseFactory.create(
-            viewManagerModel, loginViewModel, signupViewModel, userDataAccessObject);
-    views.add(signupView, signupView.viewName);
+            viewManagerModel,
+            loginViewModel,
+            signupViewModel,
+            userDataAccessObject,
+            switchViewController);
+    views.add(signupView, SignupView.viewName);
 
     LoginView loginView =
         LoginUseCaseFactory.create(
-            viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);
+            viewManagerModel,
+            loginViewModel,
+            loggedInViewModel,
+            userDataAccessObject,
+            switchViewController);
     views.add(loginView, loginView.viewName);
 
-    ChatView chatView = new ChatView();
+    WelcomeView welcomeView = new WelcomeView(switchViewController);
+    views.add(welcomeView, WelcomeView.viewName);
+
+    OkHttpClient client = new OkHttpClient();
+    var messageDataAccessObject = new FirebaseMessageDataAccessObject(client);
+
+    ChatView chatView = ChatUseCaseFactory.create(messageDataAccessObject);
     LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView);
     views.add(loggedInView, loggedInView.viewName);
 
-    viewManagerModel.setActiveView(signupView.viewName);
+    viewManagerModel.setActiveView(WelcomeView.viewName);
     viewManagerModel.firePropertyChanged();
 
     application.pack();

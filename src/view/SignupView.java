@@ -3,6 +3,7 @@ package view;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
-  public final String viewName = "sign up";
+  public static final String viewName = "sign up";
 
   private final JTextField usernameInputField = new JTextField(15);
   private final JPasswordField passwordInputField = new JPasswordField(15);
@@ -23,18 +24,20 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
   private final JButton signUp;
   private final JButton cancel;
 
-  public SignupView(SignupController controller, SignupViewModel signupViewModel) {
-    // TODO: extract this color (and the Color.red below) to another file
-    this.setBackground(Color.YELLOW);
+  public SignupView(
+      SignupController controller,
+      SignupViewModel signupViewModel,
+      SwitchViewController switchViewController) {
+    this.setBackground(ViewConstants.background);
 
     this.signupController = controller;
     signupViewModel.addPropertyChangeListener(this);
 
     JPanel body = new JPanel();
-    body.setBackground(Color.RED);
+    body.setBackground(ViewConstants.panel);
     body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
     // It seems the y-axis is ignored here
-    body.setMaximumSize(new Dimension(400, 300));
+    body.setMaximumSize(ViewConstants.paneSize);
 
     body.setAlignmentX(CENTER_ALIGNMENT);
     body.setAlignmentY(CENTER_ALIGNMENT);
@@ -78,7 +81,15 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
           }
         });
 
-    cancel.addActionListener(this);
+    cancel.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent evt) {
+            if (evt.getSource().equals(cancel)) {
+              switchViewController.switchTo(WelcomeView.viewName);
+            }
+          }
+        });
 
     // This makes a new KeyListener implementing class, instantiates it, and
     // makes it listen to keystrokes in the usernameInputField.
@@ -146,7 +157,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     this.add(Box.createGlue());
 
     this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    this.setPreferredSize(new Dimension(800, 600));
+    this.setPreferredSize(ViewConstants.windowSize);
   }
 
   /** React to a button click that results in evt. */
