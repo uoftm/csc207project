@@ -11,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.time.Instant;
 import java.util.List;
 import javax.swing.*;
 
@@ -47,8 +46,8 @@ public class ChatView extends JPanel implements PropertyChangeListener {
             if (evt.getSource().equals(send)) {
               ChatState currentState = viewModel.getState();
 
-              Message newMessage = new Message(Instant.now(), currentState.getMessage());
-              chatController.sendMessage(newMessage);
+              String messageText = currentState.getMessage();
+              chatController.sendMessage(messageText);
             }
           }
         });

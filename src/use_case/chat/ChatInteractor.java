@@ -1,6 +1,7 @@
 package use_case.chat;
 
 import entity.Message;
+import java.time.Instant;
 
 public class ChatInteractor implements ChatInputBoundary {
   final ChatOutputBoundary outputBoundary;
@@ -17,7 +18,8 @@ public class ChatInteractor implements ChatInputBoundary {
     outputBoundary.presentMessages(messages);
   }
 
-  public void sendMessage(Message message) {
+  public void sendMessage(String messageText) {
+    Message message = new Message(Instant.now(), messageText);
     dataAccessInterface.save(message);
   }
 }

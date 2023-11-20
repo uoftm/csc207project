@@ -1,6 +1,5 @@
 package interface_adapter.chat;
 
-import entity.Message;
 import use_case.chat.ChatInputBoundary;
 
 public class ChatController {
@@ -17,7 +16,7 @@ public class ChatController {
     chatInputBoundary.loadAllMessages();
   }
 
-  public void sendMessage(Message message) {
-    chatInputBoundary.sendMessage(message);
+  public void sendMessage(String messageText) {
+    chatInputBoundary.sendMessage(messageText);
   }
 }
