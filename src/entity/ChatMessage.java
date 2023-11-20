@@ -1,12 +1,9 @@
 package entity;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 public interface ChatMessage {
-    public String getTime();
-    public String getMessage();
-    public List<User> getUsers();
+  public LocalDateTime getTime();
 
-
-
+  public String getMessage();
 }

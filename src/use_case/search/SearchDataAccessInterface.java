@@ -4,9 +4,8 @@ import entity.SearchChatMessage;
 import entity.SearchRequest;
 
 public interface SearchDataAccessInterface {
-    public String getData(SearchRequest request);
 
-    public void saveData(SearchChatMessage message);
+  public void getData(SearchRequest request);
 
-
+  public void saveData(SearchChatMessage message);
 }
