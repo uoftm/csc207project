@@ -1,11 +1,7 @@
 package interface_adapter.logged_in;
 
-import interface_adapter.chat.ChatState;
-
 public class LoggedInState {
   private String username = "";
-
-  private ChatState state = new ChatState();
 
   public LoggedInState(LoggedInState copy) {
     username = copy.username;

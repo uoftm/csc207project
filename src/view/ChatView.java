@@ -47,7 +47,7 @@ public class ChatView extends JPanel implements PropertyChangeListener {
             if (evt.getSource().equals(send)) {
               ChatState currentState = viewModel.getState();
 
-              Message newMessage = new Message(Instant.now(), currentState.message);
+              Message newMessage = new Message(Instant.now(), currentState.getMessage());
               chatController.sendMessage(newMessage);
             }
           }
@@ -58,7 +58,7 @@ public class ChatView extends JPanel implements PropertyChangeListener {
           public void keyTyped(KeyEvent e) {
             ChatState currentState = viewModel.getState();
             String text = message.getText() + e.getKeyChar();
-            currentState.message = text;
+            currentState.setMessage(text);
             viewModel.setState(currentState);
           }
 
