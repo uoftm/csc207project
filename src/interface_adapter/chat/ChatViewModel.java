@@ -2,8 +2,6 @@ package interface_adapter.chat;
 
 import entity.Message;
 import interface_adapter.ViewModel;
-import interface_adapter.logged_in.LoggedInState;
-
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 

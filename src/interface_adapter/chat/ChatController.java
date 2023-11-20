@@ -16,6 +16,7 @@ public class ChatController {
   public void loadAllMessages() {
     chatInputBoundary.loadAllMessages();
   }
+
   public void sendMessage(Message message) {
     chatInputBoundary.sendMessage(message);
   }
