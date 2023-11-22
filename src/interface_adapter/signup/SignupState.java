@@ -1,6 +1,8 @@
 package interface_adapter.signup;
 
 public class SignupState {
+  private String email = "";
+  private String emailError = null;
   private String username = "";
   private String usernameError = null;
   private String password = "";
@@ -9,6 +11,8 @@ public class SignupState {
   private String repeatPasswordError = null;
 
   public SignupState(SignupState copy) {
+    email = copy.email;
+    emailError = copy.emailError;
     username = copy.username;
     usernameError = copy.usernameError;
     password = copy.password;
@@ -20,6 +24,12 @@ public class SignupState {
   // Because of the previous copy constructor, the default constructor must be explicit.
   public SignupState() {}
 
+  public String getEmail() {
+    return email;
+  }
+  public String getEmailError() {
+    return emailError;
+  }
   public String getUsername() {
     return username;
   }
@@ -43,6 +53,9 @@ public class SignupState {
   public String getRepeatPasswordError() {
     return repeatPasswordError;
   }
+
+  public void setEmail(String email) { this.email = email; }
+  public void setEmailError(String emailError) { this.emailError = emailError; }
 
   public void setUsername(String username) {
     this.username = username;
@@ -71,6 +84,9 @@ public class SignupState {
   @Override
   public String toString() {
     return "SignupState{"
+        + "email='"
+        + email
+        + '\''
         + "username='"
         + username
         + '\''

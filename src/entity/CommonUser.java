@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 class CommonUser implements User {
 
+  private final String email;
   private final String name;
   private final String password;
   private final LocalDateTime creationTime;
@@ -14,12 +15,15 @@ class CommonUser implements User {
    * @param name
    * @param password
    */
-  CommonUser(String name, String password, LocalDateTime creationTime) {
+  CommonUser(String email, String name, String password, LocalDateTime creationTime) {
+    this.email = email;
     this.name = name;
     this.password = password;
     this.creationTime = creationTime;
   }
 
+  @Override
+  public String getEmail() { return email; }
   @Override
   public String getName() {
     return name;

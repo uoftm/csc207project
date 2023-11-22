@@ -1,14 +1,14 @@
 package interface_adapter.login;
 
 public class LoginState {
-  private String username = "";
-  private String usernameError = null;
+  private String email = "";
+  private String emailError = null;
   private String password = "";
   private String passwordError = null;
 
   public LoginState(LoginState copy) {
-    username = copy.username;
-    usernameError = copy.usernameError;
+    email = copy.email;
+    emailError = copy.emailError;
     password = copy.password;
     passwordError = copy.passwordError;
   }
@@ -16,12 +16,12 @@ public class LoginState {
   // Because of the previous copy constructor, the default constructor must be explicit.
   public LoginState() {}
 
-  public String getUsername() {
-    return username;
+  public String getEmail() {
+    return email;
   }
 
-  public String getUsernameError() {
-    return usernameError;
+  public String getEmailError() {
+    return emailError;
   }
 
   public String getPassword() {
@@ -32,12 +32,12 @@ public class LoginState {
     return passwordError;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
-  public void setUsernameError(String usernameError) {
-    this.usernameError = usernameError;
+  public void setEmailError(String usernameError) {
+    this.emailError = emailError;
   }
 
   public void setPassword(String password) {

@@ -25,9 +25,10 @@ public class FileUserDataAccessObject
     this.userFactory = userFactory;
 
     csvFile = new File(csvPath);
-    headers.put("username", 0);
-    headers.put("password", 1);
-    headers.put("creation_time", 2);
+    headers.put("email", 0);
+    headers.put("username", 1);
+    headers.put("password", 2);
+    headers.put("creation_time", 3);
 
     if (csvFile.length() == 0) {
       save();
@@ -37,17 +38,18 @@ public class FileUserDataAccessObject
         String header = reader.readLine();
 
         // For later: clean this up by creating a new Exception subclass and handling it in the UI.
-        assert header.equals("username,password,creation_time");
+        assert header.equals("email,username,password,creation_time");
 
         String row;
         while ((row = reader.readLine()) != null) {
           String[] col = row.split(",");
+          String email = String.valueOf(col[headers.get("email")]);
           String username = String.valueOf(col[headers.get("username")]);
           String password = String.valueOf(col[headers.get("password")]);
           String creationTimeText = String.valueOf(col[headers.get("creation_time")]);
           LocalDateTime ldt = LocalDateTime.parse(creationTimeText);
-          User user = userFactory.create(username, password, ldt);
-          accounts.put(username, user);
+          User user = userFactory.create(email, username, password, ldt);
+          accounts.put(email, user);
         }
       }
     }
@@ -55,13 +57,13 @@ public class FileUserDataAccessObject
 
   @Override
   public void save(User user) {
-    accounts.put(user.getName(), user);
+    accounts.put(user.getEmail(), user);
     this.save();
   }
 
   @Override
-  public User get(String username) {
-    return accounts.get(username);
+  public User get(String email) {
+    return accounts.get(email);
   }
 
   private void save() {
@@ -73,7 +75,7 @@ public class FileUserDataAccessObject
 
       for (User user : accounts.values()) {
         String line =
-            String.format("%s,%s,%s", user.getName(), user.getPassword(), user.getCreationTime());
+            String.format("%s, %s,%s,%s", user.getEmail(), user.getName(), user.getPassword(), user.getCreationTime());
         writer.write(line);
         writer.newLine();
       }

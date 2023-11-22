@@ -20,6 +20,7 @@ public class SignupInteractor implements SignupInputBoundary {
 
   @Override
   public void execute(SignupInputData signupInputData) {
+    // TODO: Check firebase for existing email
     if (userDataAccessObject.existsByName(signupInputData.getUsername())) {
       userPresenter.prepareFailView("User already exists.");
     } else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
@@ -28,7 +29,7 @@ public class SignupInteractor implements SignupInputBoundary {
 
       LocalDateTime now = LocalDateTime.now();
       User user =
-          userFactory.create(signupInputData.getUsername(), signupInputData.getPassword(), now);
+          userFactory.create(signupInputData.getEmail(), signupInputData.getUsername(), signupInputData.getPassword(), now);
       userDataAccessObject.save(user);
 
       SignupOutputData signupOutputData =
