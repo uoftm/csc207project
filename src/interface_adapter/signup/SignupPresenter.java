@@ -30,8 +30,9 @@ public class SignupPresenter implements SignupOutputBoundary {
     response.setCreationTime(responseTime.format(DateTimeFormatter.ofPattern("hh:mm:ss")));
 
     LoginState loginState = loginViewModel.getState();
-    loginState.setUsername(response.getUsername());
+    loginState.setEmail(response.getEmail());
     this.loginViewModel.setState(loginState);
+    loginViewModel.firePropertyChanged();
     loginViewModel.firePropertyChanged();
 
     viewManagerModel.setActiveView(loginViewModel.getViewName());
@@ -41,7 +42,7 @@ public class SignupPresenter implements SignupOutputBoundary {
   @Override
   public void prepareFailView(String error) {
     SignupState signupState = signupViewModel.getState();
-    signupState.setUsernameError(error);
+    signupState.setError(error);
     signupViewModel.firePropertyChanged();
   }
 }

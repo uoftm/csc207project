@@ -18,8 +18,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
   public static final String viewName = "log in";
   private final LoginViewModel loginViewModel;
 
-  final JTextField usernameInputField = new JTextField(15);
-  private final JLabel usernameErrorField = new JLabel();
+  final JTextField emailInputField = new JTextField(15);
+  private final JLabel emailErrorField = new JLabel();
 
   final JPasswordField passwordInputField = new JPasswordField(15);
   private final JLabel passwordErrorField = new JLabel();
@@ -46,12 +46,14 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     body.setAlignmentX(CENTER_ALIGNMENT);
     body.setAlignmentY(CENTER_ALIGNMENT);
 
-    JLabel title = new JLabel("Login Screen");
+    JLabel title = new JLabel(LoginViewModel.TITLE_LABEL);
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    LabelTextPanel usernameInfo = new LabelTextPanel(new JLabel("Username"), usernameInputField);
-    LabelTextPanel passwordInfo = new LabelTextPanel(new JLabel("Password"), passwordInputField);
-    usernameInfo.setBackground(body.getBackground());
+    LabelTextPanel emailInfo =
+        new LabelTextPanel(new JLabel(LoginViewModel.EMAIL_LABEL), emailInputField);
+    LabelTextPanel passwordInfo =
+        new LabelTextPanel(new JLabel(LoginViewModel.PASSWORD_LABEL), passwordInputField);
+    emailInfo.setBackground(body.getBackground());
     passwordInfo.setBackground(body.getBackground());
 
     JPanel buttons = new JPanel();
@@ -68,7 +70,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
             if (evt.getSource().equals(logIn)) {
               LoginState currentState = loginViewModel.getState();
 
-              loginController.execute(currentState.getUsername(), currentState.getPassword());
+              loginController.execute(currentState.getEmail(), currentState.getPassword());
             }
           }
         });
@@ -83,12 +85,12 @@ public class LoginView extends JPanel implements PropertyChangeListener {
           }
         });
 
-    usernameInputField.addKeyListener(
+    emailInputField.addKeyListener(
         new KeyListener() {
           @Override
           public void keyTyped(KeyEvent e) {
             LoginState currentState = loginViewModel.getState();
-            currentState.setUsername(usernameInputField.getText() + e.getKeyChar());
+            currentState.setEmail(emailInputField.getText() + e.getKeyChar());
             loginViewModel.setState(currentState);
           }
 
@@ -117,8 +119,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
         });
 
     body.add(title);
-    body.add(usernameInfo);
-    body.add(usernameErrorField);
+    body.add(emailInfo);
+    body.add(emailErrorField);
     body.add(passwordInfo);
     body.add(passwordErrorField);
     body.add(buttons);
@@ -134,10 +136,8 @@ public class LoginView extends JPanel implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     LoginState state = (LoginState) evt.getNewValue();
-    setFields(state);
-  }
-
-  private void setFields(LoginState state) {
-    usernameInputField.setText(state.getUsername());
+    if (state.getError() != null) {
+      JOptionPane.showMessageDialog(this, state.getError());
+    }
   }
 }

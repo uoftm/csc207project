@@ -16,6 +16,7 @@ import javax.swing.*;
 public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
   public static final String viewName = "sign up";
 
+  private final JTextField emailInputField = new JTextField(15);
   private final JTextField usernameInputField = new JTextField(15);
   private final JPasswordField passwordInputField = new JPasswordField(15);
   private final JPasswordField repeatPasswordInputField = new JPasswordField(15);
@@ -48,6 +49,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     titlePanel.add(title);
     titlePanel.setBackground(body.getBackground());
 
+    LabelTextPanel emailInfo =
+        new LabelTextPanel(new JLabel(SignupViewModel.EMAIL_LABEL), emailInputField);
     LabelTextPanel usernameInfo =
         new LabelTextPanel(new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
     LabelTextPanel passwordInfo =
@@ -55,6 +58,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     LabelTextPanel repeatPasswordInfo =
         new LabelTextPanel(
             new JLabel(SignupViewModel.REPEAT_PASSWORD_LABEL), repeatPasswordInputField);
+    emailInfo.setBackground(body.getBackground());
     usernameInfo.setBackground(body.getBackground());
     passwordInfo.setBackground(body.getBackground());
     repeatPasswordInfo.setBackground(body.getBackground());
@@ -74,6 +78,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
               SignupState currentState = signupViewModel.getState();
 
               signupController.execute(
+                  currentState.getEmail(),
                   currentState.getUsername(),
                   currentState.getPassword(),
                   currentState.getRepeatPassword());
@@ -91,6 +96,22 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
           }
         });
 
+    emailInputField.addKeyListener(
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {
+            SignupState currentState = signupViewModel.getState();
+            String text = emailInputField.getText() + e.getKeyChar();
+            currentState.setEmail(text);
+            signupViewModel.setState(currentState);
+          }
+
+          @Override
+          public void keyPressed(KeyEvent e) {}
+
+          @Override
+          public void keyReleased(KeyEvent e) {}
+        });
     // This makes a new KeyListener implementing class, instantiates it, and
     // makes it listen to keystrokes in the usernameInputField.
     //
@@ -147,6 +168,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         });
 
     body.add(titlePanel);
+    body.add(emailInfo);
     body.add(usernameInfo);
     body.add(passwordInfo);
     body.add(repeatPasswordInfo);
@@ -168,8 +190,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SignupState state = (SignupState) evt.getNewValue();
-    if (state.getUsernameError() != null) {
-      JOptionPane.showMessageDialog(this, state.getUsernameError());
+    if (state.getError() != null) {
+      JOptionPane.showMessageDialog(this, state.getError());
     }
   }
 }
