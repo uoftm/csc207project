@@ -75,7 +75,9 @@ public class FileUserDataAccessObject
 
       for (User user : accounts.values()) {
         String line =
-            String.format("%s, %s,%s,%s", user.getEmail(), user.getName(), user.getPassword(), user.getCreationTime());
+            String.format(
+                "%s, %s,%s,%s",
+                user.getEmail(), user.getName(), user.getPassword(), user.getCreationTime());
         writer.write(line);
         writer.newLine();
       }

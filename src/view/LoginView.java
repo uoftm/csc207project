@@ -49,8 +49,10 @@ public class LoginView extends JPanel implements PropertyChangeListener {
     JLabel title = new JLabel(LoginViewModel.TITLE_LABEL);
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    LabelTextPanel emailInfo = new LabelTextPanel(new JLabel(LoginViewModel.EMAIL_LABEL), emailInputField);
-    LabelTextPanel passwordInfo = new LabelTextPanel(new JLabel(LoginViewModel.PASSWORD_LABEL), passwordInputField);
+    LabelTextPanel emailInfo =
+        new LabelTextPanel(new JLabel(LoginViewModel.EMAIL_LABEL), emailInputField);
+    LabelTextPanel passwordInfo =
+        new LabelTextPanel(new JLabel(LoginViewModel.PASSWORD_LABEL), passwordInputField);
     emailInfo.setBackground(body.getBackground());
     passwordInfo.setBackground(body.getBackground());
 
@@ -135,7 +137,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
   public void propertyChange(PropertyChangeEvent evt) {
     LoginState state = (LoginState) evt.getNewValue();
     if (state.getError() != null) {
-        JOptionPane.showMessageDialog(this, state.getError());
+      JOptionPane.showMessageDialog(this, state.getError());
     }
   }
 }

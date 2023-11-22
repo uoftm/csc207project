@@ -49,7 +49,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     titlePanel.add(title);
     titlePanel.setBackground(body.getBackground());
 
-    LabelTextPanel emailInfo = new LabelTextPanel(new JLabel(SignupViewModel.EMAIL_LABEL), emailInputField);
+    LabelTextPanel emailInfo =
+        new LabelTextPanel(new JLabel(SignupViewModel.EMAIL_LABEL), emailInputField);
     LabelTextPanel usernameInfo =
         new LabelTextPanel(new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
     LabelTextPanel passwordInfo =
@@ -96,21 +97,21 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         });
 
     emailInputField.addKeyListener(
-          new KeyListener() {
-              @Override
-              public void keyTyped(KeyEvent e) {
-                  SignupState currentState = signupViewModel.getState();
-                  String text = emailInputField.getText() + e.getKeyChar();
-                  currentState.setEmail(text);
-                  signupViewModel.setState(currentState);
-              }
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {
+            SignupState currentState = signupViewModel.getState();
+            String text = emailInputField.getText() + e.getKeyChar();
+            currentState.setEmail(text);
+            signupViewModel.setState(currentState);
+          }
 
-              @Override
-              public void keyPressed(KeyEvent e) {}
+          @Override
+          public void keyPressed(KeyEvent e) {}
 
-              @Override
-              public void keyReleased(KeyEvent e) {}
-          });
+          @Override
+          public void keyReleased(KeyEvent e) {}
+        });
     // This makes a new KeyListener implementing class, instantiates it, and
     // makes it listen to keystrokes in the usernameInputField.
     //

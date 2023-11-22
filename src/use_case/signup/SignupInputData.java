@@ -14,7 +14,10 @@ public class SignupInputData {
     this.repeatPassword = repeatPassword;
   }
 
-  String getEmail() { return email; }
+  String getEmail() {
+    return email;
+  }
+
   String getUsername() {
     return username;
   }

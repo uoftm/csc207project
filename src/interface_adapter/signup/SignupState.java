@@ -21,6 +21,7 @@ public class SignupState {
   public String getEmail() {
     return email;
   }
+
   public String getUsername() {
     return username;
   }
@@ -37,7 +38,9 @@ public class SignupState {
     return repeatPassword;
   }
 
-  public void setEmail(String email) { this.email = email; }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
   public void setUsername(String username) {
     this.username = username;

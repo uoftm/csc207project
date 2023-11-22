@@ -16,7 +16,11 @@ public class FirebaseUserDataAccessObject
   public User get(String email) {
     Request request =
         new Request.Builder()
-            .url(Constants.FIREBASE_URL + "users/" + email + ".json") // TODO: Ensure this successfully searches by email
+            .url(
+                Constants.FIREBASE_URL
+                    + "users/"
+                    + email
+                    + ".json") // TODO: Ensure this successfully searches by email
             .method("GET", null)
             .build();
 
