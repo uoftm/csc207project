@@ -13,10 +13,10 @@ public class FirebaseUserDataAccessObject
   static OkHttpClient client = new OkHttpClient();
 
   @Override
-  public User get(String username) {
+  public User get(String email) {
     Request request =
         new Request.Builder()
-            .url(Constants.FIREBASE_URL + "users/" + username + ".json")
+            .url(Constants.FIREBASE_URL + "users/" + email + ".json") // TODO: Ensure this successfully searches by email
             .method("GET", null)
             .build();
 
@@ -31,7 +31,7 @@ public class FirebaseUserDataAccessObject
   @Override
   public boolean existsByName(String identifier) {
     return false;
-  }
+  } // TODO: Ensure this successfully searches by email
 
   @Override
   public void save(User user) {}

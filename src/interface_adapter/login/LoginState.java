@@ -36,7 +36,7 @@ public class LoginState {
     this.email = email;
   }
 
-  public void setEmailError(String usernameError) {
+  public void setEmailError(String emailError) {
     this.emailError = emailError;
   }
 

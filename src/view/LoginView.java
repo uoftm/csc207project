@@ -68,7 +68,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
             if (evt.getSource().equals(logIn)) {
               LoginState currentState = loginViewModel.getState();
 
-              loginController.execute(currentState.getUsername(), currentState.getPassword());
+              loginController.execute(currentState.getEmail(), currentState.getPassword());
             }
           }
         });
@@ -88,7 +88,7 @@ public class LoginView extends JPanel implements PropertyChangeListener {
           @Override
           public void keyTyped(KeyEvent e) {
             LoginState currentState = loginViewModel.getState();
-            currentState.setUsername(emailInputField.getText() + e.getKeyChar());
+            currentState.setEmail(emailInputField.getText() + e.getKeyChar());
             loginViewModel.setState(currentState);
           }
 
@@ -138,6 +138,6 @@ public class LoginView extends JPanel implements PropertyChangeListener {
   }
 
   private void setFields(LoginState state) {
-    emailInputField.setText(state.getUsername());
+    emailInputField.setText(state.getEmail());
   }
 }

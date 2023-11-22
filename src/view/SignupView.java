@@ -49,7 +49,7 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     titlePanel.add(title);
     titlePanel.setBackground(body.getBackground());
 
-    LabelTextPanel emailInfo = new LabelTextPanel(new JLabel(SignupViewModel.EMAIL_LABEL), usernameInputField);
+    LabelTextPanel emailInfo = new LabelTextPanel(new JLabel(SignupViewModel.EMAIL_LABEL), emailInputField);
     LabelTextPanel usernameInfo =
         new LabelTextPanel(new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
     LabelTextPanel passwordInfo =
@@ -189,8 +189,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SignupState state = (SignupState) evt.getNewValue();
-    if (state.getUsernameError() != null) {
-      JOptionPane.showMessageDialog(this, state.getUsernameError());
+    if (state.getError() != null) {
+      JOptionPane.showMessageDialog(this, state.getError());
     }
   }
 }
