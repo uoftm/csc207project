@@ -14,13 +14,13 @@ import javax.swing.*;
 
 public class ChatView implements PropertyChangeListener {
   public JPanel contentPane;
-    private JPanel paneInternals;
+  private JPanel paneInternals;
   private JScrollPane scrollPane;
   private JTextField message;
   private JButton send;
-    private JPanel rawPane;
+  private JPanel rawPane;
 
-    private final ChatViewModel viewModel;
+  private final ChatViewModel viewModel;
 
   public ChatView(ChatController chatController, ChatViewModel viewModel) {
     this.viewModel = viewModel;
@@ -28,15 +28,14 @@ public class ChatView implements PropertyChangeListener {
 
     rawPane.setLayout(new BoxLayout(rawPane, BoxLayout.Y_AXIS));
 
-      paneInternals = new JPanel();
-      paneInternals.setLayout(new BoxLayout(paneInternals, BoxLayout.Y_AXIS));
+    paneInternals = new JPanel();
+    paneInternals.setLayout(new BoxLayout(paneInternals, BoxLayout.Y_AXIS));
 
-      JScrollPane scrollPane = new JScrollPane(paneInternals);
-      scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-      scrollPane.setPreferredSize(new Dimension(300, 300));
+    JScrollPane scrollPane = new JScrollPane(paneInternals);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    scrollPane.setPreferredSize(new Dimension(300, 300));
 
-      rawPane.add(scrollPane
-      );
+    rawPane.add(scrollPane);
 
     send.addActionListener(
         evt -> {
