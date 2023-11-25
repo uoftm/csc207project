@@ -6,7 +6,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 public class ChatViewModel extends ViewModel {
-
   private ChatState state = new ChatState();
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
