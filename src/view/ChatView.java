@@ -5,8 +5,6 @@ import interface_adapter.chat.ChatController;
 import interface_adapter.chat.ChatState;
 import interface_adapter.chat.ChatViewModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -14,14 +12,21 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.*;
 
-public class ChatView extends JPanel implements PropertyChangeListener {
-  private final JPanel paneInternals;
+public class ChatView implements PropertyChangeListener {
+  public JPanel contentPane;
+  private JPanel paneInternals;
+  private JScrollPane scrollPane;
+  private JTextField message;
+  private JButton send;
+  private JPanel rawPane;
 
   private final ChatViewModel viewModel;
 
   public ChatView(ChatController chatController, ChatViewModel viewModel) {
     this.viewModel = viewModel;
     this.viewModel.addPropertyChangeListener(this);
+
+    rawPane.setLayout(new BoxLayout(rawPane, BoxLayout.Y_AXIS));
 
     paneInternals = new JPanel();
     paneInternals.setLayout(new BoxLayout(paneInternals, BoxLayout.Y_AXIS));
@@ -30,27 +35,18 @@ public class ChatView extends JPanel implements PropertyChangeListener {
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     scrollPane.setPreferredSize(new Dimension(300, 300));
 
-    var messagePanel = new JPanel();
-    var message = new JTextField(15);
-    var send = new JButton("Send");
-    messagePanel.add(message);
-    messagePanel.add(send);
-    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    this.add(scrollPane);
-    this.add(messagePanel);
+    rawPane.add(scrollPane);
 
     send.addActionListener(
-        // This creates an anonymous subclass of ActionListener and instantiates it.
-        new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            if (evt.getSource().equals(send)) {
-              ChatState currentState = viewModel.getState();
+        evt -> {
+          if (evt.getSource().equals(send)) {
+            ChatState currentState = viewModel.getState();
 
-              String messageText = currentState.getMessage();
-              chatController.sendMessage(messageText);
-            }
+            String messageText = currentState.getMessage();
+            chatController.sendMessage(messageText);
           }
         });
+
     message.addKeyListener(
         new KeyListener() {
           @Override

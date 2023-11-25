@@ -62,7 +62,7 @@ public class Main {
             signupViewModel,
             userDataAccessObject,
             switchViewController);
-    views.add(signupView, SignupView.viewName);
+    views.add(signupView.contentPane, SignupView.viewName);
 
     LoginView loginView =
         LoginUseCaseFactory.create(
@@ -71,17 +71,17 @@ public class Main {
             loggedInViewModel,
             userDataAccessObject,
             switchViewController);
-    views.add(loginView, loginView.viewName);
+    views.add(loginView.contentPane, loginView.viewName);
 
     WelcomeView welcomeView = new WelcomeView(switchViewController);
-    views.add(welcomeView, WelcomeView.viewName);
+    views.add(welcomeView.contentPane, WelcomeView.viewName);
 
     OkHttpClient client = new OkHttpClient();
     var messageDataAccessObject = new FirebaseMessageDataAccessObject(client);
 
     ChatView chatView = ChatUseCaseFactory.create(messageDataAccessObject);
-    LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView);
-    views.add(loggedInView, loggedInView.viewName);
+    LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView, switchViewController);
+    views.add(loggedInView.contentPane, loggedInView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);
     viewManagerModel.firePropertyChanged();
