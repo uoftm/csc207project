@@ -1,7 +1,5 @@
 package data_access;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.SearchChatMessage;
 import entity.SearchReponseArray;
 import entity.SearchRequest;
@@ -67,18 +65,20 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
 
     try (Response response = client.newCall(request).execute()) {
 
-      ObjectMapper objectMapper = new ObjectMapper();
-      JsonNode rootNode = objectMapper.readTree(response.body().string());
-      JsonNode hitsArray = rootNode.path("hits").path("hits");
+      JSONObject rootNode = new JSONObject(response.body().string());
+      JSONArray hitsArray = rootNode.getJSONObject("hits").getJSONArray("hits");
       ArrayList<SearchResponse> searchResponses = new ArrayList<>();
       Pattern pattern = Pattern.compile("<em>(.*?)</em>");
-      for (JsonNode hit : hitsArray) {
-        JsonNode source = hit.path("_source");
-        JsonNode highlightNode = hit.path("highlight").path("message");
+      for (int i = 0; i < hitsArray.length(); i++) {
+        JSONObject hit = hitsArray.getJSONObject(i);
+        JSONObject source = hit.getJSONObject("_source");
+        JSONArray highlightNode = hit.getJSONObject("highlight").optJSONArray("message");
         String finalHighlight;
-        if (!highlightNode.isMissingNode()) {
-          ArrayList<String> object =
-              new ObjectMapper().convertValue(highlightNode, ArrayList.class);
+        if (highlightNode != null) {
+          ArrayList<String> object = new ArrayList<>();
+          for (int j = 0; j < highlightNode.length(); j++) {
+            object.add(highlightNode.getString(j));
+          }
           String highlightedText = object.get(0);
           Matcher matcher = pattern.matcher(highlightedText);
           matcher.find();
@@ -89,9 +89,9 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
         SearchResponse oneResponse =
             new SearchResponse(
                 finalHighlight,
-                source.path("message").asText(),
-                Instant.parse(source.path("time").asText()),
-                source.path("roomID").asText());
+                source.getString("message"),
+                Instant.parse(source.getString("time")),
+                source.getString("roomID"));
         searchResponses.add(oneResponse);
       }
       return new SearchReponseArray(searchResponses, false);
