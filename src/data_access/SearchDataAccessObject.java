@@ -17,7 +17,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
 
   private OkHttpClient client;
 
-  public SearchDataAccessObject(OkHttpClient okHttpClient){
+  public SearchDataAccessObject(OkHttpClient okHttpClient) {
     this.client = okHttpClient;
   }
 
