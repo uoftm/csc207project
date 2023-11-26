@@ -9,7 +9,7 @@ public class ChatViewModel extends ViewModel {
   private ChatState state = new ChatState();
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
-  List<Message> messages;
+  public List<Message> messages;
 
   public ChatViewModel(List<Message> messages) {
     super("chat");

@@ -4,12 +4,14 @@ import data_access.FileUserDataAccessObject;
 import data_access.FirebaseMessageDataAccessObject;
 import entity.CommonUserFactory;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.chat.ChatViewModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import view.*;
@@ -79,7 +81,8 @@ public class Main {
     OkHttpClient client = new OkHttpClient();
     var messageDataAccessObject = new FirebaseMessageDataAccessObject(client);
 
-    ChatView chatView = ChatUseCaseFactory.create(messageDataAccessObject);
+    ChatView chatView =
+        ChatUseCaseFactory.create(messageDataAccessObject, new ChatViewModel(new ArrayList<>()));
     LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView, switchViewController);
     views.add(loggedInView.contentPane, loggedInView.viewName);
 
