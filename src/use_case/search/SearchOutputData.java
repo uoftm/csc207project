@@ -1,13 +1,15 @@
 package use_case.search;
 
-public class SearchOutputData {
-  private final String response;
+import entity.SearchReponseArray;
 
-  SearchOutputData(String response) {
+public class SearchOutputData {
+  private final SearchReponseArray response;
+
+  SearchOutputData(SearchReponseArray response) {
     this.response = response;
   }
 
-  public String getResponse() {
+  public SearchReponseArray getResponse() {
     return response;
   }
 }

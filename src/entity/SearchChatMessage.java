@@ -1,27 +1,22 @@
 package entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
-public class SearchChatMessage implements ChatMessage {
+public class SearchChatMessage extends Message {
 
-  private final LocalDateTime messageTime;
   private final String roomID;
-  private final String message;
 
-  public SearchChatMessage(LocalDateTime time, String roomID, String message) {
-    this.messageTime = time;
+  public SearchChatMessage(Instant time, String roomID, String message) {
+    super(time, message);
     this.roomID = roomID;
-    this.message = message;
   }
 
-  @Override
-  public LocalDateTime getTime() {
-    return messageTime;
+  public Instant getTime() {
+    return super.timestamp;
   }
 
-  @Override
   public String getMessage() {
-    return message;
+    return super.content;
   }
 
   public String getRoomID() {
