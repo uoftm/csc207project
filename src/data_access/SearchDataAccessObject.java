@@ -15,13 +15,17 @@ import use_case.search.SearchDataAccessInterface;
 
 public class SearchDataAccessObject implements SearchDataAccessInterface {
 
+  private OkHttpClient client;
+
+  public SearchDataAccessObject(){
+    this.client = new OkHttpClient();
+  }
+
   @Override
   public SearchReponseArray getData(SearchRequest searchRequest) {
 
     String esUrl = Constants.esUrl;
     String apiKey = Constants.apiKey;
-
-    OkHttpClient client = new OkHttpClient();
 
     String index = "search-chats";
 
@@ -110,8 +114,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             .put("time", message.getTime())
             .put("roomID", message.getRoomID())
             .put("message", message.getMessage());
-
-    OkHttpClient client = new OkHttpClient();
+    
     // Define the JSON data for bulk ingestion
     String jsonPayload =
         "{ \"index\" : { \"_index\" : \"search-chats\" } }\n" + json.toString() + "\n";
