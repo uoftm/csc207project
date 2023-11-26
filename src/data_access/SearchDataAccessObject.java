@@ -17,8 +17,8 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
 
   private OkHttpClient client;
 
-  public SearchDataAccessObject(){
-    this.client = new OkHttpClient();
+  public SearchDataAccessObject(OkHttpClient okHttpClient){
+    this.client = okHttpClient;
   }
 
   @Override
@@ -114,7 +114,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             .put("time", message.getTime())
             .put("roomID", message.getRoomID())
             .put("message", message.getMessage());
-    
+
     // Define the JSON data for bulk ingestion
     String jsonPayload =
         "{ \"index\" : { \"_index\" : \"search-chats\" } }\n" + json.toString() + "\n";
