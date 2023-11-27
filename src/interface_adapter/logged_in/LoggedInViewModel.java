@@ -5,11 +5,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class LoggedInViewModel extends ViewModel {
-  public final String TITLE_LABEL = "Logged In View";
-
   private LoggedInState state = new LoggedInState();
 
-  public static final String LOGOUT_BUTTON_LABEL = "Log out";
   private String loggedInUser;
 
   public LoggedInViewModel() {
