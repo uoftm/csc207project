@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,18 +49,12 @@ public class FirebaseUserDataAccessObject
     JSONObject jsonBody = new JSONObject(jsonMap);
     System.out.println(jsonBody.toString()); // TODO: Get rid of this
 
-    HttpUrl.Builder urlBuilder
-            = HttpUrl.parse(Constants.SIGNUP_URL).newBuilder();
+    HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.SIGNUP_URL).newBuilder();
     urlBuilder.addQueryParameter("key", Constants.FIREBASE_AUTH_ID);
 
-    RequestBody body = RequestBody.create(
-            MediaType.parse("application/json"), jsonBody.toString());
+    RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonBody.toString());
 
-    Request request =
-      new Request.Builder()
-              .url(urlBuilder.build().toString())
-              .post(body)
-              .build();
+    Request request = new Request.Builder().url(urlBuilder.build().toString()).post(body).build();
     try {
       Response response = client.newCall(request).execute();
       if (response.code() == 200) {

@@ -1,7 +1,6 @@
 package use_case.login;
 
 import entity.User;
-
 import java.util.Optional;
 
 public interface LoginUserDataAccessInterface {
