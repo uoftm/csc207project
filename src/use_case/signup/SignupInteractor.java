@@ -3,6 +3,7 @@ package use_case.signup;
 import entity.User;
 import entity.UserFactory;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class SignupInteractor implements SignupInputBoundary {
   final SignupUserDataAccessInterface userDataAccessObject;
@@ -34,11 +35,14 @@ public class SignupInteractor implements SignupInputBoundary {
               signupInputData.getUsername(),
               signupInputData.getPassword(),
               now);
-      userDataAccessObject.save(user);
-
-      SignupOutputData signupOutputData =
-          new SignupOutputData(user.getEmail(), now.toString(), false);
-      userPresenter.prepareSuccessView(signupOutputData);
+      Optional<String> result = userDataAccessObject.save(user);
+      if (result.isEmpty()) {
+        SignupOutputData signupOutputData =
+                new SignupOutputData(user.getEmail(), now.toString(), false);
+        userPresenter.prepareSuccessView(signupOutputData);
+      } else {
+        userPresenter.prepareFailView(result.get());
+      }
     }
   }
 }
