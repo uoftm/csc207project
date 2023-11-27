@@ -20,14 +20,16 @@ public class SignupInteractor implements SignupInputBoundary {
 
   @Override
   public void execute(SignupInputData signupInputData) {
-    //TODO: Replace this with a combined request to firebase
+    // TODO: Replace this with a combined request to firebase
     if (userDataAccessObject.existsByName(signupInputData.getEmail())) {
-      userPresenter.prepareFailView("A user has already signed up with this email, please enter another.");
+      userPresenter.prepareFailView(
+          "A user has already signed up with this email, please enter another.");
     } else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
       userPresenter.prepareFailView("Passwords don't match.");
     } else {
       LocalDateTime now = LocalDateTime.now();
-      User user = userFactory.create(
+      User user =
+          userFactory.create(
               signupInputData.getEmail(),
               signupInputData.getUsername(),
               signupInputData.getPassword(),
@@ -37,7 +39,8 @@ public class SignupInteractor implements SignupInputBoundary {
       if (!"Success".equals(firebaseResponse)) { // Assuming "Success" indicates a successful save
         userPresenter.prepareFailView(firebaseResponse); // Handle the error from Firebase
       } else {
-        SignupOutputData signupOutputData = new SignupOutputData(user.getEmail(), now.toString(), false);
+        SignupOutputData signupOutputData =
+            new SignupOutputData(user.getEmail(), now.toString(), false);
         userPresenter.prepareSuccessView(signupOutputData);
       }
     }

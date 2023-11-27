@@ -1,13 +1,10 @@
 package data_access;
 
 import entity.User;
-
+import entity.UserFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDateTime;
-
-import entity.UserFactory;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,14 +23,14 @@ public class FirebaseUserDataAccessObject
   @Override
   public User get(String email) {
     Request request =
-            new Request.Builder()
-                    .url(
-                            Constants.FIREBASE_URL
-                                    + "users/"
-                                    + email
-                                    + ".json") // TODO: Ensure this successfully searches by email
-                    .method("GET", null)
-                    .build();
+        new Request.Builder()
+            .url(
+                Constants.FIREBASE_URL
+                    + "users/"
+                    + email
+                    + ".json") // TODO: Ensure this successfully searches by email
+            .method("GET", null)
+            .build();
 
     try {
       client.newCall(request).execute();
@@ -51,12 +48,14 @@ public class FirebaseUserDataAccessObject
   @Override
   public String save(User user) {
     String firebaseResponse = firebaseSignup(user.getEmail(), user.getPassword());
-    return firebaseResponse;  // To deal with error handling in the interactors
+    return firebaseResponse; // To deal with error handling in the interactors
   }
 
   public String firebaseSignup(String email, String password) {
     try {
-      URL url = new URL("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg");
+      URL url =
+          new URL(
+              "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg");
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "application/json; utf-8");
@@ -68,7 +67,7 @@ public class FirebaseUserDataAccessObject
       jsonInput.put("password", password);
       jsonInput.put("returnSecureToken", true);
 
-      try(OutputStream os = conn.getOutputStream()) {
+      try (OutputStream os = conn.getOutputStream()) {
         byte[] input = jsonInput.toString().getBytes("utf-8");
         os.write(input, 0, input.length);
       }

@@ -1,6 +1,5 @@
 package app;
 
-import data_access.FileUserDataAccessObject;
 import data_access.FirebaseMessageDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
 import entity.CommonUserFactory;
@@ -10,7 +9,6 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
-import java.io.IOException;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import view.*;
@@ -87,4 +85,3 @@ public class Main {
     application.setVisible(true);
   }
 }
-
