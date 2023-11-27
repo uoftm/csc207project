@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
@@ -56,9 +57,10 @@ public class FileUserDataAccessObject
   }
 
   @Override
-  public void save(User user) {
+  public Optional<String> save(User user) {
     accounts.put(user.getEmail(), user);
     this.save();
+    return Optional.empty();
   }
 
   @Override
