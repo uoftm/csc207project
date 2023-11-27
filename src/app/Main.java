@@ -2,6 +2,7 @@ package app;
 
 import data_access.FileUserDataAccessObject;
 import data_access.FirebaseMessageDataAccessObject;
+import data_access.FirebaseUserDataAccessObject;
 import entity.CommonUserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
@@ -46,21 +47,17 @@ public class Main {
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SignupViewModel signupViewModel = new SignupViewModel();
 
-    FileUserDataAccessObject userDataAccessObject;
-    try {
-      userDataAccessObject = new FileUserDataAccessObject("./users.csv", new CommonUserFactory());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+
+    FirebaseUserDataAccessObject firebaseUserDataAccessObject;
+    firebaseUserDataAccessObject = new FirebaseUserDataAccessObject(new CommonUserFactory());
 
     SignupView signupView =
         SignupUseCaseFactory.create(
             viewManagerModel,
             loginViewModel,
             signupViewModel,
-            userDataAccessObject,
+            firebaseUserDataAccessObject,
             switchViewController);
     views.add(signupView.contentPane, SignupView.viewName);
 
@@ -69,7 +66,7 @@ public class Main {
             viewManagerModel,
             loginViewModel,
             loggedInViewModel,
-            userDataAccessObject,
+            firebaseUserDataAccessObject,
             switchViewController);
     views.add(loginView.contentPane, loginView.viewName);
 
@@ -90,3 +87,4 @@ public class Main {
     application.setVisible(true);
   }
 }
+

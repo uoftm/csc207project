@@ -24,10 +24,10 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
     String stringified = new JSONObject().put("content", message.content).toString();
 
     Request request =
-        new Request.Builder()
-            .url(Constants.FIREBASE_URL + "messages/" + new Date().getTime() + ".json")
-            .method("PUT", RequestBody.create(stringified, MediaType.get("application/json")))
-            .build();
+            new Request.Builder()
+                    .url(Constants.FIREBASE_URL + "messages/" + new Date().getTime() + ".json")
+                    .method("PUT", RequestBody.create(stringified, MediaType.get("application/json")))
+                    .build();
 
     try {
       client.newCall(request).execute();
@@ -38,10 +38,10 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
 
   public List<Message> getAllMessages() {
     Request request =
-        new Request.Builder()
-            .url(Constants.FIREBASE_URL + "messages.json")
-            .method("GET", null)
-            .build();
+            new Request.Builder()
+                    .url(Constants.FIREBASE_URL + "messages.json")
+                    .method("GET", null)
+                    .build();
 
     try {
       JSONObject response = new JSONObject(client.newCall(request).execute().body().string());

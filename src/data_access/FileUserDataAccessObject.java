@@ -11,7 +11,7 @@ import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FileUserDataAccessObject
-    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+        implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
 
   private final File csvFile;
 
@@ -56,9 +56,10 @@ public class FileUserDataAccessObject
   }
 
   @Override
-  public void save(User user) {
+  public String save(User user) {
     accounts.put(user.getEmail(), user);
     this.save();
+    return "";
   }
 
   @Override
@@ -75,9 +76,9 @@ public class FileUserDataAccessObject
 
       for (User user : accounts.values()) {
         String line =
-            String.format(
-                "%s, %s,%s,%s",
-                user.getEmail(), user.getName(), user.getPassword(), user.getCreationTime());
+                String.format(
+                        "%s, %s,%s,%s",
+                        user.getEmail(), user.getName(), user.getPassword(), user.getCreationTime());
         writer.write(line);
         writer.newLine();
       }
