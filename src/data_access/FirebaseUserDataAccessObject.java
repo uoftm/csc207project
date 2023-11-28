@@ -31,12 +31,10 @@ public class FirebaseUserDataAccessObject
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     RequestBody body = RequestBody.create(JSON, jsonBody.toString());
 
-    String authUrl = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg";
+    String authUrl =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg";
 
-    Request authRequest = new Request.Builder()
-            .url(authUrl)
-            .post(body)
-            .build();
+    Request authRequest = new Request.Builder().url(authUrl).post(body).build();
 
     try {
       Response authResponse = client.newCall(authRequest).execute();
@@ -56,18 +54,20 @@ public class FirebaseUserDataAccessObject
 
       String idToken = authResponseJson.getString("idToken");
 
-      return getUserData(idToken).map(userData -> {
-        String displayName = userData[0];
-        long createdAt = Long.parseLong(userData[1]);
-        Instant instant = Instant.ofEpochMilli(createdAt);
-        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+      return getUserData(idToken)
+          .map(
+              userData -> {
+                String displayName = userData[0];
+                long createdAt = Long.parseLong(userData[1]);
+                Instant instant = Instant.ofEpochMilli(createdAt);
+                LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 
-        System.out.println("Display Name: " + displayName);
-        System.out.println("Created At: " + dateTime);
+                System.out.println("Display Name: " + displayName);
+                System.out.println("Created At: " + dateTime);
 
-        CommonUserFactory userFactory = new CommonUserFactory();
-        return userFactory.create(email, displayName, password, dateTime);
-      });
+                CommonUserFactory userFactory = new CommonUserFactory();
+                return userFactory.create(email, displayName, password, dateTime);
+              });
     } catch (IOException | JSONException e) {
       System.out.println("Error during authentication: " + e.getMessage());
       return Optional.empty();
@@ -82,12 +82,10 @@ public class FirebaseUserDataAccessObject
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     RequestBody body = RequestBody.create(JSON, jsonBody.toString());
 
-    String url = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg";
+    String url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg";
 
-    Request request = new Request.Builder()
-            .url(url)
-            .post(body)
-            .build();
+    Request request = new Request.Builder().url(url).post(body).build();
 
     try {
       Response response = client.newCall(request).execute();
@@ -99,9 +97,10 @@ public class FirebaseUserDataAccessObject
         JSONObject userObject = responseObject.getJSONArray("users").getJSONObject(0);
 
         String displayName = userObject.optString("displayName", "No display name");
-        String createdAt = userObject.optString("createdAt", "1701105347550L");  // TODO: remove this placeholder
+        String createdAt =
+            userObject.optString("createdAt", "1701105347550L"); // TODO: remove this placeholder
 
-        return Optional.ofNullable(new String[]{displayName, createdAt});
+        return Optional.ofNullable(new String[] {displayName, createdAt});
       } else {
         System.out.println("User lookup failed: " + responseData);
         return Optional.empty();

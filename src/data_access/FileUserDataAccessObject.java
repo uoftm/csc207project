@@ -64,7 +64,8 @@ public class FileUserDataAccessObject
   }
 
   @Override
-  public Optional<User> get(String email, String password) { // For firebase auth (deprecate this file eventually)
+  public Optional<User> get(
+      String email, String password) { // For firebase auth (deprecate this file eventually)
     return Optional.ofNullable(accounts.get(email));
   }
 
