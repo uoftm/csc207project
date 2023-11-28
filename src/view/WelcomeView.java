@@ -20,33 +20,9 @@ public class WelcomeView {
     body.setBackground(ViewConstants.panel);
     body.setPreferredSize(ViewConstants.paneSize);
 
-    // Array of captions
-    String[] captions = {
-      "Connect Effortlessly, Communicate Seamlessly.",
-      "Where Conversations Come Alive.",
-      "Redefining Conversation in the Digital Age.",
-      "Speak Freely, Connect Deeply.",
-      "Bringing Your Words to Life.",
-      "Instant Messaging, Lasting Connections.",
-      "Talk the Talk, Anywhere, Anytime.",
-      "Your World, Closer with Every Message.",
-      "Elevate Your Chat Experience.",
-      "Chat Smarter, Not Harder.",
-      "Messages that Matter.",
-      "Beyond Texting: Experience the Difference.",
-      "Crafting Connections, One Message at a Time.",
-      "Unleash the Power of Conversation.",
-      "Speak Easy, Connect Instantly.",
-      "Where Messages Meet Magic.",
-      "Chat Revolutionized.",
-      "Feel Closer with Every Text.",
-      "Innovating How You Communicate.",
-      "The Art of Messaging, Redefined."
-    };
-
     // Randomly select a caption
     Random rand = new Random();
-    String randomCaption = captions[rand.nextInt(captions.length)];
+    String randomCaption = ViewConstants.captions[rand.nextInt(ViewConstants.captions.length)];
 
     captionLabel.setText(randomCaption);
     captionLabel.setFont(new Font("Serif", Font.BOLD, 12));
