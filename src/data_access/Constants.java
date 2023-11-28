@@ -5,4 +5,8 @@ public class Constants {
   public static String esUrl =
       "https://e56e32ed3da843c3ba35b67803bd19b4.us-central1.gcp.cloud.es.io:443";
   public static String apiKey = "";
+
+  public static final String SIGNUP_URL =
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp";
+  public static final String FIREBASE_AUTH_ID = "AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg";
 }
