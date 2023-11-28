@@ -75,7 +75,7 @@ public class FirebaseUserDataAccessObject
   }
 
   // Return username, time user was created
-  public Optional<String[]> getUserData(String idToken) {
+  private Optional<String[]> getUserData(String idToken) {
     JSONObject jsonBody = new JSONObject();
     jsonBody.put("idToken", idToken);
 
