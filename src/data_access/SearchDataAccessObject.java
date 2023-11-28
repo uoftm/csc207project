@@ -21,7 +21,6 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     this.client = okHttpClient;
   }
 
-  @Override
   public SearchReponseArray getData(SearchRequest searchRequest) {
 
     String esUrl = Constants.esUrl;
@@ -104,7 +103,6 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     }
   }
 
-  @Override
   public void saveData(SearchChatMessage message) {
     String esUrl = Constants.esUrl;
     String apiKey = Constants.apiKey;
