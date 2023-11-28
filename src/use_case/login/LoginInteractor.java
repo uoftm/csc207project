@@ -1,14 +1,15 @@
 package use_case.login;
 
 import entity.User;
+import java.util.Optional;
 
 public class LoginInteractor implements LoginInputBoundary {
   final LoginUserDataAccessInterface userDataAccessObject;
   final LoginOutputBoundary loginPresenter;
 
   public LoginInteractor(
-      LoginUserDataAccessInterface userDataAccessInterface,
-      LoginOutputBoundary loginOutputBoundary) {
+          LoginUserDataAccessInterface userDataAccessInterface,
+          LoginOutputBoundary loginOutputBoundary) {
     this.userDataAccessObject = userDataAccessInterface;
     this.loginPresenter = loginOutputBoundary;
   }
@@ -17,18 +18,21 @@ public class LoginInteractor implements LoginInputBoundary {
   public void execute(LoginInputData loginInputData) {
     String email = loginInputData.getEmail();
     String password = loginInputData.getPassword();
-    if (!userDataAccessObject.existsByName(email)) {
-      loginPresenter.prepareFailView(email + ": Account does not exist.");
-    } else {
-      String pwd = userDataAccessObject.get(email).getPassword();
-      if (!password.equals(pwd)) {
-        loginPresenter.prepareFailView("Incorrect password for " + email + ".");
-      } else {
-        User user = userDataAccessObject.get(loginInputData.getEmail());
 
-        LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
-        loginPresenter.prepareSuccessView(loginOutputData);
-      }
+    Optional<User> optionalUser = userDataAccessObject.get(email, password);
+
+    if (optionalUser.isEmpty()) {
+      loginPresenter.prepareFailView(email + ": Account does not exist.");
+      return;
+    }
+
+    User user = optionalUser.get();
+
+    if (!password.equals(user.getPassword())) {
+      loginPresenter.prepareFailView("Incorrect password for " + email + ".");
+    } else {
+      LoginOutputData loginOutputData = new LoginOutputData(user.getName(), true);
+      loginPresenter.prepareSuccessView(loginOutputData);
     }
   }
 }
