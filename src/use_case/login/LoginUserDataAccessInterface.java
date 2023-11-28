@@ -8,5 +8,5 @@ public interface LoginUserDataAccessInterface {
 
   Optional<String> save(User user);
 
-  User get(String email);
+  Optional<User> get(String email, String password);
 }
