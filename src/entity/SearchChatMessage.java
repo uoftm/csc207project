@@ -6,8 +6,8 @@ public class SearchChatMessage extends Message {
 
   private final String roomID;
 
-  public SearchChatMessage(Instant time, String roomID, String message) {
-    super(time, message);
+  public SearchChatMessage(Instant time, String roomID, String message, String authorId) {
+    super(time, message, authorId);
     this.roomID = roomID;
   }
 
