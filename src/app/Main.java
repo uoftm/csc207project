@@ -1,17 +1,20 @@
 package app;
 
 import data_access.FirebaseMessageDataAccessObject;
+import data_access.FirebaseSettingsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.chat.ChatViewModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
+import use_case.settings.SettingsDataAccessInterface;
 import view.*;
 
 public class Main {
@@ -42,9 +45,10 @@ public class Main {
     // This information will be changed by a presenter object that is reporting the
     // results from the use case. The ViewModels are observable, and will
     // be observed by the Views.
+    SignupViewModel signupViewModel = new SignupViewModel();
     LoginViewModel loginViewModel = new LoginViewModel();
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
-    SignupViewModel signupViewModel = new SignupViewModel();
+    SettingsViewModel settingsViewModel = new SettingsViewModel();
 
     FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject();
 
@@ -76,8 +80,20 @@ public class Main {
 
     ChatView chatView =
         ChatUseCaseFactory.create(messageDataAccessObject, new ChatViewModel(new ArrayList<>()));
+
     LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView, switchViewController);
     views.add(loggedInView.contentPane, loggedInView.viewName);
+
+    SettingsDataAccessInterface settingsUserDataAccessObject = new FirebaseSettingsDataAccessObject();
+
+    SettingsView settingsView =
+            SettingsUseCaseFactory.create(
+                    viewManagerModel,
+                    settingsViewModel,
+                    loggedInViewModel,
+                    settingsUserDataAccessObject,
+                    switchViewController);
+    views.add(settingsView.contentPane, settingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);
     viewManagerModel.firePropertyChanged();
