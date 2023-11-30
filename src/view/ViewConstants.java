@@ -11,6 +11,8 @@ public class ViewConstants {
 
   public static final Dimension windowSize = new Dimension(800, 600);
   public static final Dimension paneSize = new Dimension(400, 300);
+  public static final Dimension navSize = new Dimension(400, 75);
+  public static final Dimension navMiddle = new Dimension(400, 5);
 
   // Welcome page random captions
   public static final String[] captions = {

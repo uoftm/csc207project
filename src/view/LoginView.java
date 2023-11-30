@@ -39,7 +39,6 @@ public class LoginView implements PropertyChangeListener {
     body.setPreferredSize(ViewConstants.paneSize);
 
     logIn.addActionListener(
-        // This creates an anonymous subclass of ActionListener and instantiates it.
         new ActionListener() {
           public void actionPerformed(ActionEvent evt) {
             if (evt.getSource().equals(logIn)) {
