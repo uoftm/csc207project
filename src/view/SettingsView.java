@@ -17,6 +17,7 @@ public class SettingsView implements PropertyChangeListener {
   public JPanel contentPane;
   private JPanel body;
   private JLabel title;
+  private JButton backButton;
 
   public SettingsView(
       SettingsViewModel settingsViewModel,
@@ -30,6 +31,13 @@ public class SettingsView implements PropertyChangeListener {
     contentPane.setPreferredSize(ViewConstants.windowSize);
     body.setBackground(ViewConstants.panel);
     body.setPreferredSize(ViewConstants.paneSize);
+
+    backButton.addActionListener(
+        evt -> {
+          if (evt.getSource().equals(backButton)) {
+            switchViewController.switchTo(LoggedInView.viewName);
+          }
+        });
   }
 
   @Override

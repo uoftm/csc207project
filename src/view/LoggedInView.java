@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class LoggedInView implements PropertyChangeListener {
 
-  public final String viewName = "logged in";
+  public static final String viewName = "logged in";
   private final LoggedInViewModel loggedInViewModel;
 
   private JLabel username;
@@ -18,12 +18,22 @@ public class LoggedInView implements PropertyChangeListener {
   private JButton settingsButton;
   public JPanel contentPane;
   private JPanel chat;
+  private JPanel nav;
+  private JPanel navBody;
+  private JPanel navMiddle;
 
   public LoggedInView(
       LoggedInViewModel loggedInViewModel,
       ChatView chatView,
       SwitchViewController switchViewController) {
     contentPane.setBackground(ViewConstants.background);
+    contentPane.setPreferredSize(ViewConstants.windowSize);
+
+    nav.setBackground(ViewConstants.panel);
+    nav.setPreferredSize(ViewConstants.navSize);
+    navBody.setBackground(ViewConstants.panel);
+    navMiddle.setBackground(ViewConstants.background);
+    navMiddle.setPreferredSize(ViewConstants.navMiddle);
 
     this.loggedInViewModel = loggedInViewModel;
     this.loggedInViewModel.addPropertyChangeListener(this);
