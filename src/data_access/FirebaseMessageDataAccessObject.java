@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import use_case.chat.ChatMessageDataAccessInterface;
 
 public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInterface {
-
   private final OkHttpClient client;
 
   public FirebaseMessageDataAccessObject(OkHttpClient client) {
@@ -21,7 +20,8 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
 
   public void save(Message message) {
     // Stringify message
-    String stringified = new JSONObject().put("content", message.content).toString();
+    String stringified =
+        new JSONObject().put("content", message.content).put("author", message.authorId).toString();
 
     Request request =
         new Request.Builder()
@@ -50,11 +50,14 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
       while (x.hasNext()) {
         try {
           var key = x.next();
-          var value = response.getJSONObject(key).getString("content");
           var time = Instant.ofEpochMilli(Long.parseLong(key));
-          out.add(new Message(time, value));
+          var messageObject = response.getJSONObject(key);
+          var content = messageObject.getString("content");
+          var authorId = messageObject.getString("author");
+          out.add(new Message(time, content, authorId));
         } catch (RuntimeException e) {
-          // TODO: Handle this invalid message
+          System.out.println("Invalid message");
+          System.out.println(e.getLocalizedMessage());
         }
       }
       out.sort(Comparator.comparing(a -> a.timestamp));

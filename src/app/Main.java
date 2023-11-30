@@ -46,7 +46,8 @@ public class Main {
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SignupViewModel signupViewModel = new SignupViewModel();
 
-    FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject();
+    OkHttpClient client = new OkHttpClient();
+    FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject(client);
 
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
 
@@ -71,11 +72,11 @@ public class Main {
     WelcomeView welcomeView = new WelcomeView(switchViewController);
     views.add(welcomeView.contentPane, WelcomeView.viewName);
 
-    OkHttpClient client = new OkHttpClient();
     var messageDataAccessObject = new FirebaseMessageDataAccessObject(client);
 
     ChatView chatView =
-        ChatUseCaseFactory.create(messageDataAccessObject, new ChatViewModel(new ArrayList<>()));
+        ChatUseCaseFactory.create(
+            messageDataAccessObject, new ChatViewModel(new ArrayList<>()), userDataAccessObject);
     LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView, switchViewController);
     views.add(loggedInView.contentPane, loggedInView.viewName);
 

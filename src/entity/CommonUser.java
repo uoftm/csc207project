@@ -3,6 +3,7 @@ package entity;
 import java.time.LocalDateTime;
 
 class CommonUser implements User {
+  private final String uid;
 
   private final String email;
   private final String name;
@@ -15,11 +16,17 @@ class CommonUser implements User {
    * @param name
    * @param password
    */
-  CommonUser(String email, String name, String password, LocalDateTime creationTime) {
+  CommonUser(String uid, String email, String name, String password, LocalDateTime creationTime) {
+    this.uid = uid;
     this.email = email;
     this.name = name;
     this.password = password;
     this.creationTime = creationTime;
+  }
+
+  @Override
+  public String getUid() {
+    return uid;
   }
 
   @Override

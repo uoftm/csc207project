@@ -15,7 +15,7 @@ public class SearchTest {
   @Test
   public void saveData() {
     SearchChatMessage searchMessage =
-        new SearchChatMessage(Instant.now(), "test-room-id", "test-message");
+        new SearchChatMessage(Instant.now(), "test-room-id", "test-message", "test-author-id");
     searchDataAccessObject.saveData(searchMessage);
   }
 

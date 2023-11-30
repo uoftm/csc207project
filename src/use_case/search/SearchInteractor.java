@@ -28,7 +28,10 @@ public class SearchInteractor implements SearchInputBoundary {
   public void executeRecordData(SearchInputData searchInputData) {
     SearchChatMessage chatMessage =
         new SearchChatMessage(
-            searchInputData.getTime(), searchInputData.getRoomID(), searchInputData.getMessage());
+            searchInputData.getTime(),
+            searchInputData.getRoomID(),
+            searchInputData.getMessage(),
+            searchInputData.getAuthorID());
     searchDataAccessObject.saveData(chatMessage);
   }
 }

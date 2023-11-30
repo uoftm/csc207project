@@ -6,14 +6,17 @@ public class SearchResponse {
   private final String highlightedText;
 
   private final String fullText;
+  private final String authorName;
 
   private final Instant time;
 
   private final String roomID;
 
-  public SearchResponse(String highlightedText, String fullText, Instant time, String roomID) {
+  public SearchResponse(
+      String highlightedText, String fullText, String authorName, Instant time, String roomID) {
     this.highlightedText = highlightedText;
     this.fullText = fullText;
+    this.authorName = authorName;
     this.time = time;
     this.roomID = roomID;
   }
@@ -28,6 +31,10 @@ public class SearchResponse {
 
   public Instant getTime() {
     return time;
+  }
+
+  public String getAuthorName() {
+    return authorName;
   }
 
   public String getRoomID() {

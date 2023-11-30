@@ -1,7 +1,6 @@
 package use_case.login;
 
 import entity.User;
-import java.util.Optional;
 
 public class LoginInteractor implements LoginInputBoundary {
   final LoginUserDataAccessInterface userDataAccessObject;
@@ -19,14 +18,12 @@ public class LoginInteractor implements LoginInputBoundary {
     String email = loginInputData.getEmail();
     String password = loginInputData.getPassword();
 
-    Optional<User> optionalUser = userDataAccessObject.get(email, password);
+    User user = userDataAccessObject.get(email, password);
 
-    if (optionalUser.isEmpty()) {
+    if (user == null) {
       loginPresenter.prepareFailView(email + ": Account does not exist.");
       return;
     }
-
-    User user = optionalUser.get();
 
     if (!password.equals(user.getPassword())) {
       loginPresenter.prepareFailView("Incorrect password for " + email + ".");
