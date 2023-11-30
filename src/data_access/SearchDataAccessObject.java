@@ -93,6 +93,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             new SearchResponse(
                 finalHighlight,
                 source.getString("message"),
+                source.optString("author"),
                 Instant.parse(source.getString("time")),
                 source.getString("roomID"));
         searchResponses.add(oneResponse);
@@ -111,7 +112,8 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
         new JSONObject()
             .put("time", message.getTime())
             .put("roomID", message.getRoomID())
-            .put("message", message.getMessage());
+            .put("message", message.getMessage())
+            .put("author", message.getAuthorId());
 
     // Define the JSON data for bulk ingestion
     String jsonPayload =
