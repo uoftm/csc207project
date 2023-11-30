@@ -2,8 +2,6 @@ package interface_adapter.settings;
 
 import use_case.settings.SettingsOutputBoundary;
 import use_case.settings.SettingsOutputData;
-import use_case.switch_view.SwitchViewOutputBoundary;
-import use_case.switch_view.SwitchViewOutputData;
 
 public class SettingsPresenter implements SettingsOutputBoundary {
 

@@ -22,7 +22,7 @@ public class SettingsTest {
     // Dummy test user
     LocalDateTime date = LocalDateTime.now();
     CommonUserFactory userFactory = new CommonUserFactory();
-    User test_user = userFactory.create("test@gmail.com", "Test", "1234", date);
+    User test_user = userFactory.create("123", "test@gmail.com", "Test", "1234", date);
 
     CardLayout cardLayout = new CardLayout();
     JPanel views = new JPanel(cardLayout);
