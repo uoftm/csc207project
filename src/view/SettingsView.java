@@ -12,7 +12,6 @@ public class SettingsView implements PropertyChangeListener {
 
   public static final String viewName = "settings";
   private final SettingsViewModel settingsViewModel;
-
   private final SettingsController settingsController;
   public JPanel contentPane;
   private JPanel body;

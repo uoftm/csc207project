@@ -8,7 +8,7 @@ public class Room {
     private List<DisplayUser> users;
     private List<Message> messages;
 
-    Room(String uid, String name, List<DisplayUser> users, List<Message> messages) {
+    public Room(String uid, String name, List<DisplayUser> users, List<Message> messages) {
         this.uid = uid;
         this.name = name;
         this.users = users;
