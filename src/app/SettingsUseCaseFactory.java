@@ -1,7 +1,5 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
@@ -19,16 +17,13 @@ public class SettingsUseCaseFactory {
   private SettingsUseCaseFactory() {}
 
   public static SettingsView create(
-      ViewManagerModel viewManagerModel,
       SettingsViewModel settingsViewModel,
-      LoggedInViewModel loggedInViewModel,
       SettingsDataAccessInterface settingsDataAccessObject,
       SwitchViewController switchViewController) {
 
     try {
       SettingsController settingsController =
-          createSettingsController(
-              viewManagerModel, settingsViewModel, loggedInViewModel, settingsDataAccessObject);
+          createSettingsController(settingsViewModel, settingsDataAccessObject);
 
       return new SettingsView(settingsViewModel, settingsController, switchViewController);
     } catch (IOException e) {
@@ -38,14 +33,10 @@ public class SettingsUseCaseFactory {
   }
 
   private static SettingsController createSettingsController(
-      ViewManagerModel viewManagerModel,
-      SettingsViewModel settingsViewModel,
-      LoggedInViewModel loggedInViewModel,
-      SettingsDataAccessInterface settingsDataAccessObject)
+      SettingsViewModel settingsViewModel, SettingsDataAccessInterface settingsDataAccessObject)
       throws IOException {
 
-    SettingsOutputBoundary settingsOutputBoundary =
-        new SettingsPresenter(viewManagerModel, loggedInViewModel, settingsViewModel);
+    SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(settingsViewModel);
     SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
 
     return new SettingsController(settingsInteractor);

@@ -89,11 +89,7 @@ public class Main {
 
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
-            viewManagerModel,
-            settingsViewModel,
-            loggedInViewModel,
-            settingsUserDataAccessObject,
-            switchViewController);
+            settingsViewModel, settingsUserDataAccessObject, switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);
