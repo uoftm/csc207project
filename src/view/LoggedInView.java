@@ -14,11 +14,11 @@ public class LoggedInView implements PropertyChangeListener {
 
   private JLabel username;
 
-  private JButton logOut;
+  private JButton logoutButton;
+  private JButton settingsButton;
   public JPanel contentPane;
   private JPanel chat;
 
-  /** A window with a title and a JButton. */
   public LoggedInView(
       LoggedInViewModel loggedInViewModel,
       ChatView chatView,
@@ -28,10 +28,17 @@ public class LoggedInView implements PropertyChangeListener {
     this.loggedInViewModel = loggedInViewModel;
     this.loggedInViewModel.addPropertyChangeListener(this);
 
-    logOut.addActionListener(
+    logoutButton.addActionListener(
         evt -> {
-          if (evt.getSource().equals(logOut)) {
+          if (evt.getSource().equals(logoutButton)) {
             switchViewController.switchTo(LoginView.viewName);
+          }
+        });
+
+    settingsButton.addActionListener(
+        evt -> {
+          if (evt.getSource().equals(settingsButton)) {
+            switchViewController.switchTo(SettingsView.viewName);
           }
         });
 
