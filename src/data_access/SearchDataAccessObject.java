@@ -93,6 +93,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             new SearchResponse(
                 finalHighlight,
                 source.getString("message"),
+                // TODO: use an in-memory cache to query username here instead
                 source.optString("author"),
                 Instant.parse(source.getString("time")),
                 source.getString("roomID"));
