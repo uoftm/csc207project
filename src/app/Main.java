@@ -84,15 +84,16 @@ public class Main {
     LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView, switchViewController);
     views.add(loggedInView.contentPane, loggedInView.viewName);
 
-    SettingsDataAccessInterface settingsUserDataAccessObject = new FirebaseSettingsDataAccessObject();
+    SettingsDataAccessInterface settingsUserDataAccessObject =
+        new FirebaseSettingsDataAccessObject();
 
     SettingsView settingsView =
-            SettingsUseCaseFactory.create(
-                    viewManagerModel,
-                    settingsViewModel,
-                    loggedInViewModel,
-                    settingsUserDataAccessObject,
-                    switchViewController);
+        SettingsUseCaseFactory.create(
+            viewManagerModel,
+            settingsViewModel,
+            loggedInViewModel,
+            settingsUserDataAccessObject,
+            switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);

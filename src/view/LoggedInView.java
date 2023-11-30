@@ -36,11 +36,11 @@ public class LoggedInView implements PropertyChangeListener {
         });
 
     settingsButton.addActionListener(
-            evt -> {
-              if (evt.getSource().equals(settingsButton)) {
-                switchViewController.switchTo(SettingsView.viewName);
-              }
-            });
+        evt -> {
+          if (evt.getSource().equals(settingsButton)) {
+            switchViewController.switchTo(SettingsView.viewName);
+          }
+        });
 
     chat.add(chatView.contentPane);
   }

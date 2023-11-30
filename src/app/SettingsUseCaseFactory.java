@@ -8,7 +8,6 @@ import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.io.IOException;
 import javax.swing.*;
-
 import use_case.settings.SettingsDataAccessInterface;
 import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInteractor;
@@ -17,39 +16,38 @@ import view.SettingsView;
 
 public class SettingsUseCaseFactory {
 
-    private SettingsUseCaseFactory() {}
+  private SettingsUseCaseFactory() {}
 
-    public static SettingsView create(
-            ViewManagerModel viewManagerModel,
-            SettingsViewModel settingsViewModel,
-            LoggedInViewModel loggedInViewModel,
-            SettingsDataAccessInterface settingsDataAccessObject,
-            SwitchViewController switchViewController) {
+  public static SettingsView create(
+      ViewManagerModel viewManagerModel,
+      SettingsViewModel settingsViewModel,
+      LoggedInViewModel loggedInViewModel,
+      SettingsDataAccessInterface settingsDataAccessObject,
+      SwitchViewController switchViewController) {
 
-        try {
-            SettingsController settingsController =
-                    createSettingsController(
-                            viewManagerModel, settingsViewModel, loggedInViewModel, settingsDataAccessObject);
+    try {
+      SettingsController settingsController =
+          createSettingsController(
+              viewManagerModel, settingsViewModel, loggedInViewModel, settingsDataAccessObject);
 
-            return new SettingsView(settingsViewModel, settingsController, switchViewController);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Not available.");
-            return null;
-        }
+      return new SettingsView(settingsViewModel, settingsController, switchViewController);
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(null, "Not available.");
+      return null;
     }
+  }
 
-    private static SettingsController createSettingsController(
-            ViewManagerModel viewManagerModel,
-            SettingsViewModel settingsViewModel,
-            LoggedInViewModel loggedInViewModel,
-            SettingsDataAccessInterface settingsDataAccessObject)
-            throws IOException {
+  private static SettingsController createSettingsController(
+      ViewManagerModel viewManagerModel,
+      SettingsViewModel settingsViewModel,
+      LoggedInViewModel loggedInViewModel,
+      SettingsDataAccessInterface settingsDataAccessObject)
+      throws IOException {
 
-        SettingsOutputBoundary settingsOutputBoundary =
-                new SettingsPresenter(viewManagerModel, loggedInViewModel, settingsViewModel);
-        SettingsInputBoundary settingsInteractor =
-                new SettingsInteractor(settingsOutputBoundary);
+    SettingsOutputBoundary settingsOutputBoundary =
+        new SettingsPresenter(viewManagerModel, loggedInViewModel, settingsViewModel);
+    SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
 
-        return new SettingsController(settingsInteractor);
-    }
+    return new SettingsController(settingsInteractor);
+  }
 }

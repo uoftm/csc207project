@@ -4,13 +4,13 @@ import entity.User;
 
 public class SettingsInputData {
 
-    User user;
+  User user;
 
-    public SettingsInputData(User user) {
-        this.user = user;
-    }
+  public SettingsInputData(User user) {
+    this.user = user;
+  }
 
-    User getUser() {
-        return user;
-    }
+  User getUser() {
+    return user;
+  }
 }

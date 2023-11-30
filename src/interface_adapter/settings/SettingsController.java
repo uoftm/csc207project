@@ -6,14 +6,14 @@ import use_case.settings.SettingsInputData;
 
 public class SettingsController {
 
-    final SettingsInputBoundary settingsUseCaseInteractor;
+  final SettingsInputBoundary settingsUseCaseInteractor;
 
-    public SettingsController(SettingsInputBoundary settingsUseCaseInteractor) {
-        this.settingsUseCaseInteractor = settingsUseCaseInteractor;
-    }
+  public SettingsController(SettingsInputBoundary settingsUseCaseInteractor) {
+    this.settingsUseCaseInteractor = settingsUseCaseInteractor;
+  }
 
-    public void execute(User user) {
-        SettingsInputData settingsInputData = new SettingsInputData(user);
-        settingsUseCaseInteractor.execute(settingsInputData);
-    }
+  public void execute(User user) {
+    SettingsInputData settingsInputData = new SettingsInputData(user);
+    settingsUseCaseInteractor.execute(settingsInputData);
+  }
 }

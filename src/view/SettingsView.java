@@ -10,29 +10,33 @@ import javax.swing.*;
 
 public class SettingsView implements PropertyChangeListener {
 
-    public static final String viewName = "settings";
-    private final SettingsViewModel settingsViewModel;
+  public static final String viewName = "settings";
+  private final SettingsViewModel settingsViewModel;
 
-    private final SettingsController settingsController;
-    public JPanel contentPane;
+  private final SettingsController settingsController;
+  public JPanel contentPane;
+  private JPanel body;
+  private JLabel title;
 
-    public SettingsView(
-            SettingsViewModel settingsViewModel,
-            SettingsController controller,
-            SwitchViewController switchViewController) {
-        this.settingsController = controller;
-        this.settingsViewModel = settingsViewModel;
-        this.settingsViewModel.addPropertyChangeListener(this);
+  public SettingsView(
+      SettingsViewModel settingsViewModel,
+      SettingsController controller,
+      SwitchViewController switchViewController) {
+    this.settingsController = controller;
+    this.settingsViewModel = settingsViewModel;
+    this.settingsViewModel.addPropertyChangeListener(this);
 
-        contentPane.setBackground(ViewConstants.background);
-        contentPane.setPreferredSize(ViewConstants.windowSize);
+    contentPane.setBackground(ViewConstants.background);
+    contentPane.setPreferredSize(ViewConstants.windowSize);
+    body.setBackground(ViewConstants.panel);
+    body.setPreferredSize(ViewConstants.paneSize);
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    SettingsState state = (SettingsState) evt.getNewValue();
+    if (state.getError() != null) {
+      JOptionPane.showMessageDialog(contentPane, state.getError());
     }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        SettingsState state = (SettingsState) evt.getNewValue();
-        if (state.getError() != null) {
-            JOptionPane.showMessageDialog(contentPane, state.getError());
-        }
-    }
+  }
 }

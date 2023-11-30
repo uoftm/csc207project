@@ -4,5 +4,5 @@ import entity.User;
 
 public interface SettingsDataAccessInterface {
 
-    String op(User user);
+  String op(User user);
 }
