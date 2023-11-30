@@ -6,11 +6,15 @@ import java.time.Instant;
 public class ChatInteractor implements ChatInputBoundary {
   final ChatOutputBoundary outputBoundary;
   final ChatMessageDataAccessInterface dataAccessInterface;
+  final ChatUserDataAccessInterface chatUserDataAccessInterface;
 
   public ChatInteractor(
-      ChatOutputBoundary outputBoundary, ChatMessageDataAccessInterface dataAccessInterface) {
+      ChatOutputBoundary outputBoundary,
+      ChatMessageDataAccessInterface dataAccessInterface,
+      ChatUserDataAccessInterface chatUserDataAccessInterface) {
     this.outputBoundary = outputBoundary;
     this.dataAccessInterface = dataAccessInterface;
+    this.chatUserDataAccessInterface = chatUserDataAccessInterface;
   }
 
   public void loadAllMessages() {
@@ -19,7 +23,8 @@ public class ChatInteractor implements ChatInputBoundary {
   }
 
   public void sendMessage(String messageText) {
-    Message message = new Message(Instant.now(), messageText);
+    Message message =
+        new Message(Instant.now(), messageText, chatUserDataAccessInterface.get().getUid());
     dataAccessInterface.save(message);
   }
 }

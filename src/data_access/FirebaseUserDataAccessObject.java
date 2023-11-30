@@ -6,33 +6,53 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import use_case.chat.ChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FirebaseUserDataAccessObject
-    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
-  static OkHttpClient client = new OkHttpClient();
+    implements SignupUserDataAccessInterface,
+        LoginUserDataAccessInterface,
+        ChatUserDataAccessInterface {
+  class RawUserData {
+    String uid;
+    String displayName;
+    long createdAt;
+
+    RawUserData(String uid, String displayName, long createdAt) {
+      this.uid = uid;
+      this.displayName = displayName;
+      this.createdAt = createdAt;
+    }
+  }
+
+  private final OkHttpClient client;
+
+  private String token = null;
+  private User user = null;
+
+  public FirebaseUserDataAccessObject(OkHttpClient client) {
+    this.client = client;
+  }
 
   @Override
-  public Optional<User> get(String email, String password) {
+  public User get(String email, String password) {
     // Authentication Request
-    JSONObject jsonBody = new JSONObject();
-    jsonBody.put("email", email);
-    jsonBody.put("password", password);
-    jsonBody.put("returnSecureToken", true);
+    JSONObject jsonBody =
+        new JSONObject()
+            .put("email", email)
+            .put("password", password)
+            .put("returnSecureToken", true);
 
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    RequestBody body = RequestBody.create(JSON, jsonBody.toString());
+    RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
 
-    String authUrl =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg";
+    String authUrl = Constants.LOGIN_URL + "?key=" + Constants.FIREBASE_AUTH_ID;
 
     Request authRequest = new Request.Builder().url(authUrl).post(body).build();
 
@@ -42,48 +62,49 @@ public class FirebaseUserDataAccessObject
 
       if (!authResponse.isSuccessful()) {
         System.out.println("Authentication failed: " + authResponseData);
-        return Optional.empty();
+        return null;
       }
 
       JSONObject authResponseJson = new JSONObject(authResponseData);
 
       if (!authResponseJson.has("idToken") || !authResponseJson.has("localId")) {
         System.out.println("Invalid authentication response");
-        return Optional.empty();
+        return null;
       }
 
       String idToken = authResponseJson.getString("idToken");
 
-      return getUserData(idToken)
-          .map(
-              userData -> {
-                String displayName = userData[0];
-                long createdAt = Long.parseLong(userData[1]);
-                Instant instant = Instant.ofEpochMilli(createdAt);
-                LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+      var userData = getUserData(idToken);
+      if (userData == null) {
+        return null;
+      }
 
-                System.out.println("Display Name: " + displayName);
-                System.out.println("Created At: " + dateTime);
+      String displayName = userData.displayName;
+      long createdAt = userData.createdAt;
+      Instant instant = Instant.ofEpochMilli(createdAt);
+      LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 
-                CommonUserFactory userFactory = new CommonUserFactory();
-                return userFactory.create(email, displayName, password, dateTime);
-              });
+      System.out.println("Display Name: " + displayName);
+      System.out.println("Created At: " + dateTime);
+
+      CommonUserFactory userFactory = new CommonUserFactory();
+      user = userFactory.create(userData.uid, email, displayName, password, dateTime);
+      return user;
     } catch (IOException | JSONException e) {
       System.out.println("Error during authentication: " + e.getMessage());
-      return Optional.empty();
+      return null;
     }
   }
 
   // Return username, time user was created
-  private Optional<String[]> getUserData(String idToken) {
+  private RawUserData getUserData(String idToken) {
     JSONObject jsonBody = new JSONObject();
     jsonBody.put("idToken", idToken);
 
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    RequestBody body = RequestBody.create(JSON, jsonBody.toString());
+    RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
 
-    String url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg";
+    String url = Constants.ACCOUNT_LOOKUP_URL + "?key=" + Constants.FIREBASE_AUTH_ID;
 
     Request request = new Request.Builder().url(url).post(body).build();
 
@@ -91,23 +112,24 @@ public class FirebaseUserDataAccessObject
       Response response = client.newCall(request).execute();
       String responseData = response.body().string();
 
-      if (response.isSuccessful()) {
-        System.out.println("User lookup successful: " + responseData);
-        JSONObject responseObject = new JSONObject(responseData);
-        JSONObject userObject = responseObject.getJSONArray("users").getJSONObject(0);
-
-        String displayName = userObject.optString("displayName", "No display name");
-        String createdAt =
-            userObject.optString("createdAt", "1701105347550L"); // TODO: remove this placeholder
-
-        return Optional.ofNullable(new String[] {displayName, createdAt});
-      } else {
-        System.out.println("User lookup failed: " + responseData);
-        return Optional.empty();
+      if (!response.isSuccessful()) {
+        throw new Exception("User lookup failed: " + responseData);
       }
-    } catch (IOException | JSONException e) {
+
+      System.out.println("User lookup successful: " + responseData);
+      JSONObject responseObject = new JSONObject(responseData);
+      JSONObject userObject = responseObject.getJSONArray("users").getJSONObject(0);
+
+      String uid = userObject.optString("localId");
+      String displayName = userObject.optString("displayName", "No display name");
+      String createdAt =
+          userObject.optString(
+              "createdAt", Instant.now().toEpochMilli() + "L"); // TODO: remove this placeholder
+
+      return new RawUserData(uid, displayName, Long.parseLong(createdAt));
+    } catch (Exception e) {
       e.printStackTrace();
-      return Optional.empty();
+      return null;
     }
   }
 
@@ -118,17 +140,15 @@ public class FirebaseUserDataAccessObject
 
   @Override
   public Optional<String> save(User user) {
-    Map<String, String> jsonMap = new HashMap<>();
-    jsonMap.put("email", user.getEmail());
+    JSONObject jsonBody =
+        new JSONObject().put("email", user.getEmail()).put("password", user.getPassword());
     // jsonMap.put("displayName", user.getName());  // For Firebase default field to store username
-    jsonMap.put("password", user.getPassword());
-    JSONObject jsonBody = new JSONObject(jsonMap);
     System.out.println(jsonBody.toString()); // TODO: Get rid of this
 
     HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.SIGNUP_URL).newBuilder();
     urlBuilder.addQueryParameter("key", Constants.FIREBASE_AUTH_ID);
 
-    RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonBody.toString());
+    RequestBody body = RequestBody.create(jsonBody.toString(), MediaType.parse("application/json"));
 
     Request request = new Request.Builder().url(urlBuilder.build().toString()).post(body).build();
     try {
@@ -146,5 +166,10 @@ public class FirebaseUserDataAccessObject
     } catch (IOException | JSONException e) {
       return Optional.of("Unexpected error signing up. Please try again.");
     }
+  }
+
+  @Override
+  public User get() {
+    return user;
   }
 }
