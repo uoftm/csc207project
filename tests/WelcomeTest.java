@@ -1,4 +1,3 @@
-
 import interface_adapter.ViewManagerModel;
 import javax.swing.*;
 import org.junit.Assert;

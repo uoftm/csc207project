@@ -57,11 +57,6 @@ public class FirebaseUserDataAccessObject
         throw new RuntimeException("Authentication failed: " + failureMessage);
       }
 
-      if (!authResponse.isSuccessful()) {
-        String failureMessage = authResponseJson.getJSONObject("error").getString("message");
-        throw new RuntimeException("Authentication failed: " + failureMessage);
-      }
-
       if (!authResponseJson.has("idToken") || !authResponseJson.has("localId")) {
         throw new RuntimeException("Invalid authentication response");
       }
@@ -92,7 +87,7 @@ public class FirebaseUserDataAccessObject
       String responseData = response.body().string();
 
       if (!response.isSuccessful()) {
-        throw new RuntimeException("User lookup failed on our end, please try again.");
+        throw new RuntimeException("User lookup failed, please try again.");
       }
 
       System.out.println("User lookup successful: " + responseData);
@@ -110,7 +105,7 @@ public class FirebaseUserDataAccessObject
       return userFactory.create(uid, email, displayName, password, dateTime);
     } catch (IOException e) {
       e.printStackTrace();
-      throw new RuntimeException("Unable to connect to our backend, please try again.");
+      throw new RuntimeException("User lookup failed, please try again.");
     }
   }
 
