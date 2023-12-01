@@ -56,5 +56,10 @@ public class RoomsView implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         RoomsState state = (RoomsState) evt.getNewValue();
         userUidLabel.setText(state.getUserUid());
+
+        for (var room : state.getAvailableRooms()) {
+            String name = room.getName();
+            System.out.println(name);
+        }
     }
 }

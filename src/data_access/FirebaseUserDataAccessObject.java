@@ -1,11 +1,13 @@
 package data_access;
 
-import entity.CommonUserFactory;
-import entity.User;
+import entity.*;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import okhttp3.*;
 import org.json.JSONArray;
@@ -171,5 +173,25 @@ public class FirebaseUserDataAccessObject
   @Override
   public User get() {
     return user;
+  }
+
+  // TODO: Remove dummy code and connect to firebase
+  @Override
+  public List<Room> getAvailableRooms(User user) {
+    DisplayUser dummy_display_user = new DisplayUser("foo", "bar");
+    List<DisplayUser> users = new ArrayList<>();
+    users.add(dummy_display_user);
+
+    Instant timestamp = Instant.now();
+    Message message = new Message(timestamp, "This is a test message.", dummy_display_user.getUid());
+
+    List<Message> messages = new ArrayList<>();
+    messages.add(message);
+
+    Room dummy_room = new Room("", "baz", users, messages);
+    List<Room> availableRooms = new ArrayList<>();
+    availableRooms.add(dummy_room);
+
+    return availableRooms;
   }
 }

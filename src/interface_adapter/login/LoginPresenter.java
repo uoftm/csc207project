@@ -37,6 +37,7 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
 
     RoomsState roomsState = roomsViewModel.getState();
     roomsState.setUserUid(response.getUid());
+    roomsState.setAvailableRooms(response.getAvailableRooms());
     this.roomsViewModel.setState(roomsState);
     this.roomsViewModel.firePropertyChanged();
 

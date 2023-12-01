@@ -1,6 +1,9 @@
 package use_case.login;
 
+import entity.Room;
 import entity.User;
+
+import java.util.List;
 
 public class LoginInteractor implements LoginInputBoundary {
   final LoginUserDataAccessInterface userDataAccessObject;
@@ -28,7 +31,9 @@ public class LoginInteractor implements LoginInputBoundary {
     if (!password.equals(user.getPassword())) {
       loginPresenter.prepareFailView("Incorrect password for " + email + ".");
     } else {
-      LoginOutputData loginOutputData = new LoginOutputData(user.getName(), user.getUid(), true);
+      List<Room> availableRooms = userDataAccessObject.getAvailableRooms(user);
+
+      LoginOutputData loginOutputData = new LoginOutputData(user.getName(), user.getUid(), availableRooms, true);
       loginPresenter.prepareSuccessView(loginOutputData);
     }
   }
