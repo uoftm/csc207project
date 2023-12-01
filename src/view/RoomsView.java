@@ -1,6 +1,7 @@
 package view;
 
 import entities.Message;
+import entities.user_entities.User;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
@@ -67,8 +68,13 @@ public class RoomsView implements PropertyChangeListener {
             String message = currentState.getSendMessage();
             String roomUid = currentState.getRoomUid();
             if (message != null) {
-              String userUid = currentState.getUserUid();
-              roomsController.sendMessage(roomUid, userUid, message);
+              User user = currentState.getUser();
+              for (var room : currentState.getAvailableRooms()) {
+                if (room.getUid().equals(roomUid)) {
+                  roomsController.sendMessage(room, user, message);
+                  break;
+                }
+              }
             }
           }
         });
@@ -90,7 +96,15 @@ public class RoomsView implements PropertyChangeListener {
         evt -> {
           if (evt.getSource().equals(refreshButton)) {
             RoomsState currentState = viewModel.getState();
-            roomsController.loadMessages(currentState.getRoomUid(), currentState.getUserUid());
+            String roomUid = currentState.getRoomUid();
+            User user = currentState.getUser();
+
+            for (var room : currentState.getAvailableRooms()) {
+              if (room.getUid().equals(roomUid)) {
+                roomsController.loadMessages(room, user);
+                break;
+              }
+            }
           }
         });
   }

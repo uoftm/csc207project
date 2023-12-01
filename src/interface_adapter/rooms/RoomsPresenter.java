@@ -14,7 +14,6 @@ public class RoomsPresenter implements RoomsOutputBoundary {
   public void prepareSuccessView(RoomsOutputData response) {
     // On success, switch back to the same view for now
     System.out.println("success");
-    System.out.println(response.getName());
   }
 
   @Override

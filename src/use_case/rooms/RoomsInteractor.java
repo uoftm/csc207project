@@ -1,5 +1,8 @@
 package use_case.rooms;
 
+import entities.Room;
+import entities.user_entities.User;
+
 public class RoomsInteractor implements RoomsInputBoundary {
   final RoomsOutputBoundary roomsPresenter;
   final RoomsDataAccessInterface roomsDataAccessObject;
@@ -13,8 +16,11 @@ public class RoomsInteractor implements RoomsInputBoundary {
   // TODO: Write more interactions like this
   @Override
   public void loadMessages(RoomsInputData roomsInputData) {
-    String roomUid = roomsInputData.getRoomUid();
-    String userUid = roomsInputData.getUserUid();
+    Room room = roomsInputData.getRoom();
+    User user = roomsInputData.getUser();
+
+    String roomUid = room.getUid();
+    String userUid = user.getUid();
 
     // Make request with uid here
     // and get error (can be null) back
@@ -26,10 +32,10 @@ public class RoomsInteractor implements RoomsInputBoundary {
     boolean valid = roomsDataAccessObject.validateRoomAccess(roomUid, userUid);
 
     if (valid) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(roomUid, valid, null);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, null);
       roomsPresenter.prepareFailView(roomsOutputData);
     } else {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(roomUid, valid, "Error here");
+      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, "Error here");
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
@@ -37,8 +43,11 @@ public class RoomsInteractor implements RoomsInputBoundary {
   // TODO: Write more interactions like this
   @Override
   public void sendMessage(RoomsInputData roomsInputData) {
-    String roomUid = roomsInputData.getRoomUid();
-    String userUid = roomsInputData.getUserUid();
+    Room room = roomsInputData.getRoom();
+    User user = roomsInputData.getUser();
+
+    String roomUid = room.getUid();
+    String userUid = user.getUid();
     String message = roomsInputData.getMessage();
 
     // Make request with uid here
@@ -54,10 +63,10 @@ public class RoomsInteractor implements RoomsInputBoundary {
     boolean valid = roomsDataAccessObject.validateRoomAccess(roomUid, userUid);
 
     if (valid) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(roomUid, valid, null);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, null);
       roomsPresenter.prepareFailView(roomsOutputData);
     } else {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(roomUid, valid, "Error here");
+      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, "Error here");
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }

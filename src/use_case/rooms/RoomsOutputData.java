@@ -1,37 +1,27 @@
 package use_case.rooms;
 
-import entities.Message;
-import entities.user_entities.DisplayUser;
-import java.util.List;
+import entities.Room;
+import entities.user_entities.User;
 
 public class RoomsOutputData {
-  String uid;
-  String name;
-  List<DisplayUser> users;
-  List<Message> messages;
+  User user;
+  Room room;
   private final boolean useCaseFailed;
   private final String error; // null iff useCaseFailed is false
 
-  public RoomsOutputData(String uid, boolean useCaseFailed, String error) {
-    this.uid = uid;
+  public RoomsOutputData(Room room, User user, boolean useCaseFailed, String error) {
+    this.room = room;
+    this.user = user;
     this.useCaseFailed = useCaseFailed;
     this.error = error;
   }
 
-  public String getUid() {
-    return uid;
+  public Room getRoom() {
+    return room;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public List<DisplayUser> getUsers() {
-    return users;
-  }
-
-  public List<Message> getMessages() {
-    return messages;
+  public User getUser() {
+    return user;
   }
 
   public boolean getUseCaseFailed() {

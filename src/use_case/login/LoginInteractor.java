@@ -32,8 +32,7 @@ public class LoginInteractor implements LoginInputBoundary {
     } else {
       List<Room> availableRooms = userDataAccessObject.getAvailableRooms(user);
 
-      LoginOutputData loginOutputData =
-          new LoginOutputData(user.getName(), user.getUid(), availableRooms, true);
+      LoginOutputData loginOutputData = new LoginOutputData(user, availableRooms, true);
       loginPresenter.prepareSuccessView(loginOutputData);
     }
   }

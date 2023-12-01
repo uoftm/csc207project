@@ -1,22 +1,25 @@
 package use_case.rooms;
 
+import entities.Room;
+import entities.user_entities.User;
+
 public class RoomsInputData {
-  String roomUid;
-  String userUid;
+  Room room;
+  User user;
   String message; // Nullable field
 
-  public RoomsInputData(String roomUid, String userUid, String message) {
-    this.roomUid = roomUid;
-    this.userUid = userUid;
+  public RoomsInputData(Room room, User user, String message) {
+    this.room = room;
+    this.user = user;
     this.message = message;
   }
 
-  String getRoomUid() {
-    return roomUid;
+  Room getRoom() {
+    return room;
   }
 
-  String getUserUid() {
-    return userUid;
+  User getUser() {
+    return user;
   }
 
   String getMessage() {

@@ -2,18 +2,19 @@ package interface_adapter.rooms;
 
 import entities.Message;
 import entities.Room;
+import entities.user_entities.User;
 import java.util.List;
 
 public class RoomsState {
   private String roomUid;
-  private String userUid;
+  private User user;
   private List<Room> availableRooms;
   private List<Message> displayMessages;
   private String sendMessage;
 
   public RoomsState(RoomsState copy) {
     roomUid = copy.roomUid;
-    userUid = copy.userUid;
+    user = copy.user;
     availableRooms = copy.availableRooms;
     displayMessages = copy.displayMessages;
     sendMessage = copy.sendMessage;
@@ -21,12 +22,16 @@ public class RoomsState {
 
   public RoomsState() {}
 
-  public String getUserUid() {
-    return userUid;
+  public User getUser() {
+    return user;
   }
 
-  public void setUserUid(String userUid) {
-    this.userUid = userUid;
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public String getUserUid() {
+    return user.getUid();
   }
 
   public String getRoomUid() {

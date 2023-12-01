@@ -1,5 +1,7 @@
 package interface_adapter.rooms;
 
+import entities.Room;
+import entities.user_entities.User;
 import use_case.rooms.RoomsInputBoundary;
 import use_case.rooms.RoomsInputData;
 
@@ -10,14 +12,14 @@ public class RoomsController {
     this.roomsUseCaseInteractor = roomsUseCaseInteractor;
   }
 
-  public void loadMessages(String roomUid, String userUid) {
-    RoomsInputData roomsInputData = new RoomsInputData(roomUid, userUid, null);
+  public void loadMessages(Room room, User user) {
+    RoomsInputData roomsInputData = new RoomsInputData(room, user, null);
     // Example request to load messages
     roomsUseCaseInteractor.loadMessages(roomsInputData);
   }
 
-  public void sendMessage(String roomUid, String userUid, String message) {
-    RoomsInputData roomsInputData = new RoomsInputData(roomUid, userUid, message);
+  public void sendMessage(Room room, User user, String message) {
+    RoomsInputData roomsInputData = new RoomsInputData(room, user, message);
     // Example request to send message
     roomsUseCaseInteractor.sendMessage(roomsInputData);
   }
