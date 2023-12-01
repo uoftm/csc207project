@@ -2,6 +2,7 @@ package view;
 
 import entities.auth.User;
 import entities.rooms.Message;
+import entities.rooms.Room;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
@@ -15,30 +16,40 @@ import javax.swing.*;
 
 public class RoomsView implements PropertyChangeListener {
   public JPanel contentPane;
-  private JPanel paneInternals;
-  private JScrollPane scrollPane;
+  private JPanel messagesPaneInternals;
+  private JPanel roomsPaneInternals;
   private JTextField messageTextField;
   private JButton send;
-  private JPanel rawPane;
+  private JPanel messagesPane;
   private JLabel roomNameLabel;
-  private JButton changeRoomButton;
   private JButton refreshButton;
+  private JPanel roomsPane;
   private final RoomsViewModel viewModel;
 
   public RoomsView(RoomsViewModel viewModel, RoomsController roomsController) {
     this.viewModel = viewModel;
     this.viewModel.addPropertyChangeListener(this);
 
-    rawPane.setLayout(new BoxLayout(rawPane, BoxLayout.Y_AXIS));
+    messagesPane.setLayout(new BoxLayout(messagesPane, BoxLayout.Y_AXIS));
+    roomsPane.setLayout(new BoxLayout(roomsPane, BoxLayout.Y_AXIS));
 
-    paneInternals = new JPanel();
-    paneInternals.setLayout(new BoxLayout(paneInternals, BoxLayout.Y_AXIS));
+    messagesPaneInternals = new JPanel();
+    messagesPaneInternals.setLayout(new BoxLayout(messagesPaneInternals, BoxLayout.Y_AXIS));
 
-    JScrollPane scrollPane = new JScrollPane(paneInternals);
-    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    scrollPane.setPreferredSize(new Dimension(300, 300));
+    JScrollPane messagesScrollPane = new JScrollPane(messagesPaneInternals);
+    messagesScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    messagesScrollPane.setPreferredSize(new Dimension(300, 300));
 
-    rawPane.add(scrollPane);
+    messagesPane.add(messagesScrollPane);
+
+    roomsPaneInternals = new JPanel();
+    roomsPaneInternals.setLayout(new BoxLayout(roomsPaneInternals, BoxLayout.Y_AXIS));
+
+    JScrollPane roomsScrollPane = new JScrollPane(roomsPaneInternals);
+    roomsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    roomsScrollPane.setPreferredSize(new Dimension(300, 300));
+
+    roomsPane.add(roomsScrollPane);
 
     messageTextField.addKeyListener(
         new KeyListener() {
@@ -79,19 +90,6 @@ public class RoomsView implements PropertyChangeListener {
           }
         });
 
-    changeRoomButton.addActionListener(
-        evt -> {
-          if (evt.getSource().equals(changeRoomButton)) {
-            RoomsState currentState = viewModel.getState();
-            // This needs to stay like this for now.
-            // Changing rooms will be local to this file
-            // and not involve the controller since we
-            // already have everything here.
-            currentState.setRoomUid("baz");
-            viewModel.firePropertyChanged();
-          }
-        });
-
     refreshButton.addActionListener(
         evt -> {
           if (evt.getSource().equals(refreshButton)) {
@@ -113,32 +111,41 @@ public class RoomsView implements PropertyChangeListener {
   public void propertyChange(PropertyChangeEvent evt) {
     RoomsState state = (RoomsState) evt.getNewValue();
     String currentRoomUid = state.getRoomUid();
-
     String roomName = "";
+
+    List<Room> rooms = state.getAvailableRooms();
+    roomsPaneInternals.removeAll();
+    roomsPaneInternals.revalidate();
+    roomsPaneInternals.repaint();
+
     for (var room : state.getAvailableRooms()) {
+      var roomView = new RoomView(room, viewModel);
+      roomsPaneInternals.add(roomView);
+
       if (room.getUid().equals(currentRoomUid)) {
         roomName = room.getName();
 
         List<Message> messages = room.getMessages();
         state.setDisplayMessages(messages);
 
-        paneInternals.removeAll();
-        paneInternals.revalidate();
-        paneInternals.repaint();
+        messagesPaneInternals.removeAll();
+        messagesPaneInternals.revalidate();
+        messagesPaneInternals.repaint();
 
         for (var message : messages) {
           var messageView = new MessageView(message.content);
-          paneInternals.add(messageView);
+          messagesPaneInternals.add(messageView);
         }
 
         // See https://horstmann.com/unblog/2007-06-11/swing-single-thread-rule.html
         SwingUtilities.invokeLater(
             () -> {
-              paneInternals.revalidate();
-              paneInternals.repaint();
+              messagesPaneInternals.revalidate();
+              messagesPaneInternals.repaint();
             });
       }
     }
-    roomNameLabel.setText(state.getRoomUid());
+
+    roomNameLabel.setText(roomName);
   }
 }

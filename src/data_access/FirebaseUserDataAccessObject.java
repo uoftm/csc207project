@@ -188,6 +188,24 @@ public class FirebaseUserDataAccessObject
     List<Room> availableRooms = new ArrayList<>();
     availableRooms.add(dummy_room);
 
+    List<DisplayUser> users2 = new ArrayList<>();
+    DisplayUser dummy_display_user2 = new DisplayUser("foo", "bar");
+    users2.add(dummy_display_user);
+
+    List<Message> messages2 = new ArrayList<>();
+    for (Integer i = 0; i < 20; i++) {
+      Instant timestamp2 = Instant.now();
+      Message message2 =
+          new Message(
+              timestamp,
+              "This is test message number " + i.toString(),
+              dummy_display_user.getUid());
+      messages2.add(message2);
+    }
+
+    Room dummy_room2 = new Room("Bro Chat", "Another test room!", users2, messages2);
+    availableRooms.add(dummy_room2);
+
     return availableRooms;
   }
 }
