@@ -72,6 +72,7 @@ public class Main {
             viewManagerModel,
             loginViewModel,
             loggedInViewModel,
+            roomsViewModel,
             userDataAccessObject,
             switchViewController);
     views.add(loginView.contentPane, loginView.viewName);
@@ -83,12 +84,7 @@ public class Main {
             new FirebaseRoomsDataAccessObject();
 
     RoomsView roomsView =
-            RoomsUseCaseFactory.create(roomsDataAccessObject,
-                    roomsViewModel
-            );
-    // views.add(roomsView.contentPane, roomsView.viewName);
-
-    var messageDataAccessObject = new FirebaseMessageDataAccessObject(client);
+            RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel);
 
     LoggedInView loggedInView = new LoggedInView(loggedInViewModel, roomsView, switchViewController);
     views.add(loggedInView.contentPane, loggedInView.viewName);

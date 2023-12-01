@@ -4,6 +4,8 @@ import entity.Message;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
+import interface_adapter.logged_in.LoggedInViewModel;
+import interface_adapter.logged_in.LoggedInState;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -20,7 +22,6 @@ public class RoomsView implements PropertyChangeListener {
     private JPanel rawPane;
     private JLabel userUidLabel;
     private JLabel roomUidLabel;
-
     private final RoomsViewModel viewModel;
 
     public RoomsView(RoomsViewModel viewModel, RoomsController roomsController) {
@@ -53,10 +54,7 @@ public class RoomsView implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        var state = (List<Message>) evt.getNewValue();
-        for (var message : state) {
-            var messageView = new MessageView(message.content);
-            paneInternals.add(messageView);
-        }
+        RoomsState state = (RoomsState) evt.getNewValue();
+        userUidLabel.setText(state.getUserUid());
     }
 }

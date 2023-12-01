@@ -1,5 +1,6 @@
 package app;
 
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsPresenter;
 import interface_adapter.rooms.RoomsViewModel;

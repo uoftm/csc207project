@@ -5,6 +5,7 @@ import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.io.IOException;
 import javax.swing.*;
@@ -23,13 +24,14 @@ public class LoginUseCaseFactory {
       ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,
       LoggedInViewModel loggedInViewModel,
+      RoomsViewModel roomsViewModel,
       LoginUserDataAccessInterface userDataAccessObject,
       SwitchViewController switchViewController) {
 
     try {
       LoginController loginController =
           createLoginController(
-              viewManagerModel, loginViewModel, loggedInViewModel, userDataAccessObject);
+              viewManagerModel, loginViewModel, loggedInViewModel, roomsViewModel, userDataAccessObject);
 
       return new LoginView(loginViewModel, loginController, switchViewController);
     } catch (IOException e) {
@@ -42,11 +44,12 @@ public class LoginUseCaseFactory {
       ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,
       LoggedInViewModel loggedInViewModel,
+      RoomsViewModel roomsViewModel,
       LoginUserDataAccessInterface userDataAccessObject)
       throws IOException {
 
     LoginOutputBoundary loginOutputBoundary =
-        new LoginPresenter(viewManagerModel, loggedInViewModel, loginViewModel);
+        new LoginPresenter(viewManagerModel, loggedInViewModel, roomsViewModel, loginViewModel);
     LoginInputBoundary loginInteractor =
         new LoginInteractor(userDataAccessObject, loginOutputBoundary);
 

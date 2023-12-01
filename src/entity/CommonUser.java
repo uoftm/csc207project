@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 class CommonUser implements User {
   private final String uid;
-
   private final String email;
   private final String name;
   private final String password;

@@ -19,6 +19,9 @@ public class RoomsState {
     public String getUserUid() {
         return userUid;
     }
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
+    }
     public String getRoomUid() {
         return roomUid;
     }
