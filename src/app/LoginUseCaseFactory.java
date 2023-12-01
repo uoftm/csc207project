@@ -31,7 +31,11 @@ public class LoginUseCaseFactory {
     try {
       LoginController loginController =
           createLoginController(
-              viewManagerModel, loginViewModel, loggedInViewModel, roomsViewModel, userDataAccessObject);
+              viewManagerModel,
+              loginViewModel,
+              loggedInViewModel,
+              roomsViewModel,
+              userDataAccessObject);
 
       return new LoginView(loginViewModel, loginController, switchViewController);
     } catch (IOException e) {

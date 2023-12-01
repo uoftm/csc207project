@@ -2,7 +2,6 @@ package use_case.login;
 
 import entity.Room;
 import entity.User;
-
 import java.util.List;
 
 public class LoginInteractor implements LoginInputBoundary {
@@ -33,7 +32,8 @@ public class LoginInteractor implements LoginInputBoundary {
     } else {
       List<Room> availableRooms = userDataAccessObject.getAvailableRooms(user);
 
-      LoginOutputData loginOutputData = new LoginOutputData(user.getName(), user.getUid(), availableRooms, true);
+      LoginOutputData loginOutputData =
+          new LoginOutputData(user.getName(), user.getUid(), availableRooms, true);
       loginPresenter.prepareSuccessView(loginOutputData);
     }
   }

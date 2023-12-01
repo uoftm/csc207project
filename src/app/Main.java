@@ -1,6 +1,5 @@
 package app;
 
-import data_access.FirebaseMessageDataAccessObject;
 import data_access.FirebaseRoomsDataAccessObject;
 import data_access.FirebaseSettingsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
@@ -12,7 +11,6 @@ import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
-import java.util.ArrayList;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import use_case.rooms.RoomsDataAccessInterface;
@@ -80,13 +78,12 @@ public class Main {
     WelcomeView welcomeView = new WelcomeView(switchViewController);
     views.add(welcomeView.contentPane, WelcomeView.viewName);
 
-    RoomsDataAccessInterface roomsDataAccessObject =
-            new FirebaseRoomsDataAccessObject();
+    RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject();
 
-    RoomsView roomsView =
-            RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel);
+    RoomsView roomsView = RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel);
 
-    LoggedInView loggedInView = new LoggedInView(loggedInViewModel, roomsView, switchViewController);
+    LoggedInView loggedInView =
+        new LoggedInView(loggedInViewModel, roomsView, switchViewController);
     views.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsDataAccessInterface settingsUserDataAccessObject =

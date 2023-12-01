@@ -1,7 +1,6 @@
 package data_access;
 
 import entity.*;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -183,12 +182,13 @@ public class FirebaseUserDataAccessObject
     users.add(dummy_display_user);
 
     Instant timestamp = Instant.now();
-    Message message = new Message(timestamp, "This is a test message.", dummy_display_user.getUid());
+    Message message =
+        new Message(timestamp, "This is a test message.", dummy_display_user.getUid());
 
     List<Message> messages = new ArrayList<>();
     messages.add(message);
 
-    Room dummy_room = new Room("", "baz", users, messages);
+    Room dummy_room = new Room("baz", "A test room!", users, messages);
     List<Room> availableRooms = new ArrayList<>();
     availableRooms.add(dummy_room);
 

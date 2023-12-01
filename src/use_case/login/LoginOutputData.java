@@ -1,7 +1,6 @@
 package use_case.login;
 
 import entity.Room;
-
 import java.util.List;
 
 public class LoginOutputData {
@@ -10,7 +9,8 @@ public class LoginOutputData {
   private final List<Room> availableRooms;
   private final boolean useCaseFailed;
 
-  public LoginOutputData(String username, String userUid, List<Room> availableRooms, boolean useCaseFailed) {
+  public LoginOutputData(
+      String username, String userUid, List<Room> availableRooms, boolean useCaseFailed) {
     this.username = username;
     this.userUid = userUid;
     this.availableRooms = availableRooms;
@@ -20,9 +20,12 @@ public class LoginOutputData {
   public String getUsername() {
     return username;
   }
+
   public String getUid() {
     return userUid;
   }
 
-  public List<Room> getAvailableRooms() { return availableRooms; }
+  public List<Room> getAvailableRooms() {
+    return availableRooms;
+  }
 }
