@@ -1,6 +1,6 @@
 package interface_adapter.settings;
 
-import entities.user_entities.AbstractUser;
+import entities.auth.AbstractUser;
 
 public class SettingsState {
   private AbstractUser user;

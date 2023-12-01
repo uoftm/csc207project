@@ -1,9 +1,10 @@
 package data_access;
 
-import entities.*;
-import entities.user_entities.DisplayUser;
-import entities.user_entities.User;
-import entities.user_entities.UserFactory;
+import entities.auth.DisplayUser;
+import entities.auth.User;
+import entities.auth.UserFactory;
+import entities.rooms.Message;
+import entities.rooms.Room;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;

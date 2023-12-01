@@ -1,6 +1,6 @@
 package use_case.settings;
 
-import entities.user_entities.AbstractUser;
+import entities.auth.AbstractUser;
 
 public class SettingsOutputData {
 

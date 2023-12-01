@@ -1,6 +1,6 @@
-package entities;
+package entities.rooms;
 
-import entities.user_entities.DisplayUser;
+import entities.auth.DisplayUser;
 import java.util.List;
 
 public class Room {

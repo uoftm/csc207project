@@ -1,6 +1,6 @@
 package interface_adapter.settings;
 
-import entities.user_entities.AbstractUser;
+import entities.auth.AbstractUser;
 import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInputData;
 

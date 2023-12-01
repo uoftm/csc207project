@@ -1,7 +1,7 @@
 package use_case.login;
 
-import entities.Room;
-import entities.user_entities.User;
+import entities.auth.User;
+import entities.rooms.Room;
 import java.util.List;
 
 public class LoginOutputData {

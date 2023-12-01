@@ -1,7 +1,7 @@
 package use_case.search;
 
-import entities.SearchChatMessage;
-import entities.SearchRequest;
+import entities.search.SearchChatMessage;
+import entities.search.SearchRequest;
 
 public class SearchInteractor implements SearchInputBoundary {
 

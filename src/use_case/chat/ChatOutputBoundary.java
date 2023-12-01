@@ -1,6 +1,6 @@
 package use_case.chat;
 
-import entities.Message;
+import entities.rooms.Message;
 import java.util.List;
 
 public interface ChatOutputBoundary {

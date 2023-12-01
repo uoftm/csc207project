@@ -1,8 +1,8 @@
 package use_case.search;
 
-import entities.SearchChatMessage;
-import entities.SearchReponseArray;
-import entities.SearchRequest;
+import entities.search.SearchChatMessage;
+import entities.search.SearchReponseArray;
+import entities.search.SearchRequest;
 
 public interface SearchDataAccessInterface {
 

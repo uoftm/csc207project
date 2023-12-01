@@ -1,7 +1,7 @@
 package view;
 
-import entities.Message;
-import entities.user_entities.User;
+import entities.auth.User;
+import entities.rooms.Message;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;

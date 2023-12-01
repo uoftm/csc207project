@@ -1,4 +1,4 @@
-package entities.user_entities;
+package entities.auth;
 
 import java.time.LocalDateTime;
 

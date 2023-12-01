@@ -1,6 +1,6 @@
 package data_access;
 
-import entities.user_entities.User;
+import entities.auth.User;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

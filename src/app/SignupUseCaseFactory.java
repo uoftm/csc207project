@@ -1,6 +1,6 @@
 package app;
 
-import entities.user_entities.UserFactory;
+import entities.auth.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;

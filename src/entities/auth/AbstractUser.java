@@ -1,4 +1,4 @@
-package entities.user_entities;
+package entities.auth;
 
 public interface AbstractUser {
   String getUid();

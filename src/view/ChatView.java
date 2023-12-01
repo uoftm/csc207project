@@ -1,6 +1,6 @@
 package view;
 
-import entities.Message;
+import entities.rooms.Message;
 import interface_adapter.chat.ChatController;
 import interface_adapter.chat.ChatState;
 import interface_adapter.chat.ChatViewModel;

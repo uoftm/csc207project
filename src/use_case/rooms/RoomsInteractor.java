@@ -1,7 +1,7 @@
 package use_case.rooms;
 
-import entities.Room;
-import entities.user_entities.User;
+import entities.auth.User;
+import entities.rooms.Room;
 
 public class RoomsInteractor implements RoomsInputBoundary {
   final RoomsOutputBoundary roomsPresenter;

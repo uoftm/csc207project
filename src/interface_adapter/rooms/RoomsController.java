@@ -1,7 +1,7 @@
 package interface_adapter.rooms;
 
-import entities.Room;
-import entities.user_entities.User;
+import entities.auth.User;
+import entities.rooms.Room;
 import use_case.rooms.RoomsInputBoundary;
 import use_case.rooms.RoomsInputData;
 

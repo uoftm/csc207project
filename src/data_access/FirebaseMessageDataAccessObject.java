@@ -1,6 +1,6 @@
 package data_access;
 
-import entities.Message;
+import entities.rooms.Message;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;

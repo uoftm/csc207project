@@ -1,4 +1,5 @@
-package entities;
+package entities.auth;
+
 
 public class PasswordValidatorService implements PasswordValidator {
   public boolean passwordIsValid(String password) {

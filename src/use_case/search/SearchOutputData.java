@@ -1,6 +1,6 @@
 package use_case.search;
 
-import entities.SearchReponseArray;
+import entities.search.SearchReponseArray;
 
 public class SearchOutputData {
   private final SearchReponseArray response;

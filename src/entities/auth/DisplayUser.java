@@ -1,4 +1,4 @@
-package entities.user_entities;
+package entities.auth;
 
 public class DisplayUser implements AbstractUser {
   private final String uid;

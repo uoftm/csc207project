@@ -1,6 +1,6 @@
 package use_case.chat;
 
-import entities.Message;
+import entities.rooms.Message;
 import java.time.Instant;
 
 public class ChatInteractor implements ChatInputBoundary {

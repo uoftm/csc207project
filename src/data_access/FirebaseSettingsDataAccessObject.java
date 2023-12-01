@@ -1,6 +1,6 @@
 package data_access;
 
-import entities.user_entities.AbstractUser;
+import entities.auth.AbstractUser;
 import use_case.settings.SettingsDataAccessInterface;
 
 public class FirebaseSettingsDataAccessObject implements SettingsDataAccessInterface {

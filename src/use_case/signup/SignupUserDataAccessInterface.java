@@ -1,6 +1,6 @@
 package use_case.signup;
 
-import entities.user_entities.User;
+import entities.auth.User;
 import java.util.Optional;
 
 public interface SignupUserDataAccessInterface {

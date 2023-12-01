@@ -1,9 +1,9 @@
 package data_access;
 
-import entities.SearchChatMessage;
-import entities.SearchReponseArray;
-import entities.SearchRequest;
-import entities.SearchResponse;
+import entities.search.SearchChatMessage;
+import entities.search.SearchReponseArray;
+import entities.search.SearchRequest;
+import entities.search.SearchResponse;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
