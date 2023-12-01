@@ -16,22 +16,13 @@ import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import use_case.chat.ChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FirebaseUserDataAccessObject
-    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
-  class RawUserData {
-    String uid;
-    String displayName;
-    long createdAt;
-
-    RawUserData(String uid, String displayName, long createdAt) {
-      this.uid = uid;
-      this.displayName = displayName;
-      this.createdAt = createdAt;
-    }
-  }
+    implements SignupUserDataAccessInterface,
+        LoginUserDataAccessInterface {
 
   private final OkHttpClient client;
 
@@ -59,47 +50,35 @@ public class FirebaseUserDataAccessObject
     Request authRequest = new Request.Builder().url(authUrl).post(body).build();
 
     try {
-      Response authResponse = client.newCall(authRequest).execute();
-      String authResponseData = authResponse.body().string();
+          Response authResponse = client.newCall(authRequest).execute();
+          String authResponseData = authResponse.body().string();
+        JSONObject authResponseJson = new JSONObject(authResponseData);
+
+        if (!authResponse.isSuccessful()) {
+            String failureMessage = authResponseJson.getJSONObject("error").getString("message");
+            throw new RuntimeException("Authentication failed: " + failureMessage);
+        }
 
       if (!authResponse.isSuccessful()) {
-        System.out.println("Authentication failed: " + authResponseData);
-        return null;
+        String failureMessage = authResponseJson.getJSONObject("error").getString("message");
+        throw new RuntimeException("Authentication failed: " + failureMessage);
       }
 
-      JSONObject authResponseJson = new JSONObject(authResponseData);
-
       if (!authResponseJson.has("idToken") || !authResponseJson.has("localId")) {
-        System.out.println("Invalid authentication response");
-        return null;
+          throw new RuntimeException("Invalid authentication response");
       }
 
       String idToken = authResponseJson.getString("idToken");
 
-      var userData = getUserData(idToken);
-      if (userData == null) {
-        return null;
-      }
-
-      String displayName = userData.displayName;
-      long createdAt = userData.createdAt;
-      Instant instant = Instant.ofEpochMilli(createdAt);
-      LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-
-      System.out.println("Display Name: " + displayName);
-      System.out.println("Created At: " + dateTime);
-
-      UserFactory userFactory = new UserFactory();
-      user = userFactory.create(userData.uid, email, displayName, password, dateTime);
-      return user;
+      // Initialize user from our idToken and password by making a second call to Firebase
+      return getUserData(idToken, password);
     } catch (IOException | JSONException e) {
-      System.out.println("Error during authentication: " + e.getMessage());
-      return null;
+      throw new RuntimeException("Internal error during authentication, please try again.");
     }
   }
 
-  // Return username, time user was created
-  private RawUserData getUserData(String idToken) {
+  // Return username, time user was created, and uid
+  private User getUserData(String idToken, String password) {
     JSONObject jsonBody = new JSONObject();
     jsonBody.put("idToken", idToken);
 
@@ -115,7 +94,7 @@ public class FirebaseUserDataAccessObject
       String responseData = response.body().string();
 
       if (!response.isSuccessful()) {
-        throw new Exception("User lookup failed: " + responseData);
+        throw new RuntimeException("User lookup failed on our end, please try again.");
       }
 
       System.out.println("User lookup successful: " + responseData);
@@ -123,15 +102,16 @@ public class FirebaseUserDataAccessObject
       JSONObject userObject = responseObject.getJSONArray("users").getJSONObject(0);
 
       String uid = userObject.optString("localId");
+      String email = userObject.optString("email");
       String displayName = userObject.optString("displayName", "No display name");
-      String createdAt =
-          userObject.optString(
-              "createdAt", Instant.now().toEpochMilli() + "L"); // TODO: remove this placeholder
+      long createdAt = Long.parseLong(userObject.optString("createdAt"));
+      LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
 
-      return new RawUserData(uid, displayName, Long.parseLong(createdAt));
-    } catch (Exception e) {
+      UserFactory userFactory = new UserFactory();
+      return userFactory.create(uid, email, displayName, password, dateTime);
+    } catch (IOException e) {
       e.printStackTrace();
-      return null;
+      throw new RuntimeException("Unable to connect to our backend, please try again.");
     }
   }
 

@@ -14,6 +14,14 @@ public class WelcomeView {
   private JButton signup;
   private JPanel body;
 
+  public JButton getLoginButton() {
+      return login;
+  }
+
+  public JButton getSignupButton() {
+      return signup;
+  }
+
   public WelcomeView(SwitchViewController switchViewController) {
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);
