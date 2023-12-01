@@ -1,8 +1,7 @@
 package use_case.login;
 
-import entities.rooms.Room;
 import entities.auth.User;
-
+import entities.rooms.Room;
 import java.util.List;
 
 public class LoginInteractor implements LoginInputBoundary {

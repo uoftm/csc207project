@@ -15,11 +15,11 @@ public class WelcomeView {
   private JPanel body;
 
   public JButton getLoginButton() {
-      return login;
+    return login;
   }
 
   public JButton getSignupButton() {
-      return signup;
+    return signup;
   }
 
   public WelcomeView(SwitchViewController switchViewController) {

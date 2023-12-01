@@ -1,17 +1,8 @@
-import static java.lang.Thread.sleep;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.switch_view.SwitchViewController;
-import interface_adapter.switch_view.SwitchViewPresenter;
 import javax.swing.*;
-
 import org.junit.Assert;
 import org.junit.Test;
-import use_case.switch_view.SwitchViewInputBoundary;
-import use_case.switch_view.SwitchViewInteractor;
-import use_case.switch_view.SwitchViewOutputBoundary;
 import view.LoginView;
 import view.SignupView;
 import view.WelcomeView;

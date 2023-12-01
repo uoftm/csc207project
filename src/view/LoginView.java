@@ -25,7 +25,7 @@ public class LoginView implements PropertyChangeListener {
   private JTextField email;
   private JPasswordField password;
 
-public LoginView(
+  public LoginView(
       LoginViewModel loginViewModel,
       LoginController controller,
       SwitchViewController switchViewController) {
@@ -95,6 +95,7 @@ public LoginView(
   public JButton getLoginButton() {
     return logIn;
   }
+
   public JButton getCancelButton() {
     return cancel;
   }

@@ -16,13 +16,11 @@ import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.chat.ChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FirebaseUserDataAccessObject
-    implements SignupUserDataAccessInterface,
-        LoginUserDataAccessInterface {
+    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
 
   private final OkHttpClient client;
 
@@ -50,14 +48,14 @@ public class FirebaseUserDataAccessObject
     Request authRequest = new Request.Builder().url(authUrl).post(body).build();
 
     try {
-          Response authResponse = client.newCall(authRequest).execute();
-          String authResponseData = authResponse.body().string();
-        JSONObject authResponseJson = new JSONObject(authResponseData);
+      Response authResponse = client.newCall(authRequest).execute();
+      String authResponseData = authResponse.body().string();
+      JSONObject authResponseJson = new JSONObject(authResponseData);
 
-        if (!authResponse.isSuccessful()) {
-            String failureMessage = authResponseJson.getJSONObject("error").getString("message");
-            throw new RuntimeException("Authentication failed: " + failureMessage);
-        }
+      if (!authResponse.isSuccessful()) {
+        String failureMessage = authResponseJson.getJSONObject("error").getString("message");
+        throw new RuntimeException("Authentication failed: " + failureMessage);
+      }
 
       if (!authResponse.isSuccessful()) {
         String failureMessage = authResponseJson.getJSONObject("error").getString("message");
@@ -65,7 +63,7 @@ public class FirebaseUserDataAccessObject
       }
 
       if (!authResponseJson.has("idToken") || !authResponseJson.has("localId")) {
-          throw new RuntimeException("Invalid authentication response");
+        throw new RuntimeException("Invalid authentication response");
       }
 
       String idToken = authResponseJson.getString("idToken");
@@ -105,7 +103,8 @@ public class FirebaseUserDataAccessObject
       String email = userObject.optString("email");
       String displayName = userObject.optString("displayName", "No display name");
       long createdAt = Long.parseLong(userObject.optString("createdAt"));
-      LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
+      LocalDateTime dateTime =
+          LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
 
       UserFactory userFactory = new UserFactory();
       return userFactory.create(uid, email, displayName, password, dateTime);
