@@ -1,5 +1,6 @@
-package entity;
+package entities.search;
 
+import entities.rooms.Message;
 import java.time.Instant;
 
 public class SearchChatMessage extends Message {

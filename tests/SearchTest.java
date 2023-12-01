@@ -1,8 +1,8 @@
 import static org.junit.Assert.*;
 
 import data_access.SearchDataAccessObject;
-import entity.SearchChatMessage;
-import entity.SearchRequest;
+import entities.search.SearchChatMessage;
+import entities.search.SearchRequest;
 import java.time.Instant;
 import okhttp3.OkHttpClient;
 import org.junit.Test;

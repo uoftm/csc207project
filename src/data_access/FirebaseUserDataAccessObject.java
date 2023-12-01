@@ -1,24 +1,26 @@
 package data_access;
 
-import entity.CommonUserFactory;
-import entity.User;
+import entities.auth.DisplayUser;
+import entities.auth.User;
+import entities.auth.UserFactory;
+import entities.rooms.Message;
+import entities.rooms.Room;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.chat.ChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FirebaseUserDataAccessObject
-    implements SignupUserDataAccessInterface,
-        LoginUserDataAccessInterface,
-        ChatUserDataAccessInterface {
+    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
   class RawUserData {
     String uid;
     String displayName;
@@ -87,7 +89,7 @@ public class FirebaseUserDataAccessObject
       System.out.println("Display Name: " + displayName);
       System.out.println("Created At: " + dateTime);
 
-      CommonUserFactory userFactory = new CommonUserFactory();
+      UserFactory userFactory = new UserFactory();
       user = userFactory.create(userData.uid, email, displayName, password, dateTime);
       return user;
     } catch (IOException | JSONException e) {
@@ -168,8 +170,24 @@ public class FirebaseUserDataAccessObject
     }
   }
 
+  // TODO: Remove dummy code and connect to firebase
   @Override
-  public User get() {
-    return user;
+  public List<Room> getAvailableRooms(User user) {
+    DisplayUser dummy_display_user = new DisplayUser("foo", "bar");
+    List<DisplayUser> users = new ArrayList<>();
+    users.add(dummy_display_user);
+
+    Instant timestamp = Instant.now();
+    Message message =
+        new Message(timestamp, "This is a test message.", dummy_display_user.getUid());
+
+    List<Message> messages = new ArrayList<>();
+    messages.add(message);
+
+    Room dummy_room = new Room("baz", "A test room!", users, messages);
+    List<Room> availableRooms = new ArrayList<>();
+    availableRooms.add(dummy_room);
+
+    return availableRooms;
   }
 }

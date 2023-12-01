@@ -1,6 +1,6 @@
 package interface_adapter.settings;
 
-import entity.User;
+import entities.auth.AbstractUser;
 import use_case.settings.SettingsInputBoundary;
 import use_case.settings.SettingsInputData;
 
@@ -12,7 +12,7 @@ public class SettingsController {
     this.settingsUseCaseInteractor = settingsUseCaseInteractor;
   }
 
-  public void execute(User user) {
+  public void execute(AbstractUser user) {
     SettingsInputData settingsInputData = new SettingsInputData(user);
     settingsUseCaseInteractor.execute(settingsInputData);
   }

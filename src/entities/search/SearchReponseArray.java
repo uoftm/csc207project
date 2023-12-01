@@ -1,4 +1,4 @@
-package entity;
+package entities.search;
 
 import java.util.ArrayList;
 

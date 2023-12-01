@@ -1,16 +1,16 @@
 package use_case.settings;
 
-import entity.User;
+import entities.auth.AbstractUser;
 
 public class SettingsInputData {
 
-  User user;
+  AbstractUser user;
 
-  public SettingsInputData(User user) {
+  public SettingsInputData(AbstractUser user) {
     this.user = user;
   }
 
-  User getUser() {
+  AbstractUser getUser() {
     return user;
   }
 }

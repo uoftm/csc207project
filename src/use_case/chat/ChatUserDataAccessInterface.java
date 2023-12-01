@@ -1,7 +1,7 @@
 package use_case.chat;
 
-import entity.User;
+import entities.auth.AbstractUser;
 
 public interface ChatUserDataAccessInterface {
-  User get();
+  AbstractUser get();
 }

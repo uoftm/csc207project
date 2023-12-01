@@ -1,4 +1,4 @@
-package entity;
+package entities.rooms;
 
 import java.time.Instant;
 

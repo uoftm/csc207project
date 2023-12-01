@@ -1,10 +1,9 @@
-package entity;
+package entities.auth;
 
 import java.time.LocalDateTime;
 
-class CommonUser implements User {
+public class User implements AbstractUser {
   private final String uid;
-
   private final String email;
   private final String name;
   private final String password;
@@ -16,7 +15,7 @@ class CommonUser implements User {
    * @param name
    * @param password
    */
-  CommonUser(String uid, String email, String name, String password, LocalDateTime creationTime) {
+  public User(String uid, String email, String name, String password, LocalDateTime creationTime) {
     this.uid = uid;
     this.email = email;
     this.name = name;
@@ -30,21 +29,18 @@ class CommonUser implements User {
   }
 
   @Override
-  public String getEmail() {
-    return email;
-  }
-
-  @Override
   public String getName() {
     return name;
   }
 
-  @Override
+  public String getEmail() {
+    return email;
+  }
+
   public String getPassword() {
     return password;
   }
 
-  @Override
   public LocalDateTime getCreationTime() {
     return creationTime;
   }

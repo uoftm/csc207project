@@ -69,20 +69,20 @@
           </vspacer>
         </children>
       </grid>
-      <grid id="e3524" binding="chat" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="66cdc" binding="rooms" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
-          <hspacer id="40e6b">
+          <hspacer id="c0476">
             <constraints/>
           </hspacer>
-          <splitpane id="8dab3">
+          <splitpane id="69bd7">
             <constraints/>
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="f5211" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="e2939" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <splitpane position="right"/>
@@ -90,19 +90,19 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <vspacer id="744bd">
+                  <vspacer id="a1d1b">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </vspacer>
-                  <vspacer id="c9537">
+                  <vspacer id="bd182">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </vspacer>
                 </children>
               </grid>
-              <component id="d4afa" class="javax.swing.JLabel">
+              <component id="4cc16" class="javax.swing.JLabel">
                 <constraints>
                   <splitpane position="left"/>
                 </constraints>
@@ -112,7 +112,7 @@
               </component>
             </children>
           </splitpane>
-          <hspacer id="11398">
+          <hspacer id="16195">
             <constraints/>
           </hspacer>
         </children>
