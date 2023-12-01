@@ -92,6 +92,14 @@ public class LoginView implements PropertyChangeListener {
         });
   }
 
+  public JButton getLoginButton() {
+    return logIn;
+  }
+
+  public JButton getCancelButton() {
+    return cancel;
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     LoginState state = (LoginState) evt.getNewValue();
