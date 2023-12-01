@@ -8,8 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
-public class RoomView extends JPanel {
-  public RoomView(Room room, RoomsViewModel viewModel) {
+public class ListedRoom extends JPanel {
+  public ListedRoom(Room room, RoomsViewModel viewModel) {
     String roomName = room.getName(); // Cannot be null (there should be a test for this)
     JLabel roomNameLabel = new JLabel(roomName);
     roomNameLabel.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Change cursor to hand on hover

@@ -119,7 +119,7 @@ public class RoomsView implements PropertyChangeListener {
     roomsPaneInternals.repaint();
 
     for (var room : state.getAvailableRooms()) {
-      var roomView = new RoomView(room, viewModel);
+      var roomView = new ListedRoom(room, viewModel);
       roomsPaneInternals.add(roomView);
 
       if (room.getUid().equals(currentRoomUid)) {
