@@ -1,7 +1,7 @@
 package data_access;
 
-import entity.DisplayUser;
-import entity.Message;
+import entities.Message;
+import entities.user_entities.DisplayUser;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;

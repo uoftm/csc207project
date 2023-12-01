@@ -3,8 +3,8 @@ import static java.lang.Thread.sleep;
 import app.SettingsUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
 import data_access.FirebaseSettingsDataAccessObject;
-import entity.CommonUserFactory;
-import entity.User;
+import entities.user_entities.User;
+import entities.user_entities.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
@@ -21,7 +21,7 @@ public class SettingsTest {
   public void testSettingsLoad() {
     // Dummy test user
     LocalDateTime date = LocalDateTime.now();
-    CommonUserFactory userFactory = new CommonUserFactory();
+    UserFactory userFactory = new UserFactory();
     User test_user = userFactory.create("123", "test@gmail.com", "Test", "1234", date);
 
     CardLayout cardLayout = new CardLayout();

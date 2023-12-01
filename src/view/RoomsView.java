@@ -1,6 +1,6 @@
 package view;
 
-import entity.Message;
+import entities.Message;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;

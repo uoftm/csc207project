@@ -1,6 +1,6 @@
 package interface_adapter.chat;
 
-import entity.Message;
+import entities.Message;
 import java.util.List;
 import use_case.chat.ChatOutputBoundary;
 

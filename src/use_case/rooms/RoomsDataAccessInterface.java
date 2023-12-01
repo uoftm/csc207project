@@ -1,6 +1,6 @@
 package use_case.rooms;
 
-import entity.Message;
+import entities.Message;
 import java.util.List;
 
 public interface RoomsDataAccessInterface {

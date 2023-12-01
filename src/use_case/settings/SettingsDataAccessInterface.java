@@ -1,8 +1,8 @@
 package use_case.settings;
 
-import entity.User;
+import entities.user_entities.AbstractUser;
 
 public interface SettingsDataAccessInterface {
 
-  String op(User user);
+  String op(AbstractUser user);
 }

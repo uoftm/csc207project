@@ -2,8 +2,8 @@ import static java.lang.Thread.sleep;
 
 import app.ChatUseCaseFactory;
 import data_access.FirebaseMessageDataAccessObject;
-import entity.CommonUserFactory;
-import entity.User;
+import entities.user_entities.User;
+import entities.user_entities.UserFactory;
 import interface_adapter.chat.ChatViewModel;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class ChatTest {
   public void displaysMessages() {
     OkHttpClient client = new OkHttpClient();
     User user =
-        new CommonUserFactory()
+        new UserFactory()
             .create(
                 "test-user-id",
                 "example@example.com",

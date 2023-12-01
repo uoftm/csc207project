@@ -1,7 +1,7 @@
 package interface_adapter.rooms;
 
-import entity.Message;
-import entity.Room;
+import entities.Message;
+import entities.Room;
 import java.util.List;
 
 public class RoomsState {

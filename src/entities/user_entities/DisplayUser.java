@@ -1,6 +1,6 @@
-package entity;
+package entities.user_entities;
 
-public class DisplayUser {
+public class DisplayUser implements AbstractUser {
   private final String uid;
   private final String name;
 

@@ -1,7 +1,7 @@
 package use_case.rooms;
 
-import entity.DisplayUser;
-import entity.Message;
+import entities.Message;
+import entities.user_entities.DisplayUser;
 import java.util.List;
 
 public class RoomsOutputData {

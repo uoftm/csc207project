@@ -1,6 +1,9 @@
 package data_access;
 
-import entity.*;
+import entities.*;
+import entities.user_entities.DisplayUser;
+import entities.user_entities.User;
+import entities.user_entities.UserFactory;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,14 +15,11 @@ import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.chat.ChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FirebaseUserDataAccessObject
-    implements SignupUserDataAccessInterface,
-        LoginUserDataAccessInterface,
-        ChatUserDataAccessInterface {
+    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
   class RawUserData {
     String uid;
     String displayName;
@@ -88,7 +88,7 @@ public class FirebaseUserDataAccessObject
       System.out.println("Display Name: " + displayName);
       System.out.println("Created At: " + dateTime);
 
-      CommonUserFactory userFactory = new CommonUserFactory();
+      UserFactory userFactory = new UserFactory();
       user = userFactory.create(userData.uid, email, displayName, password, dateTime);
       return user;
     } catch (IOException | JSONException e) {
@@ -167,11 +167,6 @@ public class FirebaseUserDataAccessObject
     } catch (IOException | JSONException e) {
       return Optional.of("Unexpected error signing up. Please try again.");
     }
-  }
-
-  @Override
-  public User get() {
-    return user;
   }
 
   // TODO: Remove dummy code and connect to firebase

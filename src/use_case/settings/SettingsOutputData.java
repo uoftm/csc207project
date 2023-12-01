@@ -1,18 +1,18 @@
 package use_case.settings;
 
-import entity.User;
+import entities.user_entities.AbstractUser;
 
 public class SettingsOutputData {
 
-  User user;
+  AbstractUser user;
   private final boolean useCaseFailed;
 
-  public SettingsOutputData(User user, boolean useCaseFailed) {
+  public SettingsOutputData(AbstractUser user, boolean useCaseFailed) {
     this.user = user;
     this.useCaseFailed = useCaseFailed;
   }
 
-  public User getUser() {
+  public AbstractUser getUser() {
     return user;
   }
 }

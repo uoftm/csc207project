@@ -1,11 +1,11 @@
 package data_access;
 
-import entity.User;
+import entities.user_entities.AbstractUser;
 import use_case.settings.SettingsDataAccessInterface;
 
 public class FirebaseSettingsDataAccessObject implements SettingsDataAccessInterface {
   @Override
-  public String op(User user) {
+  public String op(AbstractUser user) {
     return "";
   }
 }
