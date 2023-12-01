@@ -131,6 +131,7 @@ public class RoomsView implements PropertyChangeListener {
           paneInternals.add(messageView);
         }
 
+        // See https://horstmann.com/unblog/2007-06-11/swing-single-thread-rule.html
         SwingUtilities.invokeLater(
             () -> {
               paneInternals.revalidate();
