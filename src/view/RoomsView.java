@@ -1,38 +1,62 @@
 package view;
 
+import entity.Message;
 import interface_adapter.rooms.RoomsController;
+import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
-import interface_adapter.settings.SettingsState;
-import interface_adapter.switch_view.SwitchViewController;
 
-import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import javax.swing.*;
 
 public class RoomsView implements PropertyChangeListener {
-    public static final String viewName = "rooms";
-    private final RoomsViewModel roomsViewModel;
-    private final RoomsController roomsController;
-    private JPanel panel1;
     public JPanel contentPane;
+    private JPanel paneInternals;
+    private JScrollPane scrollPane;
+    private JTextField message;
+    private JButton send;
+    private JPanel rawPane;
+    private JLabel userUidLabel;
+    private JLabel roomUidLabel;
 
-    public RoomsView(
-            RoomsViewModel roomViewModel,
-            RoomsController controller,
-            SwitchViewController switchViewController) {
-        this.roomsController = controller;
-        this.roomsViewModel = roomViewModel;
-        this.roomsViewModel.addPropertyChangeListener(this);
+    private final RoomsViewModel viewModel;
 
-        contentPane.setBackground(ViewConstants.background);
-        contentPane.setPreferredSize(ViewConstants.windowSize);
+    public RoomsView(RoomsViewModel viewModel, RoomsController roomsController) {
+        this.viewModel = viewModel;
+        this.viewModel.addPropertyChangeListener(this);
+
+        rawPane.setLayout(new BoxLayout(rawPane, BoxLayout.Y_AXIS));
+
+        paneInternals = new JPanel();
+        paneInternals.setLayout(new BoxLayout(paneInternals, BoxLayout.Y_AXIS));
+
+        JScrollPane scrollPane = new JScrollPane(paneInternals);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(300, 300));
+
+        rawPane.add(scrollPane);
+
+        send.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(send)) {
+                        RoomsState currentState = viewModel.getState();
+
+                        String txt = currentState.getUserUid();
+                        System.out.println(txt);
+                    }
+                });
+
+        roomsController.loadMessages("", "");
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SettingsState state = (SettingsState) evt.getNewValue();
-        if (state.getError() != null) {
-            JOptionPane.showMessageDialog(contentPane, state.getError());
+        var state = (List<Message>) evt.getNewValue();
+        for (var message : state) {
+            var messageView = new MessageView(message.content);
+            paneInternals.add(messageView);
         }
     }
 }

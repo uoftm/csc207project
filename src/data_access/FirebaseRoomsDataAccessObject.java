@@ -19,4 +19,9 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
         messages.add(message);
         return messages;
     }
+
+    @Override
+    public boolean validateRoomAccess(String roomUid, String userUid) {
+        return true;
+    }
 }

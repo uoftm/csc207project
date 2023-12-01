@@ -1,14 +1,17 @@
 package use_case.rooms;
 
 public class RoomsInputData {
+    String roomUid;
+    String userUid;
 
-    String uid;
-
-    public RoomsInputData(String uid) {
-        this.uid = uid;
+    public RoomsInputData(String roomUid, String userUid) {
+        this.roomUid = roomUid;
+        this.userUid = userUid;
     }
-
     String getRoomUid() {
-        return uid;
+        return roomUid;
+    }
+    String getUserUid() {
+        return userUid;
     }
 }

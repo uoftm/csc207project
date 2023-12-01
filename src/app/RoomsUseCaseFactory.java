@@ -11,13 +11,12 @@ import view.RoomsView;
 public class RoomsUseCaseFactory {
     public static RoomsView create(
             RoomsDataAccessInterface roomsDataAccessObject,
-            RoomsViewModel roomsViewModel,
-            SwitchViewController switchViewController
+            RoomsViewModel roomsViewModel
     ) {
         RoomsPresenter roomsPresenter = new RoomsPresenter(roomsViewModel);
         RoomsInteractor roomsInteractor =
                 new RoomsInteractor(roomsDataAccessObject, roomsPresenter);
         RoomsController roomsController = new RoomsController(roomsInteractor);
-        return new RoomsView(roomsViewModel, roomsController, switchViewController);
+        return new RoomsView(roomsViewModel, roomsController);
     }
 }

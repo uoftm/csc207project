@@ -3,6 +3,7 @@ package view;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.switch_view.SwitchViewController;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
@@ -17,14 +18,15 @@ public class LoggedInView implements PropertyChangeListener {
   private JButton logoutButton;
   private JButton settingsButton;
   public JPanel contentPane;
-  private JPanel chat;
   private JPanel nav;
   private JPanel navBody;
   private JPanel navMiddle;
+  private JPanel rooms;
+  private JPanel panel1;
 
   public LoggedInView(
       LoggedInViewModel loggedInViewModel,
-      ChatView chatView,
+      RoomsView roomsView,
       SwitchViewController switchViewController) {
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);
@@ -52,7 +54,7 @@ public class LoggedInView implements PropertyChangeListener {
           }
         });
 
-    chat.add(chatView.contentPane);
+    rooms.add(roomsView.contentPane);
   }
 
   @Override

@@ -10,9 +10,9 @@ public class RoomsController {
         this.roomsUseCaseInteractor = roomsUseCaseInteractor;
     }
 
-    public void execute(String name) {
-        RoomsInputData settingsInputData = new RoomsInputData(name);
+    public void loadMessages(String roomUid, String userUid) {
+        RoomsInputData roomsInputData = new RoomsInputData(roomUid, userUid);
         // Example request to load messages
-        roomsUseCaseInteractor.loadMessages(settingsInputData);
+        roomsUseCaseInteractor.loadMessages(roomsInputData);
     }
 }

@@ -16,14 +16,24 @@ public class RoomsInteractor implements RoomsInputBoundary {
     // TODO: Write more interactions like this
     @Override
     public void loadMessages(RoomsInputData roomsInputData) {
-        String uid = roomsInputData.getRoomUid();
+        String roomUid = roomsInputData.getRoomUid();
+        String userUid = roomsInputData.getUserUid();
 
         // Make request with uid here
         // and get error (can be null) back
         String error = null;
         boolean useCaseFailed = error != null;
 
-        RoomsOutputData roomsOutputData = new RoomsOutputData(uid, useCaseFailed, error);
-        roomsPresenter.prepareSuccessView(roomsOutputData);
+        // This request should be validated through firebase
+        // to check if this user belongs to this room that exists
+        boolean valid = roomsDataAccessObject.validateRoomAccess(roomUid, userUid);
+
+        if (valid) {
+            RoomsOutputData roomsOutputData = new RoomsOutputData(roomUid, valid, null);
+            roomsPresenter.prepareFailView(roomsOutputData);
+        } else {
+            RoomsOutputData roomsOutputData = new RoomsOutputData(roomUid, valid, "Error here");
+            roomsPresenter.prepareFailView(roomsOutputData);
+        }
     }
 }

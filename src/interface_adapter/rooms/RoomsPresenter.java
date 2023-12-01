@@ -7,7 +7,6 @@ import use_case.rooms.RoomsOutputData;
 import java.util.List;
 
 public class RoomsPresenter implements RoomsOutputBoundary {
-
     private final RoomsViewModel roomsViewModel;
 
     public RoomsPresenter(RoomsViewModel roomsViewModel) {
