@@ -14,5 +14,5 @@ public interface RoomsDataAccessInterface {
 
   Response<String> addUserToRoom(Room room, User user, String email);
 
-  Response<Room> createRoom(User user, String createRoom);
+  Response<Room> createRoom(User user, String roomToCreateName);
 }

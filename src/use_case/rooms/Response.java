@@ -1,12 +1,11 @@
 package use_case.rooms;
 
 public class Response<T> {
-  private String error; // Nullable field
+  private String error;
   private T val;
 
-  public Response(T val, String error) {
+  public Response(T val) {
     this.val = val;
-    this.error = error;
   }
 
   public boolean isError() {
@@ -15,6 +14,10 @@ public class Response<T> {
 
   public String getError() {
     return this.error;
+  }
+
+  public void setError(String error) {
+    this.error = error;
   }
 
   public T getVal() {

@@ -22,8 +22,8 @@ public class FirebaseRoomsDataAccessObjectTest {
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
     Response<List<Message>> response = dao.loadMessages(dummyRoom, dummyUser);
+    assertFalse(response.isError());
     assertNotNull(response.getVal());
-    assertNull(response.getError());
   }
 
   @Test
@@ -32,13 +32,15 @@ public class FirebaseRoomsDataAccessObjectTest {
         new FirebaseRoomsDataAccessObject() {
           @Override
           public Response<List<Message>> loadMessages(Room room, User user) {
-            return new Response<>(null, "Failed to retrieve messages.");
+            Response<List<Message>> response = new Response<>(null);
+            response.setError("Failed to retrieve messages.");
+            return response;
           }
         };
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
     Response<List<Message>> response = dao.loadMessages(dummyRoom, dummyUser);
-    assertNull(response.getVal());
+    assertTrue(response.isError());
     assertEquals("Failed to retrieve messages.", response.getError());
   }
 
@@ -49,8 +51,8 @@ public class FirebaseRoomsDataAccessObjectTest {
     User dummyUser = createDummyUser();
     String message = "Test message";
     Response<String> response = dao.sendMessage(dummyRoom, dummyUser, message);
+    assertFalse(response.isError());
     assertEquals("success", response.getVal());
-    assertNull(response.getError());
   }
 
   @Test
@@ -59,14 +61,16 @@ public class FirebaseRoomsDataAccessObjectTest {
         new FirebaseRoomsDataAccessObject() {
           @Override
           public Response<String> sendMessage(Room room, User user, String message) {
-            return new Response<>(null, "Failed to send message.");
+            Response<String> response = new Response<>(null);
+            response.setError("Failed to send message.");
+            return response;
           }
         };
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
     String message = "Test message";
     Response<String> response = dao.sendMessage(dummyRoom, dummyUser, message);
-    assertNull(response.getVal());
+    assertTrue(response.isError());
     assertEquals("Failed to send message.", response.getError());
   }
 
@@ -86,8 +90,8 @@ public class FirebaseRoomsDataAccessObjectTest {
     User dummyUser = createDummyUser();
     String email = "test@example.com";
     Response<String> response = dao.addUserToRoom(dummyRoom, dummyUser, email);
+    assertFalse(response.isError());
     assertEquals("User added successfully!", response.getVal());
-    assertNull(response.getError());
   }
 
   @Test
@@ -96,14 +100,16 @@ public class FirebaseRoomsDataAccessObjectTest {
         new FirebaseRoomsDataAccessObject() {
           @Override
           public Response<String> addUserToRoom(Room room, User user, String email) {
-            return new Response<>(null, "Failed to add user.");
+            Response<String> response = new Response<>(null);
+            response.setError("Failed to add user.");
+            return response;
           }
         };
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
     String email = "test@example.com";
     Response<String> response = dao.addUserToRoom(dummyRoom, dummyUser, email);
-    assertNull(response.getVal());
+    assertTrue(response.isError());
     assertEquals("Failed to add user.", response.getError());
   }
 
@@ -113,8 +119,8 @@ public class FirebaseRoomsDataAccessObjectTest {
     User dummyUser = createDummyUser();
     String roomName = "New Room";
     Response<Room> response = dao.createRoom(dummyUser, roomName);
+    assertFalse(response.isError());
     assertNotNull(response.getVal());
-    assertNull(response.getError());
   }
 
   @Test
@@ -123,13 +129,15 @@ public class FirebaseRoomsDataAccessObjectTest {
         new FirebaseRoomsDataAccessObject() {
           @Override
           public Response<Room> createRoom(User user, String roomName) {
-            return new Response<>(null, "Failed to create room.");
+            Response<Room> response = new Response<>(null);
+            response.setError("Failed to create room.");
+            return response;
           }
         };
     User dummyUser = createDummyUser();
     String roomName = "New Room";
     Response<Room> response = dao.createRoom(dummyUser, roomName);
-    assertNull(response.getVal());
+    assertTrue(response.isError());
     assertEquals("Failed to create room.", response.getError());
   }
 

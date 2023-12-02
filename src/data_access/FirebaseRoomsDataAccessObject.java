@@ -24,9 +24,11 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     messages.add(message);
 
     // Uncomment this to see what happens when you fail to get messages:
-    // return new Response<>(null, "Failed to retrieve messages.");
+    // Response<List<Messages>> response = new Response<List<Messages>>(null);
+    // response.setError("Failed to retrieve messages.");
+    // return response;
 
-    return new Response<>(messages, null);
+    return new Response<>(messages);
   }
 
   @Override
@@ -35,9 +37,11 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     System.out.println(message);
 
     // Uncomment this to see what happens when you fail to send a message:
-    // return new Response<>(null, "Failed to send message.");
+    // Response<String> response = new Response<String>(null);
+    // response.setError("Failed to send message.");
+    // return response;
 
-    return new Response<>("success", null);
+    return new Response<>("success");
   }
 
   @Override
@@ -53,13 +57,15 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     // user being a member of room has already been validated at this point
 
     // Uncomment this to see what happens when you fail to create room:
-    // return new Response<>(null, "Failed to add user.");
+    // Response<String> response = new Response<String>(null);
+    // response.setError("Failed to add user.");
+    // return response;
 
-    return new Response<>("User added successfully!", null);
+    return new Response<>("User added successfully!");
   }
 
   @Override
-  public Response<Room> createRoom(User user, String createRoom) {
+  public Response<Room> createRoom(User user, String roomToCreateName) {
     // TODO: You should create a room with members {user} and return this new room as a Room entity
     DisplayUser me = new DisplayUser(user.getUid(), user.getName());
     List<DisplayUser> users = new ArrayList<>();
@@ -67,9 +73,11 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     users.add(me);
 
     // Uncomment this to see what happens when you fail to create room:
-    // return new Response<Room>(null, "Failed to create room.");
+    // Response<Room> response = new Response<Room>(null);
+    // response.setError("Failed to create room.");
+    // return response;
 
-    Room room = new Room("1234", createRoom, users, messages);
-    return new Response<>(room, null);
+    Room room = new Room("1234", roomToCreateName, users, messages);
+    return new Response<>(room);
   }
 }

@@ -11,21 +11,10 @@ public class RoomsState {
   private List<Room> availableRooms;
   private List<Message> displayMessages;
   private String sendMessage;
-  private String email; // Other user email
-  private String createRoom; // Room to create
-  private String error; // Nullable field
+  private String userToAddEmail;
+  private String roomToCreateName;
+  private String error;
   private String success;
-
-  public RoomsState(RoomsState copy) {
-    roomUid = copy.roomUid;
-    user = copy.user;
-    availableRooms = copy.availableRooms;
-    displayMessages = copy.displayMessages;
-    sendMessage = copy.sendMessage;
-    email = copy.email;
-    error = copy.error;
-    success = copy.success;
-  }
 
   public RoomsState() {}
 
@@ -73,20 +62,20 @@ public class RoomsState {
     this.sendMessage = sendMessage;
   }
 
-  public String getEmail() {
-    return email;
+  public String getUserToAddEmail() {
+    return userToAddEmail;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  public void setUserToAddEmail(String userToAddEmail) {
+    this.userToAddEmail = userToAddEmail;
   }
 
-  public String getCreateRoom() {
-    return createRoom;
+  public String getRoomToCreateName() {
+    return roomToCreateName;
   }
 
-  public void setCreateRoom(String createRoom) {
-    this.createRoom = createRoom;
+  public void setRoomToCreateName(String roomToCreateName) {
+    this.roomToCreateName = roomToCreateName;
   }
 
   public String getError() {

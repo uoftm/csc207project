@@ -22,13 +22,13 @@ public class RoomsController {
     roomsUseCaseInteractor.sendMessage(roomsInputData);
   }
 
-  public void addUserToRoom(Room room, User user, String email) {
-    RoomsInputData roomsInputData = new RoomsInputData(room, user, null, email, null);
+  public void addUserToRoom(Room room, User user, String userToAddEmail) {
+    RoomsInputData roomsInputData = new RoomsInputData(room, user, null, userToAddEmail, null);
     roomsUseCaseInteractor.addUserToRoom(roomsInputData);
   }
 
-  public void createRoom(User user, String createRoom) {
-    RoomsInputData roomsInputData = new RoomsInputData(null, user, null, null, createRoom);
+  public void createRoom(User user, String roomToCreateName) {
+    RoomsInputData roomsInputData = new RoomsInputData(null, user, null, null, roomToCreateName);
     roomsUseCaseInteractor.createRoom(roomsInputData);
   }
 }

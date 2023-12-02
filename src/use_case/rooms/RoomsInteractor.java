@@ -91,9 +91,9 @@ public class RoomsInteractor implements RoomsInputBoundary {
   @Override
   public void createRoom(RoomsInputData roomsInputData) {
     User user = roomsInputData.getUser();
-    String createRoom = roomsInputData.getCreateRoom();
+    String roomToCreateName = roomsInputData.getRoomToCreateName();
 
-    Response<Room> response = roomsDataAccessObject.createRoom(user, createRoom);
+    Response<Room> response = roomsDataAccessObject.createRoom(user, roomToCreateName);
     if (response.isError()) {
       RoomsOutputData roomsOutputData =
           new RoomsOutputData(null, null, null, response.getError(), null);
