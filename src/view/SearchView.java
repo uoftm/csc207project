@@ -3,6 +3,7 @@ package view;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.switch_view.SwitchViewController;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -17,10 +18,14 @@ public class SearchView implements PropertyChangeListener {
 
   private JTextField searchBoxText;
   public JPanel contentPane;
+  private JButton backButton;
 
   private SearchViewModel searchViewModel;
 
-  public SearchView(SearchController searchController, SearchViewModel searchviewModel) {
+  public SearchView(
+      SearchController searchController,
+      SearchViewModel searchviewModel,
+      SwitchViewController switchViewController) {
     this.searchViewModel = searchviewModel;
     searchviewModel.addPropertyChangeListener(this);
 
@@ -50,6 +55,13 @@ public class SearchView implements PropertyChangeListener {
               searchViewModel.getState().getRoomID(),
               currentState.getSearchedTerm(),
               searchViewModel.getState().getUserUid());
+        });
+
+    backButton.addActionListener(
+        evt -> {
+          if (evt.getSource().equals(backButton)) {
+            switchViewController.switchTo(LoggedInView.viewName);
+          }
         });
   }
 

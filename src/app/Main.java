@@ -88,7 +88,7 @@ public class Main {
         SearchUseCaseFactory.createSearchController(
             searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
 
-    var searchView = new SearchView(searchController, searchViewModel);
+    var searchView = new SearchView(searchController, searchViewModel, switchViewController);
     viewManagerModel.add(searchView.contentPane, SearchView.viewName);
 
     var searchedView = new SearchedView(searchedViewModel, switchViewController);
