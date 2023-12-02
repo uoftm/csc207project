@@ -87,8 +87,15 @@ public class Main {
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
             searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+
+    var searchView = new SearchView(searchController, searchViewModel);
+    viewManagerModel.add(searchView.contentPane, SearchView.viewName);
+
+    var searchedView = new SearchedView(searchedViewModel, switchViewController);
+    viewManagerModel.add(searchedView.contentPane, SearchedView.viewName);
+
     StartSearchController startSearchController =
-        new StartSearchController(viewManagerModel, searchController, searchViewModel);
+        new StartSearchController(viewManagerModel, searchViewModel);
 
     RoomsView roomsView =
         RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel, startSearchController);

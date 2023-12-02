@@ -37,19 +37,6 @@ public class SearchedView implements PropertyChangeListener {
 
     rawPanel.add(scrollPane);
 
-    var highlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
-    for (var response : searchedViewModel.getState().getResponses()) {
-      JPanel eachMessagePanel = new JPanel();
-      eachMessagePanel.setLayout(new BorderLayout());
-      JLabel label = new JLabel(response.label);
-      eachMessagePanel.add(label);
-      JTextPane textPane = new JTextPane();
-      textPane.setText(response.rawMessage);
-      eachMessagePanel.add(textPane, BorderLayout.CENTER);
-
-      paneInternals.add(eachMessagePanel);
-    }
-
     backButton.addActionListener(
         evt -> {
           if (evt.getSource().equals(backButton)) {
@@ -62,5 +49,18 @@ public class SearchedView implements PropertyChangeListener {
   public void propertyChange(PropertyChangeEvent evt) {
 
     SearchedState state = (SearchedState) evt.getNewValue();
+
+    var highlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+    for (var response : searchedViewModel.getState().getResponses()) {
+      JPanel eachMessagePanel = new JPanel();
+      eachMessagePanel.setLayout(new BorderLayout());
+      JLabel label = new JLabel(response.label);
+      eachMessagePanel.add(label);
+      JTextPane textPane = new JTextPane();
+      textPane.setText(response.rawMessage);
+      eachMessagePanel.add(textPane, BorderLayout.CENTER);
+
+      paneInternals.add(eachMessagePanel);
+    }
   }
 }
