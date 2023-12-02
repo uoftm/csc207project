@@ -3,17 +3,16 @@ package interface_adapter.logged_in;
 public class LoggedInState {
   private String username = "";
 
-  public LoggedInState(LoggedInState copy) {
-    username = copy.username;
-  }
-
-  // Because of the previous copy constructor, the default constructor must be explicit.
-  public LoggedInState() {}
-
+  /**
+   * @return the username that the user is currently typing in to log in
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * @param username the new username that the user has typed on the login screen
+   */
   public void setUsername(String username) {
     this.username = username;
   }

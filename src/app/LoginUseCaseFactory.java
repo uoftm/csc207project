@@ -1,12 +1,10 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.rooms.RoomsViewModel;
-import interface_adapter.switch_view.SwitchViewController;
 import java.io.IOException;
 import javax.swing.*;
 import use_case.login.LoginInputBoundary;
@@ -17,27 +15,20 @@ import view.LoginView;
 
 public class LoginUseCaseFactory {
 
-  /** Prevent instantiation. */
-  private LoginUseCaseFactory() {}
-
+  /** Creates a LoginView along with all the clean architecture components required to run it. */
   public static LoginView create(
-      ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,
       LoggedInViewModel loggedInViewModel,
       RoomsViewModel roomsViewModel,
-      LoginUserDataAccessInterface userDataAccessObject,
-      SwitchViewController switchViewController) {
+      LoginUserDataAccessInterface userDataAccessObject) {
 
     try {
       LoginController loginController =
           createLoginController(
-              viewManagerModel,
-              loginViewModel,
-              loggedInViewModel,
-              roomsViewModel,
-              userDataAccessObject);
+              loginViewModel, loggedInViewModel, roomsViewModel, userDataAccessObject);
 
-      return new LoginView(loginViewModel, loginController, switchViewController);
+      return new LoginView(
+          loginViewModel, loginController, SwitchViewUseCaseFactory.getController());
     } catch (IOException e) {
       JOptionPane.showMessageDialog(null, "Could not open user data file.");
       return null;
@@ -45,7 +36,6 @@ public class LoginUseCaseFactory {
   }
 
   private static LoginController createLoginController(
-      ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,
       LoggedInViewModel loggedInViewModel,
       RoomsViewModel roomsViewModel,
@@ -53,9 +43,10 @@ public class LoginUseCaseFactory {
       throws IOException {
 
     LoginOutputBoundary loginOutputBoundary =
-        new LoginPresenter(viewManagerModel, loggedInViewModel, roomsViewModel, loginViewModel);
+        new LoginPresenter(loggedInViewModel, roomsViewModel, loginViewModel);
     LoginInputBoundary loginInteractor =
-        new LoginInteractor(userDataAccessObject, loginOutputBoundary);
+        new LoginInteractor(
+            userDataAccessObject, loginOutputBoundary, SwitchViewUseCaseFactory.getPresenter());
 
     return new LoginController(loginInteractor);
   }

@@ -2,7 +2,6 @@ package data_access;
 
 import entities.auth.DisplayUser;
 import entities.auth.User;
-import entities.auth.UserFactory;
 import entities.rooms.Message;
 import entities.rooms.Room;
 import java.io.IOException;
@@ -131,8 +130,7 @@ public class FirebaseUserDataAccessObject
       LocalDateTime dateTime =
           LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
 
-      UserFactory userFactory = new UserFactory();
-      return userFactory.create(uid, email, displayName, password, dateTime);
+      return new User(uid, email, displayName, password, dateTime);
     } catch (IOException e) {
       e.printStackTrace();
       throw new RuntimeException("User lookup failed, please try again.");

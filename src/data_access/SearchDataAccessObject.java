@@ -21,6 +21,12 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     this.client = okHttpClient;
   }
 
+  /**
+   * Retrieves messages based on the provided search query.
+   *
+   * @param searchRequest The search request containing the room ID and query.
+   * @return A SearchReponseArray object containing the elasticsearch list of matches
+   */
   public SearchReponseArray getData(SearchRequest searchRequest) {
 
     String esUrl = Constants.esUrl;
@@ -105,6 +111,11 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     }
   }
 
+  /**
+   * Saves a message to the elasticsearch database.
+   *
+   * @param message the message to be saved
+   */
   public void saveData(SearchChatMessage message) {
     String esUrl = Constants.esUrl;
     String apiKey = Constants.apiKey;

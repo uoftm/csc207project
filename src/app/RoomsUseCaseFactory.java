@@ -8,6 +8,7 @@ import use_case.rooms.RoomsInteractor;
 import view.RoomsView;
 
 public class RoomsUseCaseFactory {
+  /** Create the full Rooms use case factory, */
   public static RoomsView create(
       RoomsDataAccessInterface roomsDataAccessObject, RoomsViewModel roomsViewModel) {
     RoomsPresenter roomsPresenter = new RoomsPresenter(roomsViewModel);

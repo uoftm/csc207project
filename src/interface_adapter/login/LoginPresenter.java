@@ -1,33 +1,35 @@
 package interface_adapter.login;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
-import use_case.switch_view.SwitchViewOutputBoundary;
-import use_case.switch_view.SwitchViewOutputData;
 
-public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoundary {
-
+public class LoginPresenter implements LoginOutputBoundary {
   private final LoginViewModel loginViewModel;
   private final LoggedInViewModel loggedInViewModel;
   private final RoomsViewModel roomsViewModel;
-  private final ViewManagerModel viewManagerModel;
 
   public LoginPresenter(
-      ViewManagerModel viewManagerModel,
       LoggedInViewModel loggedInViewModel,
       RoomsViewModel roomsViewModel,
       LoginViewModel loginViewModel) {
-    this.viewManagerModel = viewManagerModel;
     this.loggedInViewModel = loggedInViewModel;
     this.roomsViewModel = roomsViewModel;
     this.loginViewModel = loginViewModel;
   }
 
+  /**
+   * Prepares the success view after a successful login by updating the state of the
+   * loggedInViewModel and nested roomsViewModel based on the new information we have about the
+   * user.
+   *
+   * <p>Then, the interactor will switch to the logged in view
+   *
+   * @param response The LoginOutputData containing the relevant data after a successful login.
+   */
   @Override
   public void prepareSuccessView(LoginOutputData response) {
     LoggedInState loggedInState = loggedInViewModel.getState();
@@ -40,21 +42,20 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
     roomsState.setAvailableRooms(response.getAvailableRooms());
     this.roomsViewModel.setState(roomsState);
     this.roomsViewModel.firePropertyChanged();
-
-    this.viewManagerModel.setActiveView(loggedInViewModel.getViewName());
-    this.viewManagerModel.firePropertyChanged();
   }
 
+  /**
+   * If the user fails to log in, display an error message
+   *
+   * <p>This method sets the error message in the login state object and notifies the view model
+   * that a property has changed, triggering the view to display the error message popup.
+   *
+   * @param error the error message to be displayed
+   */
   @Override
   public void prepareFailView(String error) {
     LoginState loginState = loginViewModel.getState();
     loginState.setError(error);
     loginViewModel.firePropertyChanged();
-  }
-
-  @Override
-  public void present(SwitchViewOutputData outputData) {
-    this.viewManagerModel.setActiveView(outputData.getViewName());
-    this.viewManagerModel.firePropertyChanged();
   }
 }

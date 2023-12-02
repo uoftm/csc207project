@@ -6,11 +6,6 @@ public class SettingsState {
   private AbstractUser user;
   private String error = null;
 
-  public SettingsState(SettingsState state) {
-    user = state.user;
-    error = state.error;
-  }
-
   public SettingsState() {}
 
   public AbstractUser getUser() {

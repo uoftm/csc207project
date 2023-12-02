@@ -9,6 +9,16 @@ import use_case.chat.ChatUserDataAccessInterface;
 import view.ChatView;
 
 public class ChatUseCaseFactory {
+  /** Prevent instantiation. */
+  private ChatUseCaseFactory() {}
+
+  /**
+   * Creates a ChatView along with all the clean architecture components required to run it.
+   *
+   * @param messageDataAccessObject The data access object to load chat messages and send messages.
+   * @param chatViewModel
+   * @param chatUserDataAccessInterface
+   */
   public static ChatView create(
       ChatMessageDataAccessInterface messageDataAccessObject,
       ChatViewModel chatViewModel,

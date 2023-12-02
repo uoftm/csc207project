@@ -11,6 +11,12 @@ public class LoginController {
     this.loginUseCaseInteractor = loginUseCaseInteractor;
   }
 
+  /**
+   * Login with the given email and password.
+   *
+   * @param email The email of the user.
+   * @param password The password of the user.
+   */
   public void execute(String email, String password) {
     LoginInputData loginInputData = new LoginInputData(email, password);
     loginUseCaseInteractor.execute(loginInputData);

@@ -18,10 +18,18 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
     this.client = client;
   }
 
+  /**
+   * Saves a message to the Firebase database.
+   *
+   * @param message the message to be saved
+   */
   public void save(Message message) {
     // Stringify message
     String stringified =
-        new JSONObject().put("content", message.content).put("author", message.authorId).toString();
+        new JSONObject()
+            .put("content", message.getContent())
+            .put("author", message.getAuthorId())
+            .toString();
 
     Request request =
         new Request.Builder()
@@ -36,6 +44,11 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
     }
   }
 
+  /**
+   * Retrieves all messages from the Firebase database.
+   *
+   * @return a list of Message objects containing all the messages
+   */
   public List<Message> getAllMessages() {
     Request request =
         new Request.Builder()
@@ -44,14 +57,16 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
             .build();
 
     try {
-      JSONObject response = new JSONObject(client.newCall(request).execute().body().string());
+      var response = client.newCall(request).execute();
+      var body = response.body();
+      JSONObject jsonResponse = new JSONObject(body.string());
       var out = new ArrayList<Message>();
-      var x = response.keys();
+      var x = jsonResponse.keys();
       while (x.hasNext()) {
         try {
           var key = x.next();
           var time = Instant.ofEpochMilli(Long.parseLong(key));
-          var messageObject = response.getJSONObject(key);
+          var messageObject = jsonResponse.getJSONObject(key);
           var content = messageObject.getString("content");
           var authorId = messageObject.getString("author");
           out.add(new Message(time, content, authorId));
@@ -60,7 +75,7 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
           System.out.println(e.getLocalizedMessage());
         }
       }
-      out.sort(Comparator.comparing(a -> a.timestamp));
+      out.sort(Comparator.comparing(a -> a.getTimestamp()));
 
       return out;
     } catch (IOException e) {

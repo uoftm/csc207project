@@ -11,6 +11,7 @@ public class ChatViewModel extends ViewModel {
 
   public List<Message> messages;
 
+  /** Create a ChatViewModel using Clean Architecture. */
   public ChatViewModel(List<Message> messages) {
     super("chat");
     this.messages = messages;

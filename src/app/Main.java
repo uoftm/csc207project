@@ -9,7 +9,6 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
@@ -54,28 +53,18 @@ public class Main {
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject(client);
 
-    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+    SwitchViewUseCaseFactory.initialize(viewManagerModel);
 
     SignupView signupView =
-        SignupUseCaseFactory.create(
-            viewManagerModel,
-            loginViewModel,
-            signupViewModel,
-            userDataAccessObject,
-            switchViewController);
+        SignupUseCaseFactory.create(loginViewModel, signupViewModel, userDataAccessObject);
     views.add(signupView.contentPane, SignupView.viewName);
 
     LoginView loginView =
         LoginUseCaseFactory.create(
-            viewManagerModel,
-            loginViewModel,
-            loggedInViewModel,
-            roomsViewModel,
-            userDataAccessObject,
-            switchViewController);
+            loginViewModel, loggedInViewModel, roomsViewModel, userDataAccessObject);
     views.add(loginView.contentPane, loginView.viewName);
 
-    WelcomeView welcomeView = new WelcomeView(switchViewController);
+    WelcomeView welcomeView = new WelcomeView(SwitchViewUseCaseFactory.getController());
     views.add(welcomeView.contentPane, WelcomeView.viewName);
 
     RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject();
@@ -83,15 +72,14 @@ public class Main {
     RoomsView roomsView = RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel);
 
     LoggedInView loggedInView =
-        new LoggedInView(loggedInViewModel, roomsView, switchViewController);
+        new LoggedInView(loggedInViewModel, roomsView, SwitchViewUseCaseFactory.getController());
     views.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsDataAccessInterface settingsUserDataAccessObject =
         new FirebaseSettingsDataAccessObject();
 
     SettingsView settingsView =
-        SettingsUseCaseFactory.create(
-            settingsViewModel, settingsUserDataAccessObject, switchViewController);
+        SettingsUseCaseFactory.create(settingsViewModel, settingsUserDataAccessObject);
     views.add(settingsView.contentPane, settingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);

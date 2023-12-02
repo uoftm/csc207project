@@ -16,15 +16,7 @@ public class SearchChatMessage extends Message {
     return super.timestamp;
   }
 
-  public String getMessage() {
-    return super.content;
-  }
-
   public String getRoomID() {
     return roomID;
-  }
-
-  public String getAuthorId() {
-    return super.authorId;
   }
 }

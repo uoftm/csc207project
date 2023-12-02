@@ -224,7 +224,7 @@ public class RoomsView implements PropertyChangeListener {
         messagesPaneInternals.repaint();
 
         for (var message : messages) {
-          var messageView = new MessageView(message.content);
+          var messageView = new MessageView(message.getContent());
           messagesPaneInternals.add(messageView);
         }
 

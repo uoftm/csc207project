@@ -5,7 +5,6 @@ import static java.lang.Thread.sleep;
 import app.ChatUseCaseFactory;
 import data_access.FirebaseMessageDataAccessObject;
 import entities.auth.User;
-import entities.auth.UserFactory;
 import interface_adapter.chat.ChatViewModel;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

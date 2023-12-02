@@ -1,27 +1,27 @@
 package interface_adapter.signup;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
+import use_case.switch_view.SwitchViewOutputBoundary;
 import view.LoginView;
 
 public class SignupPresenter implements SignupOutputBoundary {
 
   private final SignupViewModel signupViewModel;
   private final LoginViewModel loginViewModel;
-  private final ViewManagerModel viewManagerModel;
+  private final SwitchViewOutputBoundary switchViewOutputBoundary;
 
   public SignupPresenter(
-      ViewManagerModel viewManagerModel,
       SignupViewModel signupViewModel,
-      LoginViewModel loginViewModel) {
-    this.viewManagerModel = viewManagerModel;
+      LoginViewModel loginViewModel,
+      SwitchViewOutputBoundary switchViewOutputBoundary) {
     this.signupViewModel = signupViewModel;
     this.loginViewModel = loginViewModel;
+    this.switchViewOutputBoundary = switchViewOutputBoundary;
   }
 
   @Override
@@ -35,8 +35,7 @@ public class SignupPresenter implements SignupOutputBoundary {
     this.loginViewModel.setState(loginState);
     loginViewModel.firePropertyChanged();
 
-    viewManagerModel.setActiveView(LoginView.viewName);
-    viewManagerModel.firePropertyChanged();
+    switchViewOutputBoundary.present(LoginView.viewName);
   }
 
   @Override

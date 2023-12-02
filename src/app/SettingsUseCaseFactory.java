@@ -3,7 +3,6 @@ package app;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
-import interface_adapter.switch_view.SwitchViewController;
 import java.io.IOException;
 import javax.swing.*;
 import use_case.settings.SettingsDataAccessInterface;
@@ -13,19 +12,17 @@ import use_case.settings.SettingsOutputBoundary;
 import view.SettingsView;
 
 public class SettingsUseCaseFactory {
-
   private SettingsUseCaseFactory() {}
 
   public static SettingsView create(
-      SettingsViewModel settingsViewModel,
-      SettingsDataAccessInterface settingsDataAccessObject,
-      SwitchViewController switchViewController) {
+      SettingsViewModel settingsViewModel, SettingsDataAccessInterface settingsDataAccessObject) {
 
     try {
       SettingsController settingsController =
           createSettingsController(settingsViewModel, settingsDataAccessObject);
 
-      return new SettingsView(settingsViewModel, settingsController, switchViewController);
+      return new SettingsView(
+          settingsViewModel, settingsController, SwitchViewUseCaseFactory.getController());
     } catch (IOException e) {
       JOptionPane.showMessageDialog(null, "Not available.");
       return null;

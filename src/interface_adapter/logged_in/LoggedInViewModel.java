@@ -7,8 +7,6 @@ import java.beans.PropertyChangeSupport;
 public class LoggedInViewModel extends ViewModel {
   private LoggedInState state = new LoggedInState();
 
-  private String loggedInUser;
-
   public LoggedInViewModel() {
     super("logged in");
   }
@@ -31,13 +29,5 @@ public class LoggedInViewModel extends ViewModel {
 
   public LoggedInState getState() {
     return state;
-  }
-
-  public String getLoggedInUser() {
-    return loggedInUser;
-  }
-
-  public void setLoggedInUser(String loggedInUser) {
-    this.loggedInUser = loggedInUser;
   }
 }

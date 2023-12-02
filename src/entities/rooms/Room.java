@@ -16,18 +16,30 @@ public class Room {
     this.messages = messages;
   }
 
+  /**
+   * @return the unique identifier of the Room (can be any arbitrary string).
+   */
   public String getUid() {
     return uid;
   }
 
+  /**
+   * @return the user visible display name of the Room.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * @return the list of users with permissions to view messages in the Room.
+   */
   public List<DisplayUser> getUsers() {
     return users;
   }
 
+  /**
+   * @return the list of messages in the Room.
+   */
   public List<Message> getMessages() {
     return messages;
   }

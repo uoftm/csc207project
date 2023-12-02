@@ -6,10 +6,8 @@ import app.SettingsUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
 import data_access.FirebaseSettingsDataAccessObject;
 import entities.auth.User;
-import entities.auth.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.settings.SettingsViewModel;
-import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.time.LocalDateTime;
 import javax.swing.*;
@@ -32,11 +30,11 @@ public class SettingsTest {
     SettingsDataAccessInterface settingsUserDataAccessObject =
         new FirebaseSettingsDataAccessObject();
     SettingsViewModel settingsViewModel = new SettingsViewModel();
-    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+
+    SwitchViewUseCaseFactory.initialize(viewManagerModel);
 
     SettingsView settingsView =
-        SettingsUseCaseFactory.create(
-            settingsViewModel, settingsUserDataAccessObject, switchViewController);
+        SettingsUseCaseFactory.create(settingsViewModel, settingsUserDataAccessObject);
     views.add(settingsView.contentPane, settingsView.viewName);
 
     JFrame jf = new JFrame();

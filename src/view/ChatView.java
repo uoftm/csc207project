@@ -70,7 +70,7 @@ public class ChatView implements PropertyChangeListener {
   public void propertyChange(PropertyChangeEvent evt) {
     var state = (List<Message>) evt.getNewValue();
     for (var message : state) {
-      var messageView = new MessageView(message.content);
+      var messageView = new MessageView(message.getContent());
       paneInternals.add(messageView);
     }
   }
