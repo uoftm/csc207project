@@ -4,12 +4,11 @@ import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.time.Instant;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class SearchView implements PropertyChangeListener {
   public static final String viewName = "search";
@@ -29,29 +28,40 @@ public class SearchView implements PropertyChangeListener {
     this.searchViewModel = searchviewModel;
     searchviewModel.addPropertyChangeListener(this);
 
-    searchBoxText.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            SearchState currentstate = searchviewModel.getState();
-            String text = searchBoxText.getText() + e.getKeyChar();
-            currentstate.setSearchedTerm(text);
-            searchViewModel.setState(currentstate);
-          }
+    searchBoxText
+        .getDocument()
+        .addDocumentListener(
+            new DocumentListener() {
+              @Override
+              public void insertUpdate(DocumentEvent e) {
+                update();
+              }
 
-          @Override
-          public void keyPressed(KeyEvent e) {}
+              @Override
+              public void removeUpdate(DocumentEvent e) {
+                update();
+              }
 
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
+              @Override
+              public void changedUpdate(DocumentEvent e) {
+                update();
+              }
+
+              protected void update() {
+                String text = searchBoxText.getText();
+
+                SearchState currentstate = searchviewModel.getState();
+
+                currentstate.setSearchedTerm(text);
+                searchViewModel.setState(currentstate);
+              }
+            });
 
     SearchState currentState = searchViewModel.getState();
 
     search.addActionListener(
         e -> {
           searchController.executeSearchRequest(
-              Instant.now(),
               searchViewModel.getState().getRoomID(),
               currentState.getSearchedTerm(),
               searchViewModel.getState().getUserUid());

@@ -51,16 +51,22 @@ public class SearchedView implements PropertyChangeListener {
     SearchedState state = (SearchedState) evt.getNewValue();
 
     var highlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
-    for (var response : searchedViewModel.getState().getResponses()) {
+    for (var response : state.getResponses()) {
       JPanel eachMessagePanel = new JPanel();
       eachMessagePanel.setLayout(new BorderLayout());
       JLabel label = new JLabel(response.label);
+      JLabel textPane = new JLabel(response.rawMessage);
+
       eachMessagePanel.add(label);
-      JTextPane textPane = new JTextPane();
-      textPane.setText(response.rawMessage);
-      eachMessagePanel.add(textPane, BorderLayout.CENTER);
+      eachMessagePanel.add(textPane);
 
       paneInternals.add(eachMessagePanel);
     }
+
+    SwingUtilities.invokeLater(
+        () -> {
+          paneInternals.revalidate();
+          paneInternals.repaint();
+        });
   }
 }

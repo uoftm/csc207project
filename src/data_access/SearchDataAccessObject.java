@@ -36,14 +36,9 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
                         new JSONObject()
                             .put("query", searchRequest.getQueryRequest())
                             .put("fuzziness", "AUTO")));
-    JSONObject rangeFilter =
-        new JSONObject()
-            .put("range", new JSONObject().put("time", new JSONObject().put("gte", "now-1y/y")));
 
     JSONObject boolQuery =
-        new JSONObject()
-            .put("must", new JSONArray().put(roomIDQuery).put(messageQuery))
-            .put("filter", new JSONArray().put(rangeFilter));
+        new JSONObject().put("must", new JSONArray().put(roomIDQuery).put(messageQuery));
 
     JSONObject highlight =
         new JSONObject()
@@ -56,7 +51,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     JSONObject query =
         new JSONObject()
             .put("query", new JSONObject().put("bool", boolQuery))
-            .put("size", 5)
+            .put("size", 10)
             .put("highlight", highlight);
 
     Request request =
@@ -70,6 +65,8 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     try (Response response = client.newCall(request).execute()) {
 
       JSONObject rootNode = new JSONObject(response.body().string());
+      System.out.println(query.toString());
+      System.out.println(rootNode.toString());
       JSONArray hitsArray = rootNode.getJSONObject("hits").getJSONArray("hits");
       ArrayList<SearchResponse> searchResponses = new ArrayList<>();
       for (int i = 0; i < hitsArray.length(); i++) {
@@ -104,11 +101,11 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             break;
           }
         }
-        String fulltext = finalHighlight.replaceAll("<em>|</em>", "");
+        //        String fulltext = finalHighlight.replaceAll("<em>|</em>", "");
 
         SearchResponse oneResponse =
             new SearchResponse(
-                fulltext,
+                finalHighlight,
                 // TODO: use an in-memory cache to query username here instead
                 source.optString("author"),
                 Instant.parse(source.getString("time")),
@@ -118,6 +115,8 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
       }
       return new SearchReponseArray(searchResponses, false);
     } catch (Exception e) {
+      System.out.println("Search failed");
+      e.printStackTrace();
       return new SearchReponseArray(new ArrayList<>(), true);
     }
   }
@@ -146,6 +145,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             .post(requestBody)
             .build();
 
+    System.out.println(jsonPayload);
     try (Response response = client.newCall(request).execute()) {
       if (response.isSuccessful()) {
         System.out.println("Request was successful");

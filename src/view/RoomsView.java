@@ -6,12 +6,14 @@ import entities.rooms.Room;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
+import interface_adapter.search.SearchController;
 import interface_adapter.search.StartSearchController;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.Instant;
 import java.util.List;
 import javax.swing.*;
 
@@ -36,7 +38,8 @@ public class RoomsView implements PropertyChangeListener {
   public RoomsView(
       RoomsViewModel viewModel,
       RoomsController roomsController,
-      StartSearchController searchController) {
+      SearchController searchController,
+      StartSearchController startSearchController) {
     this.viewModel = viewModel;
     this.viewModel.addPropertyChangeListener(this);
 
@@ -145,6 +148,8 @@ public class RoomsView implements PropertyChangeListener {
               for (var room : currentState.getAvailableRooms()) {
                 if (room.getUid().equals(roomUid)) {
                   roomsController.sendMessage(room, user, message);
+                  searchController.executeRecordData(
+                      Instant.now(), roomUid, message, currentState.getUserUid());
                   break;
                 }
               }
@@ -204,7 +209,7 @@ public class RoomsView implements PropertyChangeListener {
             RoomsState currentState = viewModel.getState();
             String uid = currentState.getUserUid();
             String roomUid = currentState.getRoomUid();
-            searchController.search(roomUid, uid);
+            startSearchController.search(roomUid, uid);
           }
         });
   }

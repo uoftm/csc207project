@@ -98,7 +98,8 @@ public class Main {
         new StartSearchController(viewManagerModel, searchViewModel);
 
     RoomsView roomsView =
-        RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel, startSearchController);
+        RoomsUseCaseFactory.create(
+            roomsDataAccessObject, roomsViewModel, searchController, startSearchController);
 
     LoggedInView loggedInView =
         new LoggedInView(loggedInViewModel, roomsView, switchViewController);

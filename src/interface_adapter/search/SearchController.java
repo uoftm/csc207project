@@ -12,8 +12,8 @@ public class SearchController {
     this.searchInteractor = searchInteractor;
   }
 
-  public void executeSearchRequest(Instant time, String roomID, String message, String authID) {
-    SearchInputData inputData = new SearchInputData(time, roomID, message, authID);
+  public void executeSearchRequest(String roomID, String message, String authID) {
+    SearchInputData inputData = new SearchInputData(null, roomID, message, authID);
     searchInteractor.executeSearchRequest(inputData);
   }
 

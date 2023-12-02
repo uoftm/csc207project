@@ -23,8 +23,12 @@ public class SearchedViewModel extends ViewModel {
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
   @Override
-  public void firePropertyChanged() {}
+  public void firePropertyChanged() {
+    support.firePropertyChange("state", null, state);
+  }
 
   @Override
-  public void addPropertyChangeListener(PropertyChangeListener listener) {}
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
+    support.addPropertyChangeListener(listener);
+  }
 }
