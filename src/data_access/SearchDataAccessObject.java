@@ -1,11 +1,9 @@
 package data_access;
 
-import entities.search.SearchChatMessage;
-import entities.search.SearchReponseArray;
-import entities.search.SearchRequest;
-import entities.search.SearchResponse;
+import entities.search.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -84,13 +82,38 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
         } else {
           finalHighlight = "";
         }
+
+        String openTag = "<em>";
+        String closeTag = "</em>";
+        List<SearchIndicies> item = new ArrayList<>();
+        String text = finalHighlight;
+        int currentIndex = 0;
+        while (text.indexOf(openTag, currentIndex) != -1) {
+          int start = text.indexOf(openTag, currentIndex) + openTag.length();
+          int end = text.indexOf(closeTag, start);
+
+          if (end != -1) {
+            item.add(
+                new SearchIndicies(
+                    start - (openTag.length() * item.size() + closeTag.length() * item.size()),
+                    end
+                        - (openTag.length() * (item.size() + 1)
+                            + closeTag.length() * item.size())));
+            currentIndex = end + closeTag.length();
+          } else {
+            break;
+          }
+        }
+        String fulltext = finalHighlight.replaceAll("<em>|</em>", "");
+
         SearchResponse oneResponse =
             new SearchResponse(
-                finalHighlight,
+                fulltext,
                 // TODO: use an in-memory cache to query username here instead
                 source.optString("author"),
                 Instant.parse(source.getString("time")),
-                source.getString("roomID"));
+                source.getString("roomID"),
+                item);
         searchResponses.add(oneResponse);
       }
       return new SearchReponseArray(searchResponses, false);

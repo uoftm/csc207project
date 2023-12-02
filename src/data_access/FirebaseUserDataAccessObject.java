@@ -14,6 +14,7 @@ import java.util.List;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+import use_case.chat.ChatUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
@@ -21,7 +22,8 @@ import use_case.signup.SignupUserDataAccessInterface;
 public class FirebaseUserDataAccessObject
     implements SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
-        DeleteUserDataAccessInterface {
+        DeleteUserDataAccessInterface,
+        ChatUserDataAccessInterface {
 
   private final OkHttpClient client;
 
@@ -79,9 +81,13 @@ public class FirebaseUserDataAccessObject
 
   @Override
   public User get(String email, String password) {
-    String idToken = getAccessToken(email, password);
+    token = getAccessToken(email, password);
     // Initialize user from our idToken and password by making a second call to Firebase
-    return getUserData(idToken, password);
+    return getUserData(token, password);
+  }
+
+  public User get() {
+    return getUserData(token, "");
   }
 
   public String getDisplayName(String uid) {

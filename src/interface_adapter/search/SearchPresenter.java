@@ -1,8 +1,11 @@
 package interface_adapter.search;
 
+import entities.search.SearchResponse;
+import entities.search.SearchResponseThing;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.searched.SearchedState;
 import interface_adapter.searched.SearchedViewModel;
+import java.util.ArrayList;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
 
@@ -26,7 +29,22 @@ public class SearchPresenter implements SearchOutputBoundary {
   @Override
   public void prepareSearchResponse(SearchOutputData responses) {
     SearchedState searchedState = searchedViewModel.getState();
-    searchedState.setResponses(responses.getResponse());
+    ArrayList<SearchResponseThing> returned = new ArrayList<>();
+    String openTag = "<em>";
+    String closeTag = "</em>";
+    for (SearchResponse response : responses.getResponse().getResponses()) {
+      String label =
+          response.getTime().toString()
+              + ", "
+              + response.getAuthorName()
+              + ", "
+              + response.getRoomName()
+              + ": ";
+
+      returned.add(
+          new SearchResponseThing(label, response.getHighlightIndices(), response.getFullText()));
+    }
+    searchedState.setResponses(returned);
     this.searchedViewModel.setState(searchedState);
     this.searchedViewModel.firePropertyChanged();
     this.viewManagerModel.setActiveView(searchedViewModel.getViewName());

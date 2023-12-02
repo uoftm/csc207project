@@ -1,6 +1,6 @@
 package view;
 
-import data_access.FirebaseUserDataAccessObject;
+import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
@@ -10,6 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.Instant;
 import javax.swing.*;
+import use_case.chat.ChatUserDataAccessInterface;
 
 public class SearchView implements PropertyChangeListener {
   public static final String viewName = "search";
@@ -24,8 +25,8 @@ public class SearchView implements PropertyChangeListener {
   public SearchView(
       SearchController searchController,
       SearchViewModel searchviewModel,
-      String roomID,
-      FirebaseUserDataAccessObject userDataAccessObject) {
+      RoomsViewModel roomsViewModel,
+      ChatUserDataAccessInterface userDataAccessObject) {
     this.searchViewModel = searchviewModel;
     searchviewModel.addPropertyChangeListener(this);
 
@@ -52,7 +53,7 @@ public class SearchView implements PropertyChangeListener {
         e -> {
           searchController.executeSearchRequest(
               Instant.now(),
-              roomID,
+              roomsViewModel.getState().getRoomUid(),
               currentState.getSearchedTerm(),
               userDataAccessObject.get().getUid());
         });

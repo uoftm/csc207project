@@ -29,6 +29,7 @@ public class RoomsView implements PropertyChangeListener {
   private JButton addUserButton;
   private JLabel roomNameLabel2;
   private JTextField emailTextField;
+  private JButton searchButton;
   private final RoomsViewModel viewModel;
 
   public RoomsView(RoomsViewModel viewModel, RoomsController roomsController) {

@@ -24,8 +24,7 @@ public class SearchUseCaseFactory {
       ViewManagerModel viewManagerModel,
       SearchedViewModel searchedViewModel,
       String roomID,
-      FirebaseUserDataAccessObject userDataAccessObject
-      ) {
+      FirebaseUserDataAccessObject userDataAccessObject) {
     try {
       SearchController searchController =
           createSearchController(

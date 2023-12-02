@@ -7,7 +7,6 @@ import interface_adapter.chat.ChatViewModel;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -23,16 +22,17 @@ public class ChatView implements PropertyChangeListener {
   private JTextField message;
   private JButton send;
   private JPanel rawPane;
-    private JButton search;
-    
+  private JButton search;
+
   private final ChatViewModel viewModel;
 
-
-  public ChatView(ChatController chatController, ChatViewModel viewModel, SearchViewModel searchViewModel,
-                  SwitchViewController switchViewController) {
+  public ChatView(
+      ChatController chatController,
+      ChatViewModel viewModel,
+      SearchViewModel searchViewModel,
+      SwitchViewController switchViewController) {
     this.viewModel = viewModel;
     this.viewModel.addPropertyChangeListener(this);
-
 
     rawPane.setLayout(new BoxLayout(rawPane, BoxLayout.Y_AXIS));
 
@@ -73,13 +73,12 @@ public class ChatView implements PropertyChangeListener {
         });
 
     search.addActionListener(
-            evt -> {
-        if (evt.getSource().equals(search)) {
+        evt -> {
+          if (evt.getSource().equals(search)) {
             SearchState currentState = searchViewModel.getState();
             switchViewController.switchTo(SearchView.viewName);
-
-        }
-    });
+          }
+        });
 
     chatController.loadAllMessages();
   }
