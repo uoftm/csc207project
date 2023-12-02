@@ -14,13 +14,14 @@ import java.util.List;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FirebaseUserDataAccessObject
-    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface, DeleteUserDataAccessInterface {
+    implements SignupUserDataAccessInterface,
+        LoginUserDataAccessInterface,
+        DeleteUserDataAccessInterface {
 
   private final OkHttpClient client;
 
@@ -34,6 +35,7 @@ public class FirebaseUserDataAccessObject
   private class SignupResults {
     String uid;
     String idToken;
+
     SignupResults(String uid, String idToken) {
       this.uid = uid;
       this.idToken = idToken;
@@ -43,10 +45,10 @@ public class FirebaseUserDataAccessObject
   private String getAccessToken(String email, String password) {
     // Authentication Request
     JSONObject jsonBody =
-            new JSONObject()
-                    .put("email", email)
-                    .put("password", password)
-                    .put("returnSecureToken", true);
+        new JSONObject()
+            .put("email", email)
+            .put("password", password)
+            .put("returnSecureToken", true);
 
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
@@ -83,7 +85,8 @@ public class FirebaseUserDataAccessObject
   }
 
   public String getDisplayName(String uid) {
-    // Note: This method doesn't require authentication, as anyone is allowed to retrieve a display name given an uid
+    // Note: This method doesn't require authentication, as anyone is allowed to retrieve a display
+    // name given an uid
     String url = String.format(Constants.DISPLAY_NAME_URL, uid);
     Request request = new Request.Builder().url(url).get().build();
 
@@ -244,6 +247,7 @@ public class FirebaseUserDataAccessObject
       throw new RuntimeException("Unable to delete user data. Please try again.");
     }
   }
+
   private void deleteUserFromAuth(User user) {
     String idToken = getAccessToken(user.getEmail(), user.getPassword());
     JSONObject jsonBody = new JSONObject().put("idToken", idToken);

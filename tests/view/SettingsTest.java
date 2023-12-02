@@ -16,7 +16,6 @@ import javax.swing.*;
 import org.junit.Assert;
 import org.junit.Test;
 import use_case.settings.SettingsDataAccessInterface;
-import view.SettingsView;
 
 public class SettingsTest {
   @Test

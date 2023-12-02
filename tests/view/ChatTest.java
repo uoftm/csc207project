@@ -14,7 +14,6 @@ import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import use_case.chat.ChatMessageDataAccessInterface;
-import view.ChatView;
 
 public class ChatTest {
   @Test

@@ -16,6 +16,7 @@ public class Constants {
 
   public static final String ACCOUNT_LOOKUP_URL =
       "https://identitytoolkit.googleapis.com/v1/accounts:lookup";
-  public static final String DELETE_USER_URL = "https://identitytoolkit.googleapis.com/v1/accounts:delete";
+  public static final String DELETE_USER_URL =
+      "https://identitytoolkit.googleapis.com/v1/accounts:delete";
   public static final String FIREBASE_AUTH_ID = "AIzaSyBuJk14Gljk-chdN_9YVywSKnf38ttwUVg";
 }
