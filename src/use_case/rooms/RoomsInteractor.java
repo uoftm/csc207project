@@ -3,7 +3,6 @@ package use_case.rooms;
 import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
-
 import java.util.List;
 
 public class RoomsInteractor implements RoomsInputBoundary {
@@ -26,10 +25,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
     if (valid) {
       Response<List<Message>> response = roomsDataAccessObject.loadMessages(room, user);
       if (response.isError()) {
-        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, response.getError(), null);
+        RoomsOutputData roomsOutputData =
+            new RoomsOutputData(null, null, null, response.getError(), null);
         roomsPresenter.prepareFailView(roomsOutputData);
       } else {
-        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, response.getVal(), null, null);
+        RoomsOutputData roomsOutputData =
+            new RoomsOutputData(null, null, response.getVal(), null, null);
         roomsPresenter.prepareLoadMessagesSuccessView(roomsOutputData);
       }
     } else {
@@ -50,7 +51,8 @@ public class RoomsInteractor implements RoomsInputBoundary {
     if (valid) {
       Response<String> response = roomsDataAccessObject.sendMessage(room, user, message);
       if (response.isError()) {
-        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, response.getError(), null);
+        RoomsOutputData roomsOutputData =
+            new RoomsOutputData(null, null, null, response.getError(), null);
         roomsPresenter.prepareFailView(roomsOutputData);
       }
     } else {
@@ -71,10 +73,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
     if (valid) {
       Response<String> response = roomsDataAccessObject.addUserToRoom(room, user, email);
       if (response.isError()) {
-        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, response.getError(), null);
+        RoomsOutputData roomsOutputData =
+            new RoomsOutputData(null, null, null, response.getError(), null);
         roomsPresenter.prepareFailView(roomsOutputData);
       } else {
-        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, null, response.getVal());
+        RoomsOutputData roomsOutputData =
+            new RoomsOutputData(null, null, null, null, response.getVal());
         roomsPresenter.prepareSuccessView(roomsOutputData);
       }
     } else {
@@ -91,10 +95,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
 
     Response<Room> response = roomsDataAccessObject.createRoom(user, createRoom);
     if (response.isError()) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, response.getError(), null);
+      RoomsOutputData roomsOutputData =
+          new RoomsOutputData(null, null, null, response.getError(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     } else {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(response.getVal(), null, null, null, null);
+      RoomsOutputData roomsOutputData =
+          new RoomsOutputData(response.getVal(), null, null, null, null);
       roomsPresenter.prepareCreateRoomSuccessView(roomsOutputData);
     }
   }

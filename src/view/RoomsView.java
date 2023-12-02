@@ -78,58 +78,57 @@ public class RoomsView implements PropertyChangeListener {
         });
 
     emailTextField.addKeyListener(
-            new KeyListener() {
-              @Override
-              public void keyTyped(KeyEvent e) {
-                RoomsState currentState = viewModel.getState();
-                String currentEmail = currentState.getEmail();
-                String email = "";
-                if (currentEmail != null) {
-                  email = currentEmail;
-                }
-                currentState.setEmail(email + e.getKeyChar());
-                viewModel.firePropertyChanged();
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {
+            RoomsState currentState = viewModel.getState();
+            String currentEmail = currentState.getEmail();
+            String email = "";
+            if (currentEmail != null) {
+              email = currentEmail;
+            }
+            currentState.setEmail(email + e.getKeyChar());
+            viewModel.firePropertyChanged();
+          }
+
+          @Override
+          public void keyPressed(KeyEvent e) {}
+
+          @Override
+          public void keyReleased(KeyEvent e) {}
+        });
+
+    // This is to resolve a crazy frontend issue
+    createRoomTextField.addKeyListener(
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {
+            // Handle in keyPressed
+          }
+
+          @Override
+          public void keyPressed(KeyEvent e) {
+            RoomsState currentState = viewModel.getState();
+            String currentCreateRoom = currentState.getCreateRoom();
+            String createRoom = currentCreateRoom != null ? currentCreateRoom : "";
+
+            if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
+              if (!createRoom.isEmpty()) {
+                createRoom = createRoom.substring(0, createRoom.length() - 1);
               }
+            } else {
+              createRoom += e.getKeyChar();
+            }
 
-              @Override
-              public void keyPressed(KeyEvent e) {}
+            currentState.setCreateRoom(createRoom);
+            viewModel.firePropertyChanged();
+          }
 
-              @Override
-              public void keyReleased(KeyEvent e) {}
-            });
+          @Override
+          public void keyReleased(KeyEvent e) {}
+        });
 
-      // This is to resolve a crazy frontend issue
-      createRoomTextField.addKeyListener(
-              new KeyListener() {
-                  @Override
-                  public void keyTyped(KeyEvent e) {
-                      // Handle in keyPressed
-                  }
-
-                  @Override
-                  public void keyPressed(KeyEvent e) {
-                      RoomsState currentState = viewModel.getState();
-                      String currentCreateRoom = currentState.getCreateRoom();
-                      String createRoom = currentCreateRoom != null ? currentCreateRoom : "";
-
-                      if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
-                          if (!createRoom.isEmpty()) {
-                              createRoom = createRoom.substring(0, createRoom.length() - 1);
-                          }
-                      } else {
-                          createRoom += e.getKeyChar();
-                      }
-
-                      currentState.setCreateRoom(createRoom);
-                      viewModel.firePropertyChanged();
-                  }
-
-                  @Override
-                  public void keyReleased(KeyEvent e) {}
-              });
-
-
-      send.addActionListener(
+    send.addActionListener(
         evt -> {
           if (evt.getSource().equals(send)) {
             RoomsState currentState = viewModel.getState();
@@ -163,34 +162,34 @@ public class RoomsView implements PropertyChangeListener {
         });
 
     addUserButton.addActionListener(
-            evt -> {
-              if (evt.getSource().equals(addUserButton)) {
-                RoomsState currentState = viewModel.getState();
-                String email = currentState.getEmail();
-                String roomUid = currentState.getRoomUid();
-                if (email != null) {
-                  User user = currentState.getUser();
-                  for (var room : currentState.getAvailableRooms()) {
-                    if (room.getUid().equals(roomUid)) {
-                      roomsController.addUserToRoom(room, user, email);
-                      break;
-                    }
-                  }
+        evt -> {
+          if (evt.getSource().equals(addUserButton)) {
+            RoomsState currentState = viewModel.getState();
+            String email = currentState.getEmail();
+            String roomUid = currentState.getRoomUid();
+            if (email != null) {
+              User user = currentState.getUser();
+              for (var room : currentState.getAvailableRooms()) {
+                if (room.getUid().equals(roomUid)) {
+                  roomsController.addUserToRoom(room, user, email);
+                  break;
                 }
               }
-            });
+            }
+          }
+        });
 
     createRoomButton.addActionListener(
-            evt -> {
-              if (evt.getSource().equals(createRoomButton)) {
-                RoomsState currentState = viewModel.getState();
-                String createRoom = currentState.getCreateRoom();
-                if (createRoom != null) {
-                  User user = currentState.getUser();
-                  roomsController.createRoom(user, createRoom);
-                }
-              }
-            });
+        evt -> {
+          if (evt.getSource().equals(createRoomButton)) {
+            RoomsState currentState = viewModel.getState();
+            String createRoom = currentState.getCreateRoom();
+            if (createRoom != null) {
+              User user = currentState.getUser();
+              roomsController.createRoom(user, createRoom);
+            }
+          }
+        });
   }
 
   @Override
@@ -209,14 +208,13 @@ public class RoomsView implements PropertyChangeListener {
       roomsPaneInternals.add(roomView);
 
       if (r.getUid().equals(currentRoomUid)) {
-          // String name = room.getUid();
-          name += r.getName();
-          System.out.println(name);
-          roomNameLabel.removeAll();
-          roomNameLabel.revalidate();
-          roomNameLabel.repaint();
-          System.out.println(roomNameLabel.getText());
-            roomNameLabel.setText(name);
+        name += r.getName();
+        System.out.println(name);
+        roomNameLabel.removeAll();
+        roomNameLabel.revalidate();
+        roomNameLabel.repaint();
+        System.out.println(roomNameLabel.getText());
+        roomNameLabel.setText(name);
 
         List<Message> messages = r.getMessages();
         state.setDisplayMessages(messages);
@@ -249,7 +247,7 @@ public class RoomsView implements PropertyChangeListener {
       JOptionPane.showMessageDialog(contentPane, state.getError());
     }
     if (state.getSuccess() != null) {
-        JOptionPane.showMessageDialog(contentPane, state.getSuccess());
+      JOptionPane.showMessageDialog(contentPane, state.getSuccess());
     }
   }
 }

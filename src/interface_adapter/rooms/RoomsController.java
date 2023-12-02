@@ -14,25 +14,21 @@ public class RoomsController {
 
   public void loadMessages(Room room, User user) {
     RoomsInputData roomsInputData = new RoomsInputData(room, user, null, null, null);
-    // Example request to load messages
     roomsUseCaseInteractor.loadMessages(roomsInputData);
   }
 
   public void sendMessage(Room room, User user, String message) {
     RoomsInputData roomsInputData = new RoomsInputData(room, user, message, null, null);
-    // Example request to send message
     roomsUseCaseInteractor.sendMessage(roomsInputData);
   }
 
   public void addUserToRoom(Room room, User user, String email) {
-    RoomsInputData roomsInputData = new RoomsInputData(room, user, null, email, null );
-    // Example request to add user to room
+    RoomsInputData roomsInputData = new RoomsInputData(room, user, null, email, null);
     roomsUseCaseInteractor.addUserToRoom(roomsInputData);
   }
 
   public void createRoom(User user, String createRoom) {
-    RoomsInputData roomsInputData = new RoomsInputData(null, user, null, null, createRoom );
-    // Example request to create room
+    RoomsInputData roomsInputData = new RoomsInputData(null, user, null, null, createRoom);
     roomsUseCaseInteractor.createRoom(roomsInputData);
   }
 }

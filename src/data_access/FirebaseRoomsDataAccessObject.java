@@ -3,11 +3,10 @@ package data_access;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Message;
+import entities.rooms.Room;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
-import entities.rooms.Room;
 import use_case.rooms.Response;
 import use_case.rooms.RoomsDataAccessInterface;
 

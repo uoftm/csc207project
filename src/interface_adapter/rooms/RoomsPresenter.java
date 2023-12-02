@@ -2,13 +2,10 @@ package interface_adapter.rooms;
 
 import entities.rooms.Message;
 import entities.rooms.Room;
+import java.util.List;
+import javax.swing.*;
 import use_case.rooms.RoomsOutputBoundary;
 import use_case.rooms.RoomsOutputData;
-import view.ListedRoom;
-import view.MessageView;
-
-import javax.swing.*;
-import java.util.List;
 
 public class RoomsPresenter implements RoomsOutputBoundary {
   private final RoomsViewModel roomsViewModel;

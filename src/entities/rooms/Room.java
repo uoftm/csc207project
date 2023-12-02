@@ -32,5 +32,7 @@ public class Room {
     return messages;
   }
 
-  public void setMessages(List<Message> messages) { this.messages = messages; }
+  public void setMessages(List<Message> messages) {
+    this.messages = messages;
+  }
 }

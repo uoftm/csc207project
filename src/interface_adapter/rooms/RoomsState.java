@@ -11,9 +11,9 @@ public class RoomsState {
   private List<Room> availableRooms;
   private List<Message> displayMessages;
   private String sendMessage;
-  private String email;  // Other user email
-  private String createRoom;  // Room to create
-  private String error;  // Nullable field
+  private String email; // Other user email
+  private String createRoom; // Room to create
+  private String error; // Nullable field
   private String success;
 
   public RoomsState(RoomsState copy) {
@@ -73,19 +73,35 @@ public class RoomsState {
     this.sendMessage = sendMessage;
   }
 
-  public String getEmail() { return email; }
+  public String getEmail() {
+    return email;
+  }
 
-  public void setEmail(String email) { this.email = email; }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-  public String getCreateRoom() { return createRoom; }
+  public String getCreateRoom() {
+    return createRoom;
+  }
 
-  public void setCreateRoom(String createRoom) { this.createRoom = createRoom; }
+  public void setCreateRoom(String createRoom) {
+    this.createRoom = createRoom;
+  }
 
-  public String getError() { return this.error; }
+  public String getError() {
+    return this.error;
+  }
 
-  public void setError(String error) { this.error = error; }
+  public void setError(String error) {
+    this.error = error;
+  }
 
-  public String getSuccess() { return this.success; }
+  public String getSuccess() {
+    return this.success;
+  }
 
-  public void setSuccess(String success) { this.success = success; }
+  public void setSuccess(String success) {
+    this.success = success;
+  }
 }
