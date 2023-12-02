@@ -1,3 +1,5 @@
+package view;
+
 import static java.lang.Thread.sleep;
 
 import app.SettingsUseCaseFactory;

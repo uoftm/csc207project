@@ -129,6 +129,14 @@ public class SignupView implements PropertyChangeListener {
         });
   }
 
+  public JButton getSignupButton() {
+    return signUp;
+  }
+
+  public JButton getCancelButton() {
+    return cancel;
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SignupState state = (SignupState) evt.getNewValue();

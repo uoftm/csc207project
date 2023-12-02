@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import okhttp3.*;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FirebaseUserDataAccessObject
-    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+    implements SignupUserDataAccessInterface, LoginUserDataAccessInterface, DeleteUserDataAccessInterface {
 
   private final OkHttpClient client;
 
@@ -31,14 +31,22 @@ public class FirebaseUserDataAccessObject
     this.client = client;
   }
 
-  @Override
-  public User get(String email, String password) {
+  private class SignupResults {
+    String uid;
+    String idToken;
+    SignupResults(String uid, String idToken) {
+      this.uid = uid;
+      this.idToken = idToken;
+    }
+  }
+
+  private String getAccessToken(String email, String password) {
     // Authentication Request
     JSONObject jsonBody =
-        new JSONObject()
-            .put("email", email)
-            .put("password", password)
-            .put("returnSecureToken", true);
+            new JSONObject()
+                    .put("email", email)
+                    .put("password", password)
+                    .put("returnSecureToken", true);
 
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
@@ -61,19 +69,39 @@ public class FirebaseUserDataAccessObject
         throw new RuntimeException("Invalid authentication response");
       }
 
-      String idToken = authResponseJson.getString("idToken");
-
-      // Initialize user from our idToken and password by making a second call to Firebase
-      return getUserData(idToken, password);
+      return authResponseJson.getString("idToken");
     } catch (IOException | JSONException e) {
       throw new RuntimeException("Internal error during authentication, please try again.");
     }
   }
 
+  @Override
+  public User get(String email, String password) {
+    String idToken = getAccessToken(email, password);
+    // Initialize user from our idToken and password by making a second call to Firebase
+    return getUserData(idToken, password);
+  }
+
+  public String getDisplayName(String uid) {
+    // Note: This method doesn't require authentication, as anyone is allowed to retrieve a display name given an uid
+    String url = String.format(Constants.DISPLAY_NAME_URL, uid);
+    Request request = new Request.Builder().url(url).get().build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      if (response.code() == 200) {
+        return response.body().string().replace('"', ' ').trim();
+      } else {
+        throw new IOException();
+      }
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to retrieve display name. Please try again.");
+    }
+  }
+
   // Return username, time user was created, and uid
   private User getUserData(String idToken, String password) {
-    JSONObject jsonBody = new JSONObject();
-    jsonBody.put("idToken", idToken);
+    JSONObject jsonBody = new JSONObject().put("idToken", idToken);
 
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
@@ -90,13 +118,12 @@ public class FirebaseUserDataAccessObject
         throw new RuntimeException("User lookup failed, please try again.");
       }
 
-      System.out.println("User lookup successful: " + responseData);
       JSONObject responseObject = new JSONObject(responseData);
       JSONObject userObject = responseObject.getJSONArray("users").getJSONObject(0);
 
       String uid = userObject.optString("localId");
       String email = userObject.optString("email");
-      String displayName = userObject.optString("displayName", "No display name");
+      String displayName = getDisplayName(uid);
       long createdAt = Long.parseLong(userObject.optString("createdAt"));
       LocalDateTime dateTime =
           LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
@@ -114,34 +141,56 @@ public class FirebaseUserDataAccessObject
     return false;
   } // TODO: Ensure this successfully searches by email
 
-  @Override
-  public Optional<String> save(User user) {
+  private SignupResults signup(User user) {
     JSONObject jsonBody =
         new JSONObject().put("email", user.getEmail()).put("password", user.getPassword());
-    // jsonMap.put("displayName", user.getName());  // For Firebase default field to store username
-    System.out.println(jsonBody.toString()); // TODO: Get rid of this
 
-    HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.SIGNUP_URL).newBuilder();
-    urlBuilder.addQueryParameter("key", Constants.FIREBASE_AUTH_ID);
+    String signupUrl = Constants.SIGNUP_URL + "?key=" + Constants.FIREBASE_AUTH_ID;
 
     RequestBody body = RequestBody.create(jsonBody.toString(), MediaType.parse("application/json"));
 
-    Request request = new Request.Builder().url(urlBuilder.build().toString()).post(body).build();
+    Request request = new Request.Builder().url(signupUrl).post(body).build();
     try {
       Response response = client.newCall(request).execute();
+      JSONObject jsonResponse = new JSONObject(response.body().string());
       if (response.code() == 200) {
-        // Success
-        return Optional.empty();
+        String uid = jsonResponse.getString("localId");
+        String idToken = jsonResponse.getString("idToken");
+        return new SignupResults(uid, idToken);
       } else {
-        JSONObject jsonResponse = new JSONObject(response.body().string());
-        System.out.println("Response body " + jsonResponse);
-        JSONArray errors = jsonResponse.getJSONObject("error").getJSONArray("errors");
-        String firstErrorMessage = errors.getJSONObject(0).getString("message");
-        return Optional.of(firstErrorMessage);
+        String error =
+            jsonResponse
+                .getJSONObject("error")
+                .getJSONArray("errors")
+                .getJSONObject(0)
+                .getString("message");
+        throw new RuntimeException("Unable to sign up: " + error);
       }
     } catch (IOException | JSONException e) {
-      return Optional.of("Unexpected error signing up. Please try again.");
+      throw new RuntimeException("Unexpected error signing up. Please try again.");
     }
+  }
+
+  private void saveDisplayName(String uid, String displayName, String idToken) {
+    String jsonBody = String.format("\"%s\"", displayName);
+    String url = String.format(Constants.DISPLAY_NAME_URL, uid) + "?auth=" + idToken;
+    RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
+
+    Request request = new Request.Builder().url(url).put(body).build();
+    try {
+      Response response = client.newCall(request).execute();
+      if (response.code() != 200) {
+        throw new RuntimeException("Unable to save display name. Please try again.");
+      }
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to save display name. Please try again.");
+    }
+  }
+
+  @Override
+  public void save(User user) {
+    SignupResults signupResults = signup(user);
+    saveDisplayName(signupResults.uid, user.getName(), signupResults.idToken);
   }
 
   // TODO: Remove dummy code and connect to firebase
@@ -181,5 +230,45 @@ public class FirebaseUserDataAccessObject
     availableRooms.add(dummy_room2);
 
     return availableRooms;
+  }
+
+  private void deleteFirebaseUserData(User user, String idToken) {
+    String url = String.format(Constants.USER_DATA_URL, user.getUid()) + "?auth=" + idToken;
+    Request request = new Request.Builder().url(url).delete().build();
+    try {
+      Response response = client.newCall(request).execute();
+      if (response.code() != 200) {
+        throw new IOException();
+      }
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to delete user data. Please try again.");
+    }
+  }
+  private void deleteUserFromAuth(User user) {
+    String idToken = getAccessToken(user.getEmail(), user.getPassword());
+    JSONObject jsonBody = new JSONObject().put("idToken", idToken);
+    MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
+
+    String url = Constants.DELETE_USER_URL + "?key=" + Constants.FIREBASE_AUTH_ID;
+
+    Request request = new Request.Builder().url(url).post(body).build();
+    try {
+      Response response = client.newCall(request).execute();
+      if (response.code() != 200) {
+        throw new IOException();
+      }
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to delete user account. Please try again.");
+    }
+  }
+
+  @Override
+  public void deleteUser(User user) {
+    // Note: this doesn't remove the user from any rooms for which they may be a member
+    // Before calling this method, please remove the user from their rooms using the Rooms DAO
+    String idToken = getAccessToken(user.getEmail(), user.getPassword());
+    deleteFirebaseUserData(user, idToken);
+    deleteUserFromAuth(user);
   }
 }

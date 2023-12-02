@@ -1,10 +1,9 @@
+package view;
+
 import interface_adapter.ViewManagerModel;
 import javax.swing.*;
 import org.junit.Assert;
 import org.junit.Test;
-import view.LoginView;
-import view.SignupView;
-import view.WelcomeView;
 
 public class WelcomeTest extends ButtonTest {
   @Test

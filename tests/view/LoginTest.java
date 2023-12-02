@@ -1,3 +1,5 @@
+package view;
+
 import app.LoginUseCaseFactory;
 import data_access.FirebaseUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
@@ -6,8 +8,6 @@ import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
-import view.LoginView;
-import view.WelcomeView;
 
 public class LoginTest extends ButtonTest {
 
