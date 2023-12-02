@@ -92,7 +92,7 @@ public class FirebaseUserDataAccessObject
 
     try {
       Response response = client.newCall(request).execute();
-      if (response.code() == 200) {
+      if (response.isSuccessful()) {
         return response.body().string().replace('"', ' ').trim();
       } else {
         throw new IOException();
@@ -156,7 +156,7 @@ public class FirebaseUserDataAccessObject
     try {
       Response response = client.newCall(request).execute();
       JSONObject jsonResponse = new JSONObject(response.body().string());
-      if (response.code() == 200) {
+      if (response.isSuccessful()) {
         String uid = jsonResponse.getString("localId");
         String idToken = jsonResponse.getString("idToken");
         return new SignupResults(uid, idToken);
@@ -175,14 +175,14 @@ public class FirebaseUserDataAccessObject
   }
 
   private void saveDisplayName(String uid, String displayName, String idToken) {
-    String jsonBody = String.format("\"%s\"", displayName);
+    String jsonBody = JSONObject.quote(displayName);
     String url = String.format(Constants.DISPLAY_NAME_URL, uid) + "?auth=" + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
     Request request = new Request.Builder().url(url).put(body).build();
     try {
       Response response = client.newCall(request).execute();
-      if (response.code() != 200) {
+      if (!response.isSuccessful()) {
         throw new RuntimeException("Unable to save display name. Please try again.");
       }
     } catch (IOException | JSONException e) {
@@ -240,7 +240,7 @@ public class FirebaseUserDataAccessObject
     Request request = new Request.Builder().url(url).delete().build();
     try {
       Response response = client.newCall(request).execute();
-      if (response.code() != 200) {
+      if (!response.isSuccessful()) {
         throw new IOException();
       }
     } catch (IOException | JSONException e) {
@@ -259,7 +259,7 @@ public class FirebaseUserDataAccessObject
     Request request = new Request.Builder().url(url).post(body).build();
     try {
       Response response = client.newCall(request).execute();
-      if (response.code() != 200) {
+      if (!response.isSuccessful()) {
         throw new IOException();
       }
     } catch (IOException | JSONException e) {
