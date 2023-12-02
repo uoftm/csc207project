@@ -1,10 +1,9 @@
 package use_case.signup;
 
-import entity.User;
-import java.util.Optional;
+import entities.auth.User;
 
 public interface SignupUserDataAccessInterface {
   boolean existsByName(String identifier);
 
-  Optional<String> save(User user);
+  void save(User user);
 }

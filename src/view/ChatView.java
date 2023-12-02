@@ -1,6 +1,6 @@
 package view;
 
-import entity.Message;
+import entities.rooms.Message;
 import interface_adapter.chat.ChatController;
 import interface_adapter.chat.ChatState;
 import interface_adapter.chat.ChatViewModel;
@@ -24,8 +24,8 @@ public class ChatView implements PropertyChangeListener {
   private JButton send;
   private JPanel rawPane;
     private JButton search;
-
-    private final ChatViewModel viewModel;
+    
+  private final ChatViewModel viewModel;
 
 
   public ChatView(ChatController chatController, ChatViewModel viewModel, SearchViewModel searchViewModel,

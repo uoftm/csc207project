@@ -1,6 +1,6 @@
 package interface_adapter.chat;
 
-import entity.Message;
+import entities.rooms.Message;
 import interface_adapter.ViewModel;
 import java.beans.PropertyChangeSupport;
 import java.util.List;

@@ -1,6 +1,6 @@
 package use_case.settings;
 
-import entity.User;
+import entities.auth.AbstractUser;
 
 public class SettingsInteractor implements SettingsInputBoundary {
   // TODO: Add this after other code is merged
@@ -16,7 +16,7 @@ public class SettingsInteractor implements SettingsInputBoundary {
 
   @Override
   public void execute(SettingsInputData userInputData) {
-    User user = userInputData.getUser();
+    AbstractUser user = userInputData.getUser();
 
     // TODO: Write interaction after other code is merged
     SettingsOutputData settingsOutputData = new SettingsOutputData(user, true);

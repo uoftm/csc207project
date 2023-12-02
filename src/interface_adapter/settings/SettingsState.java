@@ -1,9 +1,9 @@
 package interface_adapter.settings;
 
-import entity.User;
+import entities.auth.AbstractUser;
 
 public class SettingsState {
-  private User user;
+  private AbstractUser user;
   private String error = null;
 
   public SettingsState(SettingsState state) {
@@ -13,7 +13,7 @@ public class SettingsState {
 
   public SettingsState() {}
 
-  public User getUser() {
+  public AbstractUser getUser() {
     return user;
   }
 

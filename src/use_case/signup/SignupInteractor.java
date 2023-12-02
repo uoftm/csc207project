@@ -1,9 +1,8 @@
 package use_case.signup;
 
-import entity.User;
-import entity.UserFactory;
+import entities.auth.User;
+import entities.auth.UserFactory;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class SignupInteractor implements SignupInputBoundary {
   final SignupUserDataAccessInterface userDataAccessObject;
@@ -27,7 +26,6 @@ public class SignupInteractor implements SignupInputBoundary {
     } else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
       userPresenter.prepareFailView("Passwords don't match.");
     } else {
-
       LocalDateTime now = LocalDateTime.now();
       User user =
           userFactory.create(
@@ -36,13 +34,13 @@ public class SignupInteractor implements SignupInputBoundary {
               signupInputData.getUsername(),
               signupInputData.getPassword(),
               now);
-      Optional<String> result = userDataAccessObject.save(user);
-      if (result.isEmpty()) {
+      try {
+        userDataAccessObject.save(user);
         SignupOutputData signupOutputData =
             new SignupOutputData(user.getEmail(), now.toString(), false);
         userPresenter.prepareSuccessView(signupOutputData);
-      } else {
-        userPresenter.prepareFailView(result.get());
+      } catch (RuntimeException e) {
+        userPresenter.prepareFailView(e.getMessage());
       }
     }
   }

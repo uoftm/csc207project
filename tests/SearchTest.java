@@ -1,8 +1,8 @@
 import static org.junit.Assert.*;
 
 import data_access.SearchDataAccessObject;
-import entity.SearchChatMessage;
-import entity.SearchRequest;
+import entities.search.SearchChatMessage;
+import entities.search.SearchRequest;
 import java.time.Instant;
 import okhttp3.OkHttpClient;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class SearchTest {
   public void testGetData() {
     SearchRequest searchRequest = new SearchRequest("dog", Instant.now(), "2");
     assertEquals(
-        searchDataAccessObject.getData(searchRequest).getResponses().getFirst().getFullText(),
+        searchDataAccessObject.getData(searchRequest).getResponses().get(0).getFullText(),
         "I love dogs");
   }
 }

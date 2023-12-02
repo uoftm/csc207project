@@ -1,9 +1,8 @@
 package data_access;
 
-import entity.User;
+import entities.auth.User;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterface {
@@ -23,8 +22,7 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
    * @param user the data to save
    */
   @Override
-  public Optional<String> save(User user) {
+  public void save(User user) {
     users.put(user.getName(), user);
-    return Optional.empty();
   }
 }

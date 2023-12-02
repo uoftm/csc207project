@@ -1,19 +1,19 @@
 package app;
 
-import data_access.FirebaseMessageDataAccessObject;
+import data_access.FirebaseRoomsDataAccessObject;
 import data_access.FirebaseSettingsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.chat.ChatViewModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
-import java.util.ArrayList;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
+import use_case.rooms.RoomsDataAccessInterface;
 import use_case.settings.SettingsDataAccessInterface;
 import view.*;
 
@@ -49,6 +49,7 @@ public class Main {
     LoginViewModel loginViewModel = new LoginViewModel();
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SettingsViewModel settingsViewModel = new SettingsViewModel();
+    RoomsViewModel roomsViewModel = new RoomsViewModel();
 
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject(client);
@@ -69,6 +70,7 @@ public class Main {
             viewManagerModel,
             loginViewModel,
             loggedInViewModel,
+            roomsViewModel,
             userDataAccessObject,
             switchViewController);
     views.add(loginView.contentPane, loginView.viewName);
@@ -76,13 +78,12 @@ public class Main {
     WelcomeView welcomeView = new WelcomeView(switchViewController);
     views.add(welcomeView.contentPane, WelcomeView.viewName);
 
-    var messageDataAccessObject = new FirebaseMessageDataAccessObject(client);
+    RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject();
 
-    ChatView chatView =
-        ChatUseCaseFactory.create(
-            messageDataAccessObject, new ChatViewModel(new ArrayList<>()), userDataAccessObject);
+    RoomsView roomsView = RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel);
 
-    LoggedInView loggedInView = new LoggedInView(loggedInViewModel, chatView, switchViewController);
+    LoggedInView loggedInView =
+        new LoggedInView(loggedInViewModel, roomsView, switchViewController);
     views.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsDataAccessInterface settingsUserDataAccessObject =

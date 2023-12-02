@@ -4,7 +4,6 @@ public class SignupOutputData {
 
   private final String email;
   private String creationTime;
-
   private final boolean useCaseFailed;
 
   public SignupOutputData(String email, String creationTime, boolean useCaseFailed) {

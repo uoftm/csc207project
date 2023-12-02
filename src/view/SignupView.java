@@ -74,10 +74,6 @@ public class SignupView implements PropertyChangeListener {
           public void keyReleased(KeyEvent e) {}
         });
 
-    // This makes a new KeyListener implementing class, instantiates it, and
-    // makes it listen to keystrokes in the usernameInputField.
-    //
-    // Notice how it has access to instance variables in the enclosing class!
     username.addKeyListener(
         new KeyListener() {
           @Override
@@ -118,7 +114,7 @@ public class SignupView implements PropertyChangeListener {
             SignupState currentState = signupViewModel.getState();
             currentState.setRepeatPassword(
                 String.valueOf(repeatPassword.getPassword()) + e.getKeyChar());
-            signupViewModel.setState(currentState); // Hmm, is this necessary?
+            signupViewModel.setState(currentState);
           }
 
           @Override
@@ -127,6 +123,14 @@ public class SignupView implements PropertyChangeListener {
           @Override
           public void keyReleased(KeyEvent e) {}
         });
+  }
+
+  public JButton getSignupButton() {
+    return signUp;
+  }
+
+  public JButton getCancelButton() {
+    return cancel;
   }
 
   @Override
