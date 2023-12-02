@@ -9,7 +9,7 @@ public class ViewConstants {
   // Using a darker shade of blue for the panel to maintain harmony
   public static final Color panel = new Color(153, 204, 255); // Steel Blue
 
-  public static final Dimension windowSize = new Dimension(800, 600);
+  public static final Dimension windowSize = new Dimension(1000, 700);
   public static final Dimension paneSize = new Dimension(400, 300);
   public static final Dimension navSize = new Dimension(400, 75);
   public static final Dimension navMiddle = new Dimension(400, 5);

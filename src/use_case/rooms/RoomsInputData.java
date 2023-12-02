@@ -6,12 +6,17 @@ import entities.rooms.Room;
 public class RoomsInputData {
   Room room;
   User user;
-  String message; // Nullable field
+  String message;
+  String userToAddEmail;
+  String roomToCreateName;
 
-  public RoomsInputData(Room room, User user, String message) {
+  public RoomsInputData(
+      Room room, User user, String message, String userToAddEmail, String roomToCreateName) {
     this.room = room;
     this.user = user;
     this.message = message;
+    this.userToAddEmail = userToAddEmail;
+    this.roomToCreateName = roomToCreateName;
   }
 
   Room getRoom() {
@@ -24,5 +29,13 @@ public class RoomsInputData {
 
   String getMessage() {
     return message;
+  }
+
+  String getEmail() {
+    return userToAddEmail;
+  }
+
+  String getRoomToCreateName() {
+    return roomToCreateName;
   }
 }

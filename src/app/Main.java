@@ -49,7 +49,7 @@ public class Main {
     LoginViewModel loginViewModel = new LoginViewModel();
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SettingsViewModel settingsViewModel = new SettingsViewModel();
-    RoomsViewModel roomsViewModel = new RoomsViewModel("", "");
+    RoomsViewModel roomsViewModel = new RoomsViewModel();
 
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject(client);

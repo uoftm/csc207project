@@ -9,7 +9,7 @@ public class WelcomeView {
   public static final String viewName = "initial welcome";
 
   public JPanel contentPane;
-  private JLabel captionLabel; // This is now bound through the GUI designer
+  private JLabel captionLabel;
   private JButton login;
   private JButton signup;
   private JPanel body;
