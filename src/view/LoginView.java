@@ -4,8 +4,6 @@ import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -39,23 +37,18 @@ public class LoginView implements PropertyChangeListener {
     body.setPreferredSize(ViewConstants.paneSize);
 
     logIn.addActionListener(
-        new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            if (evt.getSource().equals(logIn)) {
-              LoginState currentState = loginViewModel.getState();
+        evt -> {
+          if (evt.getSource().equals(logIn)) {
+            LoginState currentState = loginViewModel.getState();
 
-              loginController.execute(currentState.getEmail(), currentState.getPassword());
-            }
+            loginController.execute(currentState.getEmail(), currentState.getPassword());
           }
         });
 
     cancel.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent evt) {
-            if (evt.getSource().equals(cancel)) {
-              switchViewController.switchTo(WelcomeView.viewName);
-            }
+        evt -> {
+          if (evt.getSource().equals(cancel)) {
+            switchViewController.switchTo(WelcomeView.viewName);
           }
         });
 

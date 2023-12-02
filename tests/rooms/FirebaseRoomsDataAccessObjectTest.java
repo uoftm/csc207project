@@ -32,8 +32,7 @@ public class FirebaseRoomsDataAccessObjectTest {
         new FirebaseRoomsDataAccessObject() {
           @Override
           public Response<List<Message>> loadMessages(Room room, User user) {
-            Response<List<Message>> response = new Response<>(null);
-            response.setError("Failed to retrieve messages.");
+            Response<List<Message>> response = new Response<>("Failed to retrieve messages.");
             return response;
           }
         };
@@ -61,9 +60,7 @@ public class FirebaseRoomsDataAccessObjectTest {
         new FirebaseRoomsDataAccessObject() {
           @Override
           public Response<String> sendMessage(Room room, User user, String message) {
-            Response<String> response = new Response<>(null);
-            response.setError("Failed to send message.");
-            return response;
+            return new Response<>("Failed to send message.");
           }
         };
     Room dummyRoom = createDummyRoom();
@@ -100,9 +97,7 @@ public class FirebaseRoomsDataAccessObjectTest {
         new FirebaseRoomsDataAccessObject() {
           @Override
           public Response<String> addUserToRoom(Room room, User user, String email) {
-            Response<String> response = new Response<>(null);
-            response.setError("Failed to add user.");
-            return response;
+            return new Response<>("Failed to add user.");
           }
         };
     Room dummyRoom = createDummyRoom();
@@ -129,9 +124,7 @@ public class FirebaseRoomsDataAccessObjectTest {
         new FirebaseRoomsDataAccessObject() {
           @Override
           public Response<Room> createRoom(User user, String roomName) {
-            Response<Room> response = new Response<>(null);
-            response.setError("Failed to create room.");
-            return response;
+            return new Response<>("Failed to create room.");
           }
         };
     User dummyUser = createDummyUser();

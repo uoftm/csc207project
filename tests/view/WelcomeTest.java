@@ -1,6 +1,6 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
+import interface_adapter.switch_view.ViewManagerModel;
 import javax.swing.*;
 import org.junit.Assert;
 import org.junit.Test;

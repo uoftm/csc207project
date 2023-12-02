@@ -1,6 +1,6 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
+import interface_adapter.switch_view.ViewManagerModel;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

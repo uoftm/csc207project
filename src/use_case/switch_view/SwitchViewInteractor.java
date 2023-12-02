@@ -7,6 +7,10 @@ public class SwitchViewInteractor implements SwitchViewInputBoundary {
     this.outputBoundary = outputBoundary;
   }
 
+  /**
+   * A simple SwitchViewInteractor that just passes controller information straight to the
+   * presenter.
+   */
   @Override
   public void execute(String inputData) {
     // Logic to switch views

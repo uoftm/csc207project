@@ -1,7 +1,7 @@
 package use_case.signup;
 
 import entities.auth.User;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class SignupInteractor implements SignupInputBoundary {
   final SignupUserDataAccessInterface userDataAccessObject;
@@ -14,6 +14,13 @@ public class SignupInteractor implements SignupInputBoundary {
     this.userPresenter = signupOutputBoundary;
   }
 
+  /**
+   * Executes the signup use case, by checking if the password and repeated password match, and if
+   * the email is already in use. If the email is not in use, and the passwords match, the user is
+   * saved through the SignupUserDataAccessInterface
+   *
+   * @param signupInputData the input data for the use case
+   */
   @Override
   public void execute(SignupInputData signupInputData) {
     if (userDataAccessObject.existsByName(signupInputData.getEmail())) {
@@ -22,7 +29,7 @@ public class SignupInteractor implements SignupInputBoundary {
     } else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
       userPresenter.prepareFailView("Passwords don't match.");
     } else {
-      LocalDateTime now = LocalDateTime.now();
+      Instant now = Instant.now();
       User user =
           new User(
               null,
@@ -32,8 +39,7 @@ public class SignupInteractor implements SignupInputBoundary {
               now);
       try {
         userDataAccessObject.save(user);
-        SignupOutputData signupOutputData =
-            new SignupOutputData(user.getEmail(), now.toString(), false);
+        SignupOutputData signupOutputData = new SignupOutputData(user.getEmail(), now);
         userPresenter.prepareSuccessView(signupOutputData);
       } catch (RuntimeException e) {
         userPresenter.prepareFailView(e.getMessage());

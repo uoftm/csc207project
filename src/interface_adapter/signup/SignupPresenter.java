@@ -2,8 +2,6 @@ package interface_adapter.signup;
 
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
 import use_case.switch_view.SwitchViewOutputBoundary;
@@ -24,12 +22,14 @@ public class SignupPresenter implements SignupOutputBoundary {
     this.switchViewOutputBoundary = switchViewOutputBoundary;
   }
 
+  /**
+   * Prepares the view after a successful signup, switching to the login view. We could
+   * automatically login here, but we choose to let the user login manually.
+   *
+   * @param response the response data from the signup operation
+   */
   @Override
   public void prepareSuccessView(SignupOutputData response) {
-    // On success, switch to the login view.
-    LocalDateTime responseTime = LocalDateTime.parse(response.getCreationTime());
-    response.setCreationTime(responseTime.format(DateTimeFormatter.ofPattern("hh:mm:ss")));
-
     LoginState loginState = loginViewModel.getState();
     loginState.setEmail(response.getEmail());
     this.loginViewModel.setState(loginState);
@@ -38,6 +38,11 @@ public class SignupPresenter implements SignupOutputBoundary {
     switchViewOutputBoundary.present(LoginView.viewName);
   }
 
+  /**
+   * Prepares the view after a failed signup, displaying a popup with the error message.
+   *
+   * @param error the error message to display
+   */
   @Override
   public void prepareFailView(String error) {
     SignupState signupState = signupViewModel.getState();

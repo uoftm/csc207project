@@ -14,6 +14,9 @@ public class RoomsPresenter implements RoomsOutputBoundary {
     this.roomsViewModel = roomsViewModel;
   }
 
+  /**
+   * @param response The response data containing the information about the currently active room.
+   */
   @Override
   public void prepareSuccessView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();
@@ -21,6 +24,11 @@ public class RoomsPresenter implements RoomsOutputBoundary {
     roomsViewModel.firePropertyChanged();
   }
 
+  /**
+   * Update the view model with the messages for the currently active room.
+   *
+   * @param response The RoomsOutputData containing the relevant data after a successful fetch.
+   */
   @Override
   public void prepareLoadMessagesSuccessView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();
@@ -37,6 +45,7 @@ public class RoomsPresenter implements RoomsOutputBoundary {
     roomsViewModel.firePropertyChanged();
   }
 
+  /** Add a new room to the view model. */
   @Override
   public void prepareCreateRoomSuccessView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();
@@ -47,6 +56,7 @@ public class RoomsPresenter implements RoomsOutputBoundary {
     roomsViewModel.firePropertyChanged();
   }
 
+  /** Show a popup of a failed response from the server. */
   @Override
   public void prepareFailView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();

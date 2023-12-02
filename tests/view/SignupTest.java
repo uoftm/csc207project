@@ -2,8 +2,8 @@ package view;
 
 import app.SignupUseCaseFactory;
 import data_access.FirebaseUserDataAccessObject;
-import interface_adapter.ViewManagerModel;
 import interface_adapter.signup.SignupViewModel;
+import interface_adapter.switch_view.ViewManagerModel;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;

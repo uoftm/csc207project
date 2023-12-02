@@ -124,7 +124,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
         new JSONObject()
             .put("time", message.getTime())
             .put("roomID", message.getRoomID())
-            .put("message", message.getMessage())
+            .put("message", message.getContent())
             .put("author", message.getAuthorId());
 
     // Define the JSON data for bulk ingestion

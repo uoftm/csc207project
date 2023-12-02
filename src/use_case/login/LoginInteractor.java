@@ -20,6 +20,11 @@ public class LoginInteractor implements LoginInputBoundary {
     this.switchViewPresenter = switchViewPresenter;
   }
 
+  /**
+   * Executes the login process, and if it throws an exception, display it with the presenter
+   *
+   * @param loginInputData the login input data containing the user's email and password
+   */
   @Override
   public void execute(LoginInputData loginInputData) {
     String email = loginInputData.getEmail();
@@ -27,7 +32,7 @@ public class LoginInteractor implements LoginInputBoundary {
     try {
       User user = userDataAccessObject.get(email, password);
       List<Room> availableRooms = userDataAccessObject.getAvailableRooms(user);
-      LoginOutputData loginOutputData = new LoginOutputData(user, availableRooms, true);
+      LoginOutputData loginOutputData = new LoginOutputData(user, availableRooms);
       loginPresenter.prepareSuccessView(loginOutputData);
       switchViewPresenter.present(LoggedInView.viewName);
     } catch (RuntimeException e) {

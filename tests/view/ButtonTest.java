@@ -2,10 +2,9 @@ package view;
 
 import static java.lang.Thread.sleep;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.switch_view.SwitchViewController;
 import interface_adapter.switch_view.SwitchViewPresenter;
-import javax.swing.*;
+import interface_adapter.switch_view.ViewManagerModel;
 import use_case.switch_view.SwitchViewInputBoundary;
 import use_case.switch_view.SwitchViewInteractor;
 import use_case.switch_view.SwitchViewOutputBoundary;

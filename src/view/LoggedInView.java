@@ -21,7 +21,6 @@ public class LoggedInView implements PropertyChangeListener {
   private JPanel navBody;
   private JPanel navMiddle;
   private JPanel rooms;
-  private JPanel panel1;
 
   public LoggedInView(
       LoggedInViewModel loggedInViewModel,

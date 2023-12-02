@@ -1,11 +1,11 @@
 package entities.auth;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class User extends DisplayUser implements AbstractUser {
   private final String email;
   private final String password;
-  private final LocalDateTime creationTime;
+  private final Instant creationTime;
 
   /**
    * Requires: password is valid.
@@ -13,7 +13,7 @@ public class User extends DisplayUser implements AbstractUser {
    * @param name
    * @param password
    */
-  public User(String uid, String email, String name, String password, LocalDateTime creationTime) {
+  public User(String uid, String email, String name, String password, Instant creationTime) {
     super(uid, name);
     this.email = email;
     this.password = password;
@@ -28,7 +28,7 @@ public class User extends DisplayUser implements AbstractUser {
     return password;
   }
 
-  public LocalDateTime getCreationTime() {
+  public Instant getCreationTime() {
     return creationTime;
   }
 }

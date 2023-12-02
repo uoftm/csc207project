@@ -6,7 +6,7 @@ import entities.search.SearchRequest;
 
 public interface SearchDataAccessInterface {
 
-  public SearchReponseArray getData(SearchRequest request);
+  SearchReponseArray getData(SearchRequest request);
 
-  public void saveData(SearchChatMessage message);
+  void saveData(SearchChatMessage message);
 }

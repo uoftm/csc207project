@@ -9,6 +9,11 @@ public class SwitchViewController {
     this.switchViewInteractor = switchViewInteractor;
   }
 
+  /**
+   * Switch the currently displayed page to the given view.
+   *
+   * @param viewName The name of the view to switch to. (must be added to the view manager first)
+   */
   public void switchTo(String viewName) {
     switchViewInteractor.execute(viewName);
   }

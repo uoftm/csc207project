@@ -6,8 +6,6 @@ import entities.rooms.Message;
 import entities.rooms.Room;
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.*;
@@ -127,8 +125,7 @@ public class FirebaseUserDataAccessObject
       String email = userObject.optString("email");
       String displayName = getDisplayName(uid);
       long createdAt = Long.parseLong(userObject.optString("createdAt"));
-      LocalDateTime dateTime =
-          LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
+      Instant dateTime = Instant.ofEpochMilli(createdAt);
 
       return new User(uid, email, displayName, password, dateTime);
     } catch (IOException e) {
