@@ -7,11 +7,15 @@ public class RoomsInputData {
   Room room;
   User user;
   String message; // Nullable field
+  String email;  // Nullable field
+  String createRoom;  // Nullable field
 
-  public RoomsInputData(Room room, User user, String message) {
+  public RoomsInputData(Room room, User user, String message, String email, String createRoom) {
     this.room = room;
     this.user = user;
     this.message = message;
+    this.email = email;
+    this.createRoom = createRoom;
   }
 
   Room getRoom() {
@@ -25,4 +29,10 @@ public class RoomsInputData {
   String getMessage() {
     return message;
   }
+
+  String getEmail() {
+    return email;
+  }
+
+  String getCreateRoom() { return createRoom; }
 }

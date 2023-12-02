@@ -1,7 +1,10 @@
 package use_case.rooms;
 
 import entities.auth.User;
+import entities.rooms.Message;
 import entities.rooms.Room;
+
+import java.util.List;
 
 public class RoomsInteractor implements RoomsInputBoundary {
   final RoomsOutputBoundary roomsPresenter;
@@ -13,61 +16,86 @@ public class RoomsInteractor implements RoomsInputBoundary {
     this.roomsDataAccessObject = roomsDataAccessObject;
   }
 
-  // TODO: Write more interactions like this
   @Override
   public void loadMessages(RoomsInputData roomsInputData) {
     Room room = roomsInputData.getRoom();
     User user = roomsInputData.getUser();
 
-    String roomUid = room.getUid();
-    String userUid = user.getUid();
-
-    // Make request with uid here
-    // and get error (can be null) back
-    String error = null;
-    boolean useCaseFailed = error != null;
-
-    // This request should be validated through firebase
-    // to check if this user belongs to this room that exists
-    boolean valid = roomsDataAccessObject.validateRoomAccess(roomUid, userUid);
+    boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
 
     if (valid) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, null);
-      roomsPresenter.prepareFailView(roomsOutputData);
+      Response<List<Message>> response = roomsDataAccessObject.loadMessages(room, user);
+      if (response.isError()) {
+        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, response.getError(), null);
+        roomsPresenter.prepareFailView(roomsOutputData);
+      } else {
+        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, response.getVal(), null, null);
+        roomsPresenter.prepareLoadMessagesSuccessView(roomsOutputData);
+      }
     } else {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, "Error here");
+      String error = "Access to Room " + room.getName() + " denied";
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, error, null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
 
-  // TODO: Write more interactions like this
   @Override
   public void sendMessage(RoomsInputData roomsInputData) {
     Room room = roomsInputData.getRoom();
     User user = roomsInputData.getUser();
-
-    String roomUid = room.getUid();
-    String userUid = user.getUid();
     String message = roomsInputData.getMessage();
 
-    // Make request with uid here
-    // and get error (can be null) back
-    String error = null;
-    boolean useCaseFailed = error != null;
-
-    // Put your call here @Justus
-    System.out.println(message);
-
-    // This request should be validated through firebase
-    // to check if this user belongs to this room that exists
-    boolean valid = roomsDataAccessObject.validateRoomAccess(roomUid, userUid);
+    boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
 
     if (valid) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, null);
+      Response<String> response = roomsDataAccessObject.sendMessage(room, user, message);
+      if (response.isError()) {
+        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, response.getError(), null);
+        roomsPresenter.prepareFailView(roomsOutputData);
+      }
+    } else {
+      String error = "Access to Room " + room.getName() + " denied";
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, error, null);
+      roomsPresenter.prepareFailView(roomsOutputData);
+    }
+  }
+
+  @Override
+  public void addUserToRoom(RoomsInputData roomsInputData) {
+    Room room = roomsInputData.getRoom();
+    User user = roomsInputData.getUser();
+    String email = roomsInputData.getEmail();
+
+    boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
+
+    if (valid) {
+      Response<String> response = roomsDataAccessObject.addUserToRoom(room, user, email);
+      if (response.isError()) {
+        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, response.getError(), null);
+        roomsPresenter.prepareFailView(roomsOutputData);
+      } else {
+        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, null, response.getVal());
+        roomsPresenter.prepareSuccessView(roomsOutputData);
+      }
+    } else {
+      String error = "Access to Room " + room.getName() + " denied";
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, error, null);
+      roomsPresenter.prepareFailView(roomsOutputData);
+    }
+  }
+
+  @Override
+  public void createRoom(RoomsInputData roomsInputData) {
+    User user = roomsInputData.getUser();
+    String createRoom = roomsInputData.getCreateRoom();
+
+    Response<Room> response = roomsDataAccessObject.createRoom(user, createRoom);
+    if (response.isError()) {
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, response.getError(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     } else {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, "Error here");
-      roomsPresenter.prepareFailView(roomsOutputData);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(response.getVal(), null, null, null, null);
+      roomsPresenter.prepareCreateRoomSuccessView(roomsOutputData);
     }
   }
 }
