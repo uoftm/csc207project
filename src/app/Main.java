@@ -3,10 +3,15 @@ package app;
 import data_access.FirebaseRoomsDataAccessObject;
 import data_access.FirebaseSettingsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
+import data_access.SearchDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.rooms.RoomsViewModel;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchViewModel;
+import interface_adapter.search.StartSearchController;
+import interface_adapter.searched.SearchedViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
@@ -14,6 +19,7 @@ import java.awt.*;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import use_case.rooms.RoomsDataAccessInterface;
+import use_case.search.SearchDataAccessInterface;
 import use_case.settings.SettingsDataAccessInterface;
 import view.*;
 
@@ -31,15 +37,10 @@ public class Main {
 
     application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-    CardLayout cardLayout = new CardLayout();
-
-    // The various View objects. Only one view is visible at a time.
-    JPanel views = new JPanel(cardLayout);
-    application.add(views);
-
     // This keeps track of and manages which view is currently showing.
     ViewManagerModel viewManagerModel = new ViewManagerModel();
-    new ViewManager(views, cardLayout, viewManagerModel);
+    ViewManager views = new ViewManager(viewManagerModel);
+    application.add(views.getViews());
 
     // The data for the views, such as username and password, are in the ViewModels.
     // This information will be changed by a presenter object that is reporting the
@@ -63,7 +64,7 @@ public class Main {
             signupViewModel,
             userDataAccessObject,
             switchViewController);
-    views.add(signupView.contentPane, SignupView.viewName);
+    viewManagerModel.add(signupView.contentPane, SignupView.viewName);
 
     LoginView loginView =
         LoginUseCaseFactory.create(
@@ -73,18 +74,28 @@ public class Main {
             roomsViewModel,
             userDataAccessObject,
             switchViewController);
-    views.add(loginView.contentPane, loginView.viewName);
+    viewManagerModel.add(loginView.contentPane, loginView.viewName);
 
     WelcomeView welcomeView = new WelcomeView(switchViewController);
-    views.add(welcomeView.contentPane, WelcomeView.viewName);
+    viewManagerModel.add(welcomeView.contentPane, WelcomeView.viewName);
 
     RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject();
 
-    RoomsView roomsView = RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel);
+    SearchViewModel searchViewModel = new SearchViewModel();
+    SearchedViewModel searchedViewModel = new SearchedViewModel();
+    SearchDataAccessInterface searchDataAccessObject = new SearchDataAccessObject(client);
+    SearchController searchController =
+        SearchUseCaseFactory.createSearchController(
+            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+    StartSearchController startSearchController =
+        new StartSearchController(viewManagerModel, searchController, searchViewModel);
+
+    RoomsView roomsView =
+        RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel, startSearchController);
 
     LoggedInView loggedInView =
         new LoggedInView(loggedInViewModel, roomsView, switchViewController);
-    views.add(loggedInView.contentPane, loggedInView.viewName);
+    viewManagerModel.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsDataAccessInterface settingsUserDataAccessObject =
         new FirebaseSettingsDataAccessObject();
@@ -92,10 +103,10 @@ public class Main {
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
             settingsViewModel, settingsUserDataAccessObject, switchViewController);
-    views.add(settingsView.contentPane, settingsView.viewName);
+    viewManagerModel.add(settingsView.contentPane, settingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);
-    viewManagerModel.firePropertyChanged();
+    viewManagerModel.fireViewChanged();
 
     application.pack();
     application.setVisible(true);

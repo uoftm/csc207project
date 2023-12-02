@@ -1,6 +1,5 @@
 package view;
 
-import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchState;
 import interface_adapter.search.SearchViewModel;
@@ -10,7 +9,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.Instant;
 import javax.swing.*;
-import use_case.chat.ChatUserDataAccessInterface;
 
 public class SearchView implements PropertyChangeListener {
   public static final String viewName = "search";
@@ -18,15 +16,11 @@ public class SearchView implements PropertyChangeListener {
   private JButton search;
 
   private JTextField searchBoxText;
-  private JScrollPane contentPane;
+  public JPanel contentPane;
 
   private SearchViewModel searchViewModel;
 
-  public SearchView(
-      SearchController searchController,
-      SearchViewModel searchviewModel,
-      RoomsViewModel roomsViewModel,
-      ChatUserDataAccessInterface userDataAccessObject) {
+  public SearchView(SearchController searchController, SearchViewModel searchviewModel) {
     this.searchViewModel = searchviewModel;
     searchviewModel.addPropertyChangeListener(this);
 
@@ -53,9 +47,9 @@ public class SearchView implements PropertyChangeListener {
         e -> {
           searchController.executeSearchRequest(
               Instant.now(),
-              roomsViewModel.getState().getRoomUid(),
+              searchViewModel.getState().getRoomID(),
               currentState.getSearchedTerm(),
-              userDataAccessObject.get().getUid());
+              searchViewModel.getState().getUserUid());
         });
   }
 

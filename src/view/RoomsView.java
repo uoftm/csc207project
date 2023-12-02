@@ -6,6 +6,7 @@ import entities.rooms.Room;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
+import interface_adapter.search.StartSearchController;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -32,7 +33,10 @@ public class RoomsView implements PropertyChangeListener {
   private JButton searchButton;
   private final RoomsViewModel viewModel;
 
-  public RoomsView(RoomsViewModel viewModel, RoomsController roomsController) {
+  public RoomsView(
+      RoomsViewModel viewModel,
+      RoomsController roomsController,
+      StartSearchController searchController) {
     this.viewModel = viewModel;
     this.viewModel.addPropertyChangeListener(this);
 
@@ -191,6 +195,16 @@ public class RoomsView implements PropertyChangeListener {
 
               roomsController.createRoom(user, roomToCreateName);
             }
+          }
+        });
+
+    searchButton.addActionListener(
+        evt -> {
+          if (evt.getSource().equals(searchButton)) {
+            RoomsState currentState = viewModel.getState();
+            String uid = currentState.getUserUid();
+            String roomUid = currentState.getRoomUid();
+            searchController.search(roomUid, uid);
           }
         });
   }
