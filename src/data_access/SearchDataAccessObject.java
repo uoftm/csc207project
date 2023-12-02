@@ -6,8 +6,6 @@ import entity.SearchRequest;
 import entity.SearchResponse;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,7 +48,12 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             .put("filter", new JSONArray().put(rangeFilter));
 
     JSONObject highlight =
-        new JSONObject().put("fields", new JSONObject().put("message", new JSONObject()));
+        new JSONObject()
+            .put(
+                "fields",
+                new JSONObject()
+                    .put("message", new JSONObject())
+                    .put("*", new JSONObject().put("number_of_fragments", 0)));
 
     JSONObject query =
         new JSONObject()
@@ -71,28 +74,19 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
       JSONObject rootNode = new JSONObject(response.body().string());
       JSONArray hitsArray = rootNode.getJSONObject("hits").getJSONArray("hits");
       ArrayList<SearchResponse> searchResponses = new ArrayList<>();
-      Pattern pattern = Pattern.compile("<em>(.*?)</em>");
       for (int i = 0; i < hitsArray.length(); i++) {
         JSONObject hit = hitsArray.getJSONObject(i);
         JSONObject source = hit.getJSONObject("_source");
         JSONArray highlightNode = hit.getJSONObject("highlight").optJSONArray("message");
         String finalHighlight;
         if (highlightNode != null) {
-          ArrayList<String> object = new ArrayList<>();
-          for (int j = 0; j < highlightNode.length(); j++) {
-            object.add(highlightNode.getString(j));
-          }
-          String highlightedText = object.get(0);
-          Matcher matcher = pattern.matcher(highlightedText);
-          matcher.find();
-          finalHighlight = matcher.group().substring(4, 8);
+          finalHighlight = highlightNode.getString(0);
         } else {
           finalHighlight = "";
         }
         SearchResponse oneResponse =
             new SearchResponse(
                 finalHighlight,
-                source.getString("message"),
                 // TODO: use an in-memory cache to query username here instead
                 source.optString("author"),
                 Instant.parse(source.getString("time")),

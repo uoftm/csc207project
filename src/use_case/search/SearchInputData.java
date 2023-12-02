@@ -8,7 +8,7 @@ public class SearchInputData {
   private final String message;
   private final String authorId;
 
-  SearchInputData(Instant time, String roomID, String message, String authorId) {
+  public SearchInputData(Instant time, String roomID, String message, String authorId) {
     this.message = message;
     this.time = time;
     this.roomID = roomID;

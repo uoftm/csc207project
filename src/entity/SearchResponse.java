@@ -3,26 +3,19 @@ package entity;
 import java.time.Instant;
 
 public class SearchResponse {
-  private final String highlightedText;
 
   private final String fullText;
   private final String authorName;
 
   private final Instant time;
 
-  private final String roomID;
+  private final String roomName;
 
-  public SearchResponse(
-      String highlightedText, String fullText, String authorName, Instant time, String roomID) {
-    this.highlightedText = highlightedText;
+  public SearchResponse(String fullText, String authorName, Instant time, String roomName) {
     this.fullText = fullText;
     this.authorName = authorName;
     this.time = time;
-    this.roomID = roomID;
-  }
-
-  public String getHighlightedText() {
-    return highlightedText;
+    this.roomName = roomName;
   }
 
   public String getFullText() {
@@ -37,7 +30,7 @@ public class SearchResponse {
     return authorName;
   }
 
-  public String getRoomID() {
-    return roomID;
+  public String getRoomName() {
+    return roomName;
   }
 }
