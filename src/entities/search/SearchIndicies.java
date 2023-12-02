@@ -9,4 +9,12 @@ public class SearchIndicies {
     this.start = start;
     this.end = end;
   }
+
+  public Integer getStart() {
+    return start;
+  }
+
+  public Integer getEnd() {
+    return end;
+  }
 }

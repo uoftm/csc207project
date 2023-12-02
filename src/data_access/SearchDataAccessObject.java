@@ -101,11 +101,11 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             break;
           }
         }
-        //        String fulltext = finalHighlight.replaceAll("<em>|</em>", "");
+        String fulltext = finalHighlight.replaceAll("<em>|</em>", "");
 
         SearchResponse oneResponse =
             new SearchResponse(
-                finalHighlight,
+                fulltext,
                 // TODO: use an in-memory cache to query username here instead
                 source.optString("author"),
                 Instant.parse(source.getString("time")),

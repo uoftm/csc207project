@@ -55,7 +55,17 @@ public class SearchedView implements PropertyChangeListener {
       JPanel eachMessagePanel = new JPanel();
       eachMessagePanel.setLayout(new BorderLayout());
       JLabel label = new JLabel(response.label);
-      JLabel textPane = new JLabel(response.rawMessage);
+      JTextPane textPane = new JTextPane();
+      textPane.setText(response.rawMessage);
+      textPane.setEditable(false);
+
+      for (var index : response.highlightIndices) {
+        try {
+          textPane.getHighlighter().addHighlight(index.getStart(), index.getEnd(), highlighter);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
 
       eachMessagePanel.add(label);
       eachMessagePanel.add(textPane);
