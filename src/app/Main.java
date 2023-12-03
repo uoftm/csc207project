@@ -114,7 +114,6 @@ public class Main {
     viewManagerModel.add(settingsView.contentPane, settingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);
-    viewManagerModel.fireViewChanged();
 
     application.pack();
     application.setVisible(true);

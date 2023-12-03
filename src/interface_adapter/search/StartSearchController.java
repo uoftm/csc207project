@@ -1,6 +1,7 @@
 package interface_adapter.search;
 
 import interface_adapter.ViewManagerModel;
+import view.SearchView;
 
 public class StartSearchController {
   private final ViewManagerModel viewManagerModel;
@@ -15,7 +16,6 @@ public class StartSearchController {
     searchViewModel.getState().setRoomUid(roomId);
     searchViewModel.getState().setUserUid(userId);
 
-    viewManagerModel.setActiveView("search");
-    viewManagerModel.fireViewChanged();
+    viewManagerModel.setActiveView(SearchView.viewName);
   }
 }

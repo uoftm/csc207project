@@ -42,7 +42,6 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
     this.roomsViewModel.firePropertyChanged();
 
     this.viewManagerModel.setActiveView(loggedInViewModel.getViewName());
-    this.viewManagerModel.fireViewChanged();
   }
 
   @Override
@@ -55,6 +54,5 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
   @Override
   public void present(SwitchViewOutputData outputData) {
     this.viewManagerModel.setActiveView(outputData.getViewName());
-    this.viewManagerModel.fireViewChanged();
   }
 }

@@ -27,20 +27,11 @@ public class ViewManagerModel {
 
   public void setActiveView(String activeView) {
     this.activeViewName = activeView;
+    support.firePropertyChange("view", null, this.activeViewName);
   }
 
   public void add(JPanel view, String viewName) {
     this.views.add(new ViewAndName(view, viewName));
-    this.fireViewsChanged();
-  }
-
-  // This is what the Signup Presenter will call to let the ViewModel know
-  // to alert the View
-  public void fireViewChanged() {
-    support.firePropertyChange("view", null, this.activeViewName);
-  }
-
-  public void fireViewsChanged() {
     support.firePropertyChange("views", null, this.views);
   }
 
