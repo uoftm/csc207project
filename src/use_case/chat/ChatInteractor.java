@@ -24,7 +24,7 @@ public class ChatInteractor implements ChatInputBoundary {
 
   public void sendMessage(String messageText) {
     Message message =
-        new Message(Instant.now(), messageText, chatUserDataAccessInterface.get().getUid());
+        new Message(Instant.now(), messageText, chatUserDataAccessInterface.get().getEmail());
     dataAccessInterface.save(message);
   }
 }

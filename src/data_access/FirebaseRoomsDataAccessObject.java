@@ -3,12 +3,10 @@ package data_access;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Message;
-
+import entities.rooms.Room;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
-
-import entities.rooms.Room;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +25,7 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
   public Room getRoomFromId(User user, LoginUserDataAccessInterface userDAO, String roomId) {
     String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
 
-    String url = String.format(Constants.ROOM_DATA_URL, roomId) + "?auth=" + idToken;
+    String url = String.format(Constants.ROOM_URL, roomId) + "?auth=" + idToken;
     Request request = new Request.Builder().url(url).get().build();
 
     try {
@@ -36,23 +34,33 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
         JSONObject rooms = new JSONObject(response.body().string());
 
         // Get messages
-        JSONObject messagesJSON = rooms.getJSONObject("messages");
         List<Message> messages = new ArrayList<>();
-        for (String key: new ArrayList<String>((Collection) messagesJSON.keys())) {
-          Instant timestamp = Instant.ofEpochSecond(Long.parseLong(key));
-          String contents = messagesJSON.getJSONObject(key).getString("contents");
-          String authorEmail = messagesJSON.getJSONObject(key).getString("author");
-          Message message = new Message(timestamp, contents, authorEmail);
-          messages.add(message);
+        if (rooms.has("messages")) {
+          JSONObject messagesJSON = rooms.getJSONObject("messages");
+          Iterator<String> timestampIterator = messagesJSON.keys();
+          while (timestampIterator.hasNext()) {
+            String key = timestampIterator.next();
+            Instant timestamp = Instant.ofEpochSecond(Long.parseLong(key));
+            String contents = messagesJSON.getJSONObject(key).getString("contents");
+            String encodedAuthorEmail = messagesJSON.getJSONObject(key).getString("author");
+            String authorEmail = new String(Base64.getDecoder().decode(encodedAuthorEmail));
+            Message message = new Message(timestamp, contents, authorEmail);
+            messages.add(message);
+          }
         }
 
         // Get DisplayUsers
-        JSONObject usersJSON = rooms.getJSONObject("users");
         List<DisplayUser> displayUsers = new ArrayList<>();
-        for (String userEmail: new ArrayList<String>((Collection) usersJSON.keys())) {
-          String displayName = usersJSON.getString(userEmail);
-          DisplayUser displayUser = new DisplayUser(userEmail, displayName);
-          displayUsers.add(displayUser);
+        if (rooms.has("users")) {
+          JSONObject usersJSON = rooms.getJSONObject("users");
+          Iterator<String> encodedEmailIterator = usersJSON.keys();
+          while (encodedEmailIterator.hasNext()) {
+            String encodedEmail = encodedEmailIterator.next();
+            String userEmail = new String(Base64.getDecoder().decode(encodedEmail));
+            String displayName = usersJSON.getString(encodedEmail);
+            DisplayUser displayUser = new DisplayUser(userEmail, displayName);
+            displayUsers.add(displayUser);
+          }
         }
 
         // Get name
@@ -70,7 +78,11 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
 
   private void addRoomToUserData(User user, String idToken, Room room) {
     String jsonBody = JSONObject.quote("true");
-    String url = String.format(Constants.SPECIFIC_ROOM_DATA_URL, user.getEmail(), room.getUid()) + "?auth=" + idToken;
+    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String url =
+        String.format(Constants.SPECIFIC_ROOM_DATA_URL, encodedEmail, room.getUid())
+            + "?auth="
+            + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
     Request request = new Request.Builder().url(url).put(body).build();
 
@@ -93,7 +105,9 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     roomJSON.put("name", roomName);
     // Add room users
     JSONObject roomUsersJSON = new JSONObject();
-    roomUsersJSON.put(user.getEmail(), user.getName());
+    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    roomUsersJSON.put(encodedEmail, user.getName());
+    roomJSON.put("users", roomUsersJSON);
 
     // Generate room id
     String roomId = UUID.randomUUID().toString();
@@ -121,7 +135,11 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
   }
 
   private void deleteRoomFromUserData(DisplayUser user, Room room, String idToken) {
-    String url = String.format(Constants.SPECIFIC_ROOM_DATA_URL, user.getEmail(), room.getUid()) + "?auth=" + idToken;
+    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String url =
+        String.format(Constants.SPECIFIC_ROOM_DATA_URL, encodedEmail, room.getUid())
+            + "?auth="
+            + idToken;
     Request request = new Request.Builder().url(url).delete().build();
     try {
       Response response = client.newCall(request).execute();
@@ -137,11 +155,11 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
   public void deleteRoom(User user, LoginUserDataAccessInterface userDAO, Room room) {
     String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
 
-    for (DisplayUser roomUser: room.getUsers()) {
+    for (DisplayUser roomUser : room.getUsers()) {
       deleteRoomFromUserData(roomUser, room, idToken);
     }
 
-    String url = String.format(Constants.ROOM_DATA_URL, room.getUid()) + "?auth=" + idToken;
+    String url = String.format(Constants.ROOM_URL, room.getUid()) + "?auth=" + idToken;
     Request request = new Request.Builder().url(url).delete().build();
     try {
       Response response = client.newCall(request).execute();

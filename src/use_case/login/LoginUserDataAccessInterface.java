@@ -1,7 +1,6 @@
 package use_case.login;
 
 import entities.auth.User;
-import entities.rooms.Room;
 import java.util.List;
 
 public interface LoginUserDataAccessInterface {

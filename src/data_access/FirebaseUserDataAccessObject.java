@@ -3,8 +3,6 @@ package data_access;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.auth.UserFactory;
-import entities.rooms.Message;
-import entities.rooms.Room;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,13 +10,13 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
+import java.util.Base64;
 
 public class FirebaseUserDataAccessObject
     implements SignupUserDataAccessInterface,
@@ -90,7 +88,8 @@ public class FirebaseUserDataAccessObject
     // Note: This method doesn't require authentication, as anyone is allowed to retrieve a display
     // name given an uid
     // In addition, this method returns a RuntimeError if there is no DisplayUser available
-    String url = String.format(Constants.DISPLAY_NAME_URL, email);
+    String encodedEmail = Base64.getEncoder().encodeToString(email.toLowerCase().getBytes());
+    String url = String.format(Constants.DISPLAY_NAME_URL, encodedEmail);
     Request request = new Request.Builder().url(url).get().build();
 
     try {
@@ -176,7 +175,8 @@ public class FirebaseUserDataAccessObject
 
   private void saveUserToFirebase(String email, String displayName, String idToken) {
     String jsonBody = JSONObject.quote(displayName);
-    String url = String.format(Constants.DISPLAY_NAME_URL, email) + "?auth=" + idToken;
+    String encodedEmail = Base64.getEncoder().encodeToString(email.toLowerCase().getBytes());
+    String url = String.format(Constants.DISPLAY_NAME_URL, encodedEmail) + "?auth=" + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
     Request request = new Request.Builder().url(url).put(body).build();
@@ -198,7 +198,8 @@ public class FirebaseUserDataAccessObject
 
   @Override
   public List<String> getAvailableRoomIds(User user) {
-    String url = String.format(Constants.ROOM_DATA_URL, user.getEmail());
+    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String url = String.format(Constants.ROOM_DATA_URL, encodedEmail);
     Request request = new Request.Builder().url(url).get().build();
 
     try {
@@ -214,7 +215,8 @@ public class FirebaseUserDataAccessObject
   }
 
   private void deleteFirebaseUserData(User user, String idToken) {
-    String url = String.format(Constants.USER_DATA_URL, user.getEmail()) + "?auth=" + idToken;
+    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String url = String.format(Constants.USER_DATA_URL, encodedEmail) + "?auth=" + idToken;
     Request request = new Request.Builder().url(url).delete().build();
     try {
       Response response = client.newCall(request).execute();

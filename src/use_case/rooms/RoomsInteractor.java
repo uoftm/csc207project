@@ -2,67 +2,53 @@ package use_case.rooms;
 
 import entities.auth.User;
 import entities.rooms.Room;
+import use_case.login.LoginUserDataAccessInterface;
 
 public class RoomsInteractor implements RoomsInputBoundary {
+  // TODO: Split up these distinct calls into their own interactors
   final RoomsOutputBoundary roomsPresenter;
   final RoomsDataAccessInterface roomsDataAccessObject;
+  final LoginUserDataAccessInterface userDao;
 
   public RoomsInteractor(
-      RoomsDataAccessInterface roomsDataAccessObject, RoomsOutputBoundary roomsOutputBoundary) {
+      RoomsDataAccessInterface roomsDataAccessObject,
+      LoginUserDataAccessInterface userDao,
+      RoomsOutputBoundary roomsOutputBoundary) {
     this.roomsPresenter = roomsOutputBoundary;
     this.roomsDataAccessObject = roomsDataAccessObject;
+    this.userDao = userDao;
   }
 
-  // TODO: Write more interactions like this
   @Override
   public void loadMessages(RoomsInputData roomsInputData) {
-    Room room = roomsInputData.getRoom();
-    User user = roomsInputData.getUser();
+    try {
+      Room room = roomsInputData.getRoom();
+      User user = roomsInputData.getUser();
 
-    String roomUid = room.getUid();
-    String userUid = user.getUid();
+      // TODO: Get messages from message DAO
 
-    // Make request with uid here
-    // and get error (can be null) back
-    String error = null;
-    boolean useCaseFailed = error != null;
-
-    // We will only know about rooms if we're authenticated to access them
-
-    if (valid) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, null);
-      roomsPresenter.prepareFailView(roomsOutputData);
-    } else {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, "Error here");
+      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, false, null);
+      roomsPresenter.prepareSuccessView(roomsOutputData);
+    } catch (RuntimeException e) {
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, true, e.getMessage());
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
 
-  // TODO: Write more interactions like this
   @Override
   public void sendMessage(RoomsInputData roomsInputData) {
-    Room room = roomsInputData.getRoom();
-    User user = roomsInputData.getUser();
+    try {
+      Room room = roomsInputData.getRoom();
+      User user = roomsInputData.getUser();
 
-    String roomUid = room.getUid();
-    String userUid = user.getUid();
-    String message = roomsInputData.getMessage();
+      String message = roomsInputData.getMessage();
 
-    // Make request with uid here
-    // and get error (can be null) back
-    String error = null;
-    boolean useCaseFailed = error != null;
+      // TODO: Send message via message DAO
 
-    // Put your call here @Justus
-    System.out.println(message);
-
-    // Again, we will only know about rooms if we're authenticated to access them
-
-    if (valid) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, null);
-      roomsPresenter.prepareFailView(roomsOutputData);
-    } else {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, "Error here");
+      RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, false, null);
+      roomsPresenter.prepareSuccessView(roomsOutputData);
+    } catch (RuntimeException e) {
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, true, e.getMessage());
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }

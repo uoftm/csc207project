@@ -1,9 +1,11 @@
 package data_access;
 
+import entities.auth.DisplayUser;
 import entities.auth.User;
-import java.util.UUID;
-
 import entities.rooms.Room;
+
+import java.util.List;
+import java.util.UUID;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,15 +44,16 @@ public class RoomDAOTest {
     // Assert that the room details are equivalent
     Assert.assertEquals(testRoom.getName(), retrievedRoom.getName());
     Assert.assertEquals(testRoom.getUid(), retrievedRoom.getUid());
-    Assert.assertEquals(testRoom.getMessages(), retrievedRoom.getMessages());
-    Assert.assertEquals(testRoom.getUsers(), retrievedRoom.getUsers());
+    Assert.assertTrue(retrievedRoom.getMessages().isEmpty());
+    Assert.assertEquals(testRoom.getUsers().get(0).getEmail().toLowerCase(), retrievedRoom.getUsers().get(0).getEmail().toLowerCase());
+    Assert.assertEquals(testRoom.getUsers().get(0).getName(), retrievedRoom.getUsers().get(0).getName());
 
     // Delete test room
     roomDao.deleteRoom(testUser, loginDao, testRoom);
 
     // Confirm room deletion
     Assert.assertThrows(
-            RuntimeException.class, () -> roomDao.getRoomFromId(testUser, loginDao, testRoom.getUid()));
+        RuntimeException.class, () -> roomDao.getRoomFromId(testUser, loginDao, testRoom.getUid()));
 
     // Delete user
     DeleteUserDataAccessInterface deleteDao = userDao;

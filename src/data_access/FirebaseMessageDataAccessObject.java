@@ -21,7 +21,10 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
   public void save(Message message) {
     // Stringify message
     String stringified =
-        new JSONObject().put("content", message.content).put("author", message.authorEmail).toString();
+        new JSONObject()
+            .put("content", message.content)
+            .put("author", message.authorEmail)
+            .toString();
 
     Request request =
         new Request.Builder()

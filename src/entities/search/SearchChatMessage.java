@@ -24,7 +24,7 @@ public class SearchChatMessage extends Message {
     return roomID;
   }
 
-  public String getAuthorId() {
-    return super.authorId;
+  public String getAuthorEmail() {
+    return super.authorEmail;
   }
 }
