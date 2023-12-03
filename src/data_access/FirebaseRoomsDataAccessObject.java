@@ -33,7 +33,9 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
         throw new IOException();
       }
       JSONObject roomResponse = new JSONObject(response.body().string());
-      return new ArrayList<>((Collection) roomResponse.keys());
+      List<String> roomIds = new ArrayList<>();
+      roomResponse.keys().forEachRemaining(roomIds::add);
+      return roomIds;
     } catch (IOException | JSONException e) {
       throw new RuntimeException("Unable to save display name. Please try again.");
     }
