@@ -2,7 +2,9 @@ package rooms;
 
 import static org.junit.Assert.*;
 
+import data_access.FirebaseMessageDataAccessObject;
 import data_access.FirebaseRoomsDataAccessObject;
+import data_access.FirebaseUserDataAccessObject;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Message;
@@ -11,14 +13,23 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import org.junit.Ignore;
 import org.junit.Test;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.MessageDataAccessInterface;
 import use_case.rooms.Response;
+import use_case.rooms.RoomsDataAccessInterface;
 
 public class FirebaseRoomsDataAccessObjectTest {
 
+  // TODO: Make tests pass by creating real objects in Firebase and deleting them afterwards
+
   @Test
   public void testLoadMessagesSuccess() {
-    FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject();
+    OkHttpClient client = new OkHttpClient();
+    MessageDataAccessInterface dao = new FirebaseMessageDataAccessObject(client);
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
     Response<List<Message>> response = dao.loadMessages(dummyRoom, dummyUser);
@@ -28,8 +39,9 @@ public class FirebaseRoomsDataAccessObjectTest {
 
   @Test
   public void testLoadMessagesFailure() {
-    FirebaseRoomsDataAccessObject dao =
-        new FirebaseRoomsDataAccessObject() {
+    OkHttpClient client = new OkHttpClient();
+    MessageDataAccessInterface dao =
+        new FirebaseMessageDataAccessObject(client) {
           @Override
           public Response<List<Message>> loadMessages(Room room, User user) {
             Response<List<Message>> response = new Response<>(null);
@@ -46,7 +58,8 @@ public class FirebaseRoomsDataAccessObjectTest {
 
   @Test
   public void testSendMessageSuccess() {
-    FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject();
+    OkHttpClient client = new OkHttpClient();
+    MessageDataAccessInterface dao = new FirebaseMessageDataAccessObject(client);
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
     String message = "Test message";
@@ -57,8 +70,8 @@ public class FirebaseRoomsDataAccessObjectTest {
 
   @Test
   public void testSendMessageFailure() {
-    FirebaseRoomsDataAccessObject dao =
-        new FirebaseRoomsDataAccessObject() {
+    MessageDataAccessInterface dao =
+        new FirebaseMessageDataAccessObject(null) {
           @Override
           public Response<String> sendMessage(Room room, User user, String message) {
             Response<String> response = new Response<>(null);
@@ -75,74 +88,62 @@ public class FirebaseRoomsDataAccessObjectTest {
   }
 
   @Test
-  public void testValidateRoomAccess() {
-    FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject();
-    Room dummyRoom = createDummyRoom();
-    User dummyUser = createDummyUser();
-    boolean result = dao.validateRoomAccess(dummyRoom, dummyUser);
-    assertTrue(result);
-  }
-
-  @Test
   public void testAddUserToRoomSuccess() {
-    FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject();
+    OkHttpClient client = new OkHttpClient();
+    FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
-    String email = "test@example.com";
-    Response<String> response = dao.addUserToRoom(dummyRoom, dummyUser, email);
-    assertFalse(response.isError());
-    assertEquals("User added successfully!", response.getVal());
+    DisplayUser dummyDisplayUser = createDummyDisplayUser();
+
+    dao.addUserToRoom(dummyUser, dummyDisplayUser, userDao, dummyRoom);
   }
 
   @Test
   public void testAddUserToRoomFailure() {
-    FirebaseRoomsDataAccessObject dao =
-        new FirebaseRoomsDataAccessObject() {
+    RoomsDataAccessInterface dao =
+        new FirebaseRoomsDataAccessObject(null) {
           @Override
-          public Response<String> addUserToRoom(Room room, User user, String email) {
-            Response<String> response = new Response<>(null);
-            response.setError("Failed to add user.");
-            return response;
+          public void addUserToRoom(User user, DisplayUser displayUser, LoginUserDataAccessInterface userDao, Room room) {
+            throw new RuntimeException("Failed to add user.");
           }
         };
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
-    String email = "test@example.com";
-    Response<String> response = dao.addUserToRoom(dummyRoom, dummyUser, email);
-    assertTrue(response.isError());
-    assertEquals("Failed to add user.", response.getError());
+    DisplayUser dummyDisplayUser = createDummyDisplayUser();
+    assertThrows("Failed to add user.", RuntimeException.class, () -> dao.addUserToRoom(dummyUser, dummyDisplayUser, null, dummyRoom));
   }
 
   @Test
   public void testCreateRoomSuccess() {
-    FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject();
+    OkHttpClient client = new OkHttpClient();
+    RoomsDataAccessInterface dao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     User dummyUser = createDummyUser();
     String roomName = "New Room";
-    Response<Room> response = dao.createRoom(dummyUser, roomName);
-    assertFalse(response.isError());
-    assertNotNull(response.getVal());
+    assertNotNull(dao.addRoom(dummyUser, userDao, roomName));
   }
 
   @Test
   public void testCreateRoomFailure() {
-    FirebaseRoomsDataAccessObject dao =
-        new FirebaseRoomsDataAccessObject() {
+    RoomsDataAccessInterface dao =
+        new FirebaseRoomsDataAccessObject(null) {
           @Override
-          public Response<Room> createRoom(User user, String roomName) {
-            Response<Room> response = new Response<>(null);
-            response.setError("Failed to create room.");
-            return response;
+          public Room addRoom(User user, LoginUserDataAccessInterface userDao, String roomName) {
+            throw new RuntimeException("Failed to create room.");
           }
         };
     User dummyUser = createDummyUser();
     String roomName = "New Room";
-    Response<Room> response = dao.createRoom(dummyUser, roomName);
-    assertTrue(response.isError());
-    assertEquals("Failed to create room.", response.getError());
+    assertThrows("Failed to create room.", RuntimeException.class, () -> dao.addRoom(dummyUser, null, roomName));
   }
 
   private User createDummyUser() {
     return new User("dummyUid", "dummy@example.com", "Dummy User", "password", LocalDateTime.now());
+  }
+
+  private DisplayUser createDummyDisplayUser() {
+    return new DisplayUser("dummyUid", "dummy@example.com");
   }
 
   private Room createDummyRoom() {
@@ -150,7 +151,7 @@ public class FirebaseRoomsDataAccessObjectTest {
     List<DisplayUser> users = new ArrayList<>();
     users.add(dummyDisplayUser);
     List<Message> messages = new ArrayList<>();
-    messages.add(new Message(Instant.now(), "Dummy message", dummyDisplayUser.getUid()));
+    messages.add(new Message(Instant.now(), "Dummy message", dummyDisplayUser.getEmail()));
     return new Room("dummyRoomUid", "Dummy Room", users, messages);
   }
 }

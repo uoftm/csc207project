@@ -1,9 +1,8 @@
 package app;
 
-import interface_adapter.rooms.RoomsController;
-import interface_adapter.rooms.RoomsPresenter;
-import interface_adapter.rooms.RoomsViewModel;
+import interface_adapter.rooms.*;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoadRoomsInteractor;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.rooms.RoomsInteractor;
 import view.RoomsView;
@@ -14,6 +13,9 @@ public class RoomsUseCaseFactory {
     RoomsPresenter roomsPresenter = new RoomsPresenter(roomsViewModel);
     RoomsInteractor roomsInteractor = new RoomsInteractor(roomsDataAccessObject, userDao, roomsPresenter);
     RoomsController roomsController = new RoomsController(roomsInteractor);
-    return new RoomsView(roomsViewModel, roomsController);
+    LoadRoomsPresenter loadRoomsPresenter = new LoadRoomsPresenter(roomsViewModel);
+    LoadRoomsInteractor loadRoomsInteractor = new LoadRoomsInteractor(roomsDataAccessObject, userDao, loadRoomsPresenter);
+    LoadRoomsController loadRoomsController = new LoadRoomsController(loadRoomsInteractor);
+    return new RoomsView(roomsViewModel, roomsController, loadRoomsController);
   }
 }

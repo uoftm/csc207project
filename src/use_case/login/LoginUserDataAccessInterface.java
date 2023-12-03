@@ -1,5 +1,6 @@
 package use_case.login;
 
+import entities.auth.DisplayUser;
 import entities.auth.User;
 import java.util.List;
 
@@ -8,5 +9,5 @@ public interface LoginUserDataAccessInterface {
 
   String getAccessToken(String email, String password);
 
-  List<String> getAvailableRoomIds(User user);
+  DisplayUser getDisplayUser(String email);
 }

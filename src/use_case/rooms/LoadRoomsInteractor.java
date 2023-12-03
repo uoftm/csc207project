@@ -22,7 +22,7 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
   @Override
   public List<Room> loadRooms(LoadRoomsInputData roomsInputData) {
     // TODO: Trigger this function from the view
-    List<String> availableRoomIds = userDao.getAvailableRoomIds(roomsInputData.user);
+    List<String> availableRoomIds = roomsDataAccessObject.getAvailableRoomIds(roomsInputData.user);
     List<Room> rooms = new ArrayList<>();
     for (String roomId : availableRoomIds) {
       Room room = roomsDataAccessObject.getRoomFromId(roomsInputData.user, userDao, roomId);

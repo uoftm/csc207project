@@ -196,24 +196,6 @@ public class FirebaseUserDataAccessObject
     saveUserToFirebase(user.getEmail(), user.getName(), signupResults.idToken);
   }
 
-  @Override
-  public List<String> getAvailableRoomIds(User user) {
-    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
-    String url = String.format(Constants.ROOM_DATA_URL, encodedEmail);
-    Request request = new Request.Builder().url(url).get().build();
-
-    try {
-      Response response = client.newCall(request).execute();
-      if (!response.isSuccessful()) {
-        throw new IOException();
-      }
-      JSONObject roomResponse = new JSONObject(response.body().string());
-      return new ArrayList<>((Collection) roomResponse.keys());
-    } catch (IOException | JSONException e) {
-      throw new RuntimeException("Unable to save display name. Please try again.");
-    }
-  }
-
   private void deleteFirebaseUserData(User user, String idToken) {
     String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
     String url = String.format(Constants.USER_DATA_URL, encodedEmail) + "?auth=" + idToken;

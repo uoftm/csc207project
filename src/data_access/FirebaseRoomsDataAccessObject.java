@@ -22,6 +22,24 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
   }
 
   @Override
+  public List<String> getAvailableRoomIds(User user) {
+    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String url = String.format(Constants.ROOM_DATA_URL, encodedEmail);
+    Request request = new Request.Builder().url(url).get().build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      if (!response.isSuccessful()) {
+        throw new IOException();
+      }
+      JSONObject roomResponse = new JSONObject(response.body().string());
+      return new ArrayList<>((Collection) roomResponse.keys());
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to save display name. Please try again.");
+    }
+  }
+
+  @Override
   public Room getRoomFromId(User user, LoginUserDataAccessInterface userDAO, String roomId) {
     String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
 
@@ -76,9 +94,9 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     }
   }
 
-  private void addRoomToUserData(User user, String idToken, Room room) {
+  private void addRoomToUserData(DisplayUser newUser, String idToken, Room room) {
     String jsonBody = JSONObject.quote("true");
-    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String encodedEmail = Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
     String url =
         String.format(Constants.SPECIFIC_ROOM_DATA_URL, encodedEmail, room.getUid())
             + "?auth="
@@ -89,6 +107,29 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     try {
       Response response = client.newCall(request).execute();
       if (!response.isSuccessful()) {
+        throw new IOException();
+      }
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to add user to room. Please try again.");
+    }
+  }
+
+  @Override
+  public void addUserToRoom(User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room) {
+    String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
+
+    String jsonBody = "true";
+    String encodedEmail = Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
+    String url = String.format(Constants.ROOM_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
+    RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
+
+    Request request = new Request.Builder().url(url).put(body).build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      if (response.isSuccessful()) {
+        addRoomToUserData(newUser, idToken, room);
+      } else {
         throw new IOException();
       }
     } catch (IOException | JSONException e) {
@@ -122,9 +163,10 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
       Response response = client.newCall(request).execute();
       if (response.isSuccessful()) {
         List<DisplayUser> userList = new ArrayList<>();
-        userList.add(new DisplayUser(user.getEmail(), user.getName()));
+        DisplayUser displayUser = new DisplayUser(user.getEmail(), user.getName());
+        userList.add(displayUser);
         Room room = new Room(roomId, roomName, userList, new ArrayList<>());
-        addRoomToUserData(user, idToken, room);
+        addRoomToUserData(displayUser, idToken, room);
         return room;
       } else {
         throw new IOException();

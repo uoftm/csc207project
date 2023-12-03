@@ -1,17 +1,21 @@
 package data_access;
 
+import entities.auth.User;
 import entities.rooms.Message;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
+
+import entities.rooms.Room;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.json.JSONObject;
-import use_case.chat.ChatMessageDataAccessInterface;
+import use_case.rooms.MessageDataAccessInterface;
+import use_case.rooms.Response;
 
-public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInterface {
+public class FirebaseMessageDataAccessObject implements MessageDataAccessInterface {
   private final OkHttpClient client;
 
   public FirebaseMessageDataAccessObject(OkHttpClient client) {
@@ -69,5 +73,15 @@ public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInt
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public Response<String> sendMessage(Room dummyRoom, User dummyUser, String message) {
+    return null;
+  }
+
+  @Override
+  public Response<List<Message>> loadMessages(Room dummyRoom, User dummyUser) {
+    return null;
   }
 }
