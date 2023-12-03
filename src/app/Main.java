@@ -37,15 +37,10 @@ public class Main {
 
     application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-    CardLayout cardLayout = new CardLayout();
-
-    // The various View objects. Only one view is visible at a time.
-    JPanel views = new JPanel(cardLayout);
-    application.add(views);
-
     // This keeps track of and manages which view is currently showing.
     ViewManagerModel viewManagerModel = new ViewManagerModel();
-    new ViewManager(views, cardLayout, viewManagerModel);
+    ViewManager views = new ViewManager(viewManagerModel);
+    application.add(views.getViews());
 
     // The data for the views, such as username and password, are in the ViewModels.
     // This information will be changed by a presenter object that is reporting the
@@ -69,7 +64,7 @@ public class Main {
             signupViewModel,
             userDataAccessObject,
             switchViewController);
-    views.add(signupView.contentPane, SignupView.viewName);
+    viewManagerModel.add(signupView.contentPane, SignupView.viewName);
 
     LoginView loginView =
         LoginUseCaseFactory.create(
@@ -79,10 +74,10 @@ public class Main {
             roomsViewModel,
             userDataAccessObject,
             switchViewController);
-    views.add(loginView.contentPane, loginView.viewName);
+    viewManagerModel.add(loginView.contentPane, loginView.viewName);
 
     WelcomeView welcomeView = new WelcomeView(switchViewController);
-    views.add(welcomeView.contentPane, WelcomeView.viewName);
+    viewManagerModel.add(welcomeView.contentPane, WelcomeView.viewName);
 
     RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
 
@@ -103,10 +98,7 @@ public class Main {
         new StartSearchController(viewManagerModel, searchViewModel);
 
       RoomsView roomsView =
-              RoomsUseCaseFactory.create(roomsDataAccessObject, userDataAccessObject, roomsViewModel);
-//    RoomsView roomsView =
-//        RoomsUseCaseFactory.create(
-//            roomsDataAccessObject, roomsViewModel, searchController, startSearchController);
+              RoomsUseCaseFactory.create(roomsDataAccessObject, userDataAccessObject, roomsViewModel, searchController, startSearchController);
 
     LoggedInView loggedInView =
         new LoggedInView(loggedInViewModel, roomsView, switchViewController);
