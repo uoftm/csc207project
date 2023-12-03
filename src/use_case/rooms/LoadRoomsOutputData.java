@@ -8,7 +8,7 @@ public class LoadRoomsOutputData {
   private final boolean useCaseFailed;
   private final String error; // null iff useCaseFailed is false
 
-  public LoadRoomsOutputData(List<Room> room, boolean useCaseFailed, String error) {
+  public LoadRoomsOutputData(List<Room> rooms, boolean useCaseFailed, String error) {
     this.rooms = rooms;
     this.useCaseFailed = useCaseFailed;
     this.error = error;
