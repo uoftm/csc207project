@@ -127,7 +127,7 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     String encodedEmail =
         Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
     String url =
-        String.format(Constants.ROOM_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
+        String.format(Constants.ROOM_USERS_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
     Request request = new Request.Builder().url(url).put(body).build();

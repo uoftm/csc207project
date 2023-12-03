@@ -27,24 +27,22 @@ public class FirebaseRoomsDataAccessObjectTest {
   @Test
   public void testLoadMessagesSuccess() {
     OkHttpClient client = new OkHttpClient();
-    MessageDataAccessInterface dao = new FirebaseMessageDataAccessObject(client);
+    RoomsDataAccessInterface dao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
-    Response<List<Message>> response = dao.loadMessages(dummyRoom, dummyUser);
-    assertFalse(response.isError());
-    assertNotNull(response.getVal());
+    List<Message> response = dao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid()).getMessages();
+    assertNotNull(response);
   }
 
   @Test
   public void testLoadMessagesFailure() {
-    OkHttpClient client = new OkHttpClient();
-    MessageDataAccessInterface dao =
-        new FirebaseMessageDataAccessObject(client) {
+    RoomsDataAccessInterface dao =
+        new FirebaseRoomsDataAccessObject(null) {
           @Override
-          public Response<List<Message>> loadMessages(Room room, User user) {
-            Response<List<Message>> response = new Response<>(null);
-            response.setError("Failed to retrieve messages.");
-            return response;
+          public Room getRoomFromId(
+              User user, LoginUserDataAccessInterface userDao, String roomId) {
+            throw new RuntimeException("Failed to retrieve messages.");
           }
         };
     Room dummyRoom = createDummyRoom();
