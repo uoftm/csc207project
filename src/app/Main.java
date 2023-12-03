@@ -78,7 +78,7 @@ public class Main {
     WelcomeView welcomeView = new WelcomeView(switchViewController);
     views.add(welcomeView.contentPane, WelcomeView.viewName);
 
-    RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject();
+    RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
 
     RoomsView roomsView = RoomsUseCaseFactory.create(roomsDataAccessObject, roomsViewModel);
 

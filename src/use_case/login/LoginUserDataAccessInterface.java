@@ -5,7 +5,9 @@ import entities.rooms.Room;
 import java.util.List;
 
 public interface LoginUserDataAccessInterface {
-  User get(String email, String password);
+  User getUser(String email, String password);
 
-  List<Room> getAvailableRooms(User user);
+  String getAccessToken(String email, String password);
+
+  List<String> getAvailableRoomIds(User user);
 }

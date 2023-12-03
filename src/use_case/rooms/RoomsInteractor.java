@@ -27,9 +27,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
     String error = null;
     boolean useCaseFailed = error != null;
 
-    // This request should be validated through firebase
-    // to check if this user belongs to this room that exists
-    boolean valid = roomsDataAccessObject.validateRoomAccess(roomUid, userUid);
+    // We will only know about rooms if we're authenticated to access them
 
     if (valid) {
       RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, null);
@@ -58,9 +56,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
     // Put your call here @Justus
     System.out.println(message);
 
-    // This request should be validated through firebase
-    // to check if this user belongs to this room that exists
-    boolean valid = roomsDataAccessObject.validateRoomAccess(roomUid, userUid);
+    // Again, we will only know about rooms if we're authenticated to access them
 
     if (valid) {
       RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, valid, null);

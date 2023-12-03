@@ -20,8 +20,8 @@ public class LoginInteractor implements LoginInputBoundary {
     String email = loginInputData.getEmail();
     String password = loginInputData.getPassword();
     try {
-      User user = userDataAccessObject.get(email, password);
-      List<Room> availableRooms = userDataAccessObject.getAvailableRooms(user);
+      User user = userDataAccessObject.getUser(email, password);
+      List<String> availableRoomIds = userDataAccessObject.getAvailableRoomIds(user);
       LoginOutputData loginOutputData = new LoginOutputData(user, availableRooms, true);
       loginPresenter.prepareSuccessView(loginOutputData);
     } catch (RuntimeException e) {
