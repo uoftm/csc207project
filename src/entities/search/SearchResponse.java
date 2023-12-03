@@ -1,30 +1,28 @@
 package entities.search;
 
 import java.time.Instant;
-import java.util.List;
 
 public class SearchResponse {
-  private final String fullText;
+  private final String highlightedText;
 
-  private final String authUid;
+  private final String fullText;
+  private final String authorName;
 
   private final Instant time;
 
-  private final String roomUid;
-
-  private final List<SearchIndicies> highlightIndices;
+  private final String roomID;
 
   public SearchResponse(
-      String fullText,
-      String authUid,
-      Instant time,
-      String roomUid,
-      List<SearchIndicies> highlightIndices) {
+      String highlightedText, String fullText, String authorName, Instant time, String roomID) {
+    this.highlightedText = highlightedText;
     this.fullText = fullText;
-    this.authUid = authUid;
+    this.authorName = authorName;
     this.time = time;
-    this.roomUid = roomUid;
-    this.highlightIndices = highlightIndices;
+    this.roomID = roomID;
+  }
+
+  public String getHighlightedText() {
+    return highlightedText;
   }
 
   public String getFullText() {
@@ -35,15 +33,11 @@ public class SearchResponse {
     return time;
   }
 
-  public String getAuthUid() {
-    return authUid;
+  public String getAuthorName() {
+    return authorName;
   }
 
-  public String getRoomUid() {
-    return roomUid;
-  }
-
-  public List<SearchIndicies> getHighlightIndices() {
-    return highlightIndices;
+  public String getRoomID() {
+    return roomID;
   }
 }

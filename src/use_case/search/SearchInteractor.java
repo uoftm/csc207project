@@ -18,13 +18,10 @@ public class SearchInteractor implements SearchInputBoundary {
   @Override
   public void executeSearchRequest(SearchInputData searchInputData) {
     SearchRequest request =
-        new SearchRequest(searchInputData.getMessage(), searchInputData.getRoomUid());
+        new SearchRequest(
+            searchInputData.getMessage(), searchInputData.getTime(), searchInputData.getRoomID());
     SearchOutputData outputData = new SearchOutputData(searchDataAccessObject.getData(request));
-    if (outputData.getResponse().getIsError()) {
-      searchPresenter.prepareFailedResponse(outputData);
-    } else {
-      searchPresenter.prepareSearchResponse(outputData);
-    }
+    searchPresenter.prepareSearchResponse(outputData);
   }
 
   @Override
@@ -32,9 +29,9 @@ public class SearchInteractor implements SearchInputBoundary {
     SearchChatMessage chatMessage =
         new SearchChatMessage(
             searchInputData.getTime(),
-            searchInputData.getRoomUid(),
+            searchInputData.getRoomID(),
             searchInputData.getMessage(),
-            searchInputData.getAuthUid());
+            searchInputData.getAuthorID());
     searchDataAccessObject.saveData(chatMessage);
   }
 }

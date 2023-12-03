@@ -1,9 +1,13 @@
 package data_access;
 
-import entities.search.*;
+import entities.search.SearchChatMessage;
+import entities.search.SearchReponseArray;
+import entities.search.SearchRequest;
+import entities.search.SearchResponse;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,7 +29,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     String index = "search-chats";
 
     JSONObject roomIDQuery =
-        new JSONObject().put("term", new JSONObject().put("roomID", searchRequest.getRoomUid()));
+        new JSONObject().put("term", new JSONObject().put("roomID", searchRequest.getRoomID()));
     JSONObject messageQuery =
         new JSONObject()
             .put(
@@ -36,22 +40,22 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
                         new JSONObject()
                             .put("query", searchRequest.getQueryRequest())
                             .put("fuzziness", "AUTO")));
+    JSONObject rangeFilter =
+        new JSONObject()
+            .put("range", new JSONObject().put("time", new JSONObject().put("gte", "now-1y/y")));
 
     JSONObject boolQuery =
-        new JSONObject().put("must", new JSONArray().put(roomIDQuery).put(messageQuery));
+        new JSONObject()
+            .put("must", new JSONArray().put(roomIDQuery).put(messageQuery))
+            .put("filter", new JSONArray().put(rangeFilter));
 
     JSONObject highlight =
-        new JSONObject()
-            .put(
-                "fields",
-                new JSONObject()
-                    .put("message", new JSONObject())
-                    .put("*", new JSONObject().put("number_of_fragments", 0)));
+        new JSONObject().put("fields", new JSONObject().put("message", new JSONObject()));
 
     JSONObject query =
         new JSONObject()
             .put("query", new JSONObject().put("bool", boolQuery))
-            .put("size", 10)
+            .put("size", 5)
             .put("highlight", highlight);
 
     Request request =
@@ -67,62 +71,37 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
       JSONObject rootNode = new JSONObject(response.body().string());
       JSONArray hitsArray = rootNode.getJSONObject("hits").getJSONArray("hits");
       ArrayList<SearchResponse> searchResponses = new ArrayList<>();
+      Pattern pattern = Pattern.compile("<em>(.*?)</em>");
       for (int i = 0; i < hitsArray.length(); i++) {
         JSONObject hit = hitsArray.getJSONObject(i);
         JSONObject source = hit.getJSONObject("_source");
         JSONArray highlightNode = hit.getJSONObject("highlight").optJSONArray("message");
         String finalHighlight;
         if (highlightNode != null) {
-          finalHighlight = highlightNode.getString(0);
+          ArrayList<String> object = new ArrayList<>();
+          for (int j = 0; j < highlightNode.length(); j++) {
+            object.add(highlightNode.getString(j));
+          }
+          String highlightedText = object.get(0);
+          Matcher matcher = pattern.matcher(highlightedText);
+          matcher.find();
+          finalHighlight = matcher.group().substring(4, 8);
         } else {
           finalHighlight = "";
         }
-
-        String openTag = "<em>";
-        String closeTag = "</em>";
-        List<SearchIndicies> item = new ArrayList<>();
-        String text = finalHighlight;
-        int currentIndex = 0;
-        while (text.indexOf(openTag, currentIndex) != -1) {
-          int start = text.indexOf(openTag, currentIndex);
-          int end = text.indexOf(closeTag, start);
-
-          if (end != -1) {
-            item.add(
-                new SearchIndicies(
-                    start - (openTag.length() * item.size() + closeTag.length() * item.size()),
-                    end
-                        - (openTag.length() * (item.size() + 1)
-                            + closeTag.length() * item.size())));
-            currentIndex = end + closeTag.length();
-          } else {
-            break;
-          }
-        }
-        String fulltext = finalHighlight.replaceAll("<em>|</em>", "");
-
-        // The above while loops involving the open and close Tags gets the indices for the strings
-        // to be
-        // highlighted; As in the strings surrounded by "<em>|</em>". It gets the indices for them
-        // after
-        // the correspondent tags are removed. We need to indices to highlight the part of the text
-        // that is matched by elastic search in SearchedView.
         SearchResponse oneResponse =
             new SearchResponse(
-                fulltext,
+                finalHighlight,
+                source.getString("message"),
                 // TODO: use an in-memory cache to query username here instead
                 source.optString("author"),
                 Instant.parse(source.getString("time")),
-                source.getString("roomID"),
-                item);
+                source.getString("roomID"));
         searchResponses.add(oneResponse);
       }
-      return new SearchReponseArray(searchResponses, null, false);
+      return new SearchReponseArray(searchResponses, false);
     } catch (Exception e) {
-      System.out.println("Search failed");
-      e.printStackTrace();
-      return new SearchReponseArray(
-          new ArrayList<>(), "Failed to get search results from elastic search.", true);
+      return new SearchReponseArray(new ArrayList<>(), true);
     }
   }
 
@@ -133,9 +112,9 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     JSONObject json =
         new JSONObject()
             .put("time", message.getTime())
-            .put("roomID", message.getRoomUid())
+            .put("roomID", message.getRoomID())
             .put("message", message.getMessage())
-            .put("author", message.getauthUid());
+            .put("author", message.getAuthorId());
 
     // Define the JSON data for bulk ingestion
     String jsonPayload =
@@ -150,7 +129,6 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
             .post(requestBody)
             .build();
 
-    System.out.println(jsonPayload);
     try (Response response = client.newCall(request).execute()) {
       if (response.isSuccessful()) {
         System.out.println("Request was successful");
