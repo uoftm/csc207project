@@ -4,5 +4,5 @@ public interface SearchOutputBoundary {
 
   void prepareSearchResponse(SearchOutputData response);
 
-  void prepareFailedResponse();
+  void prepareFailedResponse(SearchOutputData responses);
 }

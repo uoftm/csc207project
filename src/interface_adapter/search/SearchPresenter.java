@@ -1,10 +1,15 @@
 package interface_adapter.search;
 
 import entities.search.SearchResponse;
-import entities.search.SearchResponseThing;
+import entities.search.SearchResponseDisplay;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.searched.SearchedState;
 import interface_adapter.searched.SearchedViewModel;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
@@ -29,20 +34,18 @@ public class SearchPresenter implements SearchOutputBoundary {
   @Override
   public void prepareSearchResponse(SearchOutputData responses) {
     SearchedState searchedState = searchedViewModel.getState();
-    ArrayList<SearchResponseThing> returned = new ArrayList<>();
-    String openTag = "<em>";
-    String closeTag = "</em>";
+    ArrayList<SearchResponseDisplay> returned = new ArrayList<>();
     for (SearchResponse response : responses.getResponse().getResponses()) {
-      String label =
-          response.getTime().toString()
-              + ", "
-              + response.getAuthorName()
-              + ", "
-              + response.getRoomName()
-              + ": ";
 
       returned.add(
-          new SearchResponseThing(label, response.getHighlightIndices(), response.getFullText()));
+          new SearchResponseDisplay(
+              DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(
+                      LocalDateTime.ofInstant(response.getTime(), ZoneId.of("America/New_York"))),
+              //TODO// needs to be modified to have names instead of IDs.
+              response.getAuthUid(),
+              response.getRoomUid(),
+              response.getHighlightIndices(),
+              response.getFullText()));
     }
     searchedState.setResponses(returned);
     this.searchedViewModel.setState(searchedState);
@@ -53,9 +56,9 @@ public class SearchPresenter implements SearchOutputBoundary {
   }
 
   @Override
-  public void prepareFailedResponse() {
+  public void prepareFailedResponse(SearchOutputData responses) {
     SearchState searchState = searchViewModel.getState();
-    searchState.setHasError(true);
+    searchState.setError(responses.getResponse().getError());
     searchViewModel.firePropertyChanged();
   }
 }

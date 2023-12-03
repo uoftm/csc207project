@@ -2,29 +2,13 @@ package interface_adapter.search;
 
 public class SearchState {
 
-  private String highlightedText;
 
-  private String fullText;
+  private String roomUid;
+  private String userUid;
 
-  private String roomID;
-  private String userID;
-
-  private Boolean hasError = false;
+  private String error;
 
   private String searchedTerm;
-
-  public SearchState(
-      String highlightedText,
-      String fullText,
-      String roomID,
-      Boolean hasError,
-      String searchedTerm) {
-    this.highlightedText = highlightedText;
-    this.fullText = fullText;
-    this.roomID = roomID;
-    this.hasError = hasError;
-    this.searchedTerm = searchedTerm;
-  }
 
   public SearchState() {}
 
@@ -32,47 +16,35 @@ public class SearchState {
     return searchedTerm;
   }
 
-  public String getFullText() {
-    return fullText;
+
+
+  public String getError() {
+    return error;
   }
 
-  public String getHighlightedText() {
-    return highlightedText;
-  }
-
-  public Boolean getHasError() {
-    return hasError;
-  }
-
-  public String getRoomID() {
-    return roomID;
+  public String getRoomUid() {
+    return roomUid;
   }
 
   public void setSearchedTerm(String searchedTerm) {
     this.searchedTerm = searchedTerm;
   }
 
-  public void setHighlightedText(String highlightedText) {
-    this.highlightedText = highlightedText;
+
+
+  public void setRoomUid(String roomUid) {
+    this.roomUid = roomUid;
   }
 
-  public void setFullText(String fullText) {
-    this.fullText = fullText;
-  }
-
-  public void setRoomID(String roomID) {
-    this.roomID = roomID;
-  }
-
-  public void setHasError(Boolean hasError) {
-    this.hasError = hasError;
+  public void setError(String error) {
+    this.error = error;
   }
 
   public String getUserUid() {
-    return userID;
+    return userUid;
   }
 
-  public void setUserUid(String userID) {
-    this.userID = userID;
+  public void setUserUid(String userUid) {
+    this.userUid = userUid;
   }
 }

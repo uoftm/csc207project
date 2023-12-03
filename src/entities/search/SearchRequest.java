@@ -4,18 +4,18 @@ public class SearchRequest {
 
   private final String queryRequest;
 
-  private final String roomID;
+  private final String roomUid;
 
-  public SearchRequest(String queryRequest, String roomID) {
+  public SearchRequest(String queryRequest, String roomUid) {
     this.queryRequest = queryRequest;
-    this.roomID = roomID;
+    this.roomUid = roomUid;
   }
 
   public String getQueryRequest() {
     return queryRequest;
   }
 
-  public String getRoomID() {
-    return roomID;
+  public String getRoomUid() {
+    return roomUid;
   }
 }

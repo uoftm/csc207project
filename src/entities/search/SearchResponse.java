@@ -6,24 +6,24 @@ import java.util.List;
 public class SearchResponse {
   private final String fullText;
 
-  private final String authorName;
+  private final String authUid;
 
   private final Instant time;
 
-  private final String roomName;
+  private final String roomUid;
 
   private final List<SearchIndicies> highlightIndices;
 
   public SearchResponse(
       String fullText,
-      String authorName,
+      String authUid,
       Instant time,
-      String roomName,
+      String roomUid,
       List<SearchIndicies> highlightIndices) {
     this.fullText = fullText;
-    this.authorName = authorName;
+    this.authUid = authUid;
     this.time = time;
-    this.roomName = roomName;
+    this.roomUid = roomUid;
     this.highlightIndices = highlightIndices;
   }
 
@@ -35,12 +35,12 @@ public class SearchResponse {
     return time;
   }
 
-  public String getAuthorName() {
-    return authorName;
+  public String getAuthUid() {
+    return authUid;
   }
 
-  public String getRoomName() {
-    return roomName;
+  public String getRoomUid() {
+    return roomUid;
   }
 
   public List<SearchIndicies> getHighlightIndices() {

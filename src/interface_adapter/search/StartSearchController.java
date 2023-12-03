@@ -12,7 +12,7 @@ public class StartSearchController {
   }
 
   public void search(String roomId, String userId) {
-    searchViewModel.getState().setRoomID(roomId);
+    searchViewModel.getState().setRoomUid(roomId);
     searchViewModel.getState().setUserUid(userId);
 
     viewManagerModel.setActiveView("search");

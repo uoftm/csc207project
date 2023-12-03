@@ -5,11 +5,11 @@ import java.time.Instant;
 
 public class SearchChatMessage extends Message {
 
-  private final String roomID;
+  private final String roomUid;
 
-  public SearchChatMessage(Instant time, String roomID, String message, String authorId) {
+  public SearchChatMessage(Instant time, String roomUid, String message, String authorId) {
     super(time, message, authorId);
-    this.roomID = roomID;
+    this.roomUid = roomUid;
   }
 
   public Instant getTime() {
@@ -20,11 +20,11 @@ public class SearchChatMessage extends Message {
     return super.content;
   }
 
-  public String getRoomID() {
-    return roomID;
+  public String getRoomUid() {
+    return roomUid;
   }
 
-  public String getAuthorId() {
+  public String getauthUid() {
     return super.authorId;
   }
 }

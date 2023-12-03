@@ -53,13 +53,15 @@ public class SearchedView implements PropertyChangeListener {
     var highlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
     for (var response : state.getResponses()) {
       JPanel eachMessagePanel = new JPanel();
-      eachMessagePanel.setLayout(new BorderLayout());
-      JLabel label = new JLabel(response.label);
+      eachMessagePanel.setLayout(new FlowLayout());
+      JLabel labelOne = new JLabel(response.getTime());
+      JLabel labelTwo = new JLabel(response.getRoomName());
+      JLabel labelThree = new JLabel(response.getUserName());
       JTextPane textPane = new JTextPane();
-      textPane.setText(response.rawMessage);
+      textPane.setText(response.getMessage());
       textPane.setEditable(false);
 
-      for (var index : response.highlightIndices) {
+      for (var index : response.getHighlightIndices()) {
         try {
           textPane.getHighlighter().addHighlight(index.getStart(), index.getEnd(), highlighter);
         } catch (Exception e) {
@@ -67,7 +69,9 @@ public class SearchedView implements PropertyChangeListener {
         }
       }
 
-      eachMessagePanel.add(label);
+      eachMessagePanel.add(labelOne);
+      eachMessagePanel.add(labelTwo);
+      eachMessagePanel.add(labelThree);
       eachMessagePanel.add(textPane);
 
       paneInternals.add(eachMessagePanel);

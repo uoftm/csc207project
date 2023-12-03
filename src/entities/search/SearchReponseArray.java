@@ -6,15 +6,15 @@ public class SearchReponseArray {
 
   private final ArrayList<SearchResponse> responses;
 
-  private final Boolean hasError;
+  private final String error;
 
-  public SearchReponseArray(ArrayList<SearchResponse> responses, Boolean hasError) {
+  public SearchReponseArray(ArrayList<SearchResponse> responses, String error) {
     this.responses = responses;
-    this.hasError = hasError;
+    this.error = error;
   }
 
-  public Boolean getHasError() {
-    return hasError;
+  public String getError() {
+    return error;
   }
 
   public ArrayList<SearchResponse> getResponses() {

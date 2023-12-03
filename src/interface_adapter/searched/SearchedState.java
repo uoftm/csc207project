@@ -1,23 +1,23 @@
 package interface_adapter.searched;
 
-import entities.search.SearchResponseThing;
+import entities.search.SearchResponseDisplay;
 import java.util.ArrayList;
 
 public class SearchedState {
 
-  private ArrayList<SearchResponseThing> processedData;
+  private ArrayList<SearchResponseDisplay> processedData;
 
-  public SearchedState(ArrayList<SearchResponseThing> processedData) {
+  public SearchedState(ArrayList<SearchResponseDisplay> processedData) {
     this.processedData = processedData;
   }
 
   public SearchedState() {}
 
-  public void setResponses(ArrayList<SearchResponseThing> processedData) {
+  public void setResponses(ArrayList<SearchResponseDisplay> processedData) {
     this.processedData = processedData;
   }
 
-  public ArrayList<SearchResponseThing> getResponses() {
+  public ArrayList<SearchResponseDisplay> getResponses() {
     return processedData;
   }
 }

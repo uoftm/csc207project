@@ -25,7 +25,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     String index = "search-chats";
 
     JSONObject roomIDQuery =
-        new JSONObject().put("term", new JSONObject().put("roomID", searchRequest.getRoomID()));
+        new JSONObject().put("term", new JSONObject().put("roomID", searchRequest.getRoomUid()));
     JSONObject messageQuery =
         new JSONObject()
             .put(
@@ -65,8 +65,6 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     try (Response response = client.newCall(request).execute()) {
 
       JSONObject rootNode = new JSONObject(response.body().string());
-      System.out.println(query.toString());
-      System.out.println(rootNode.toString());
       JSONArray hitsArray = rootNode.getJSONObject("hits").getJSONArray("hits");
       ArrayList<SearchResponse> searchResponses = new ArrayList<>();
       for (int i = 0; i < hitsArray.length(); i++) {
@@ -86,7 +84,7 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
         String text = finalHighlight;
         int currentIndex = 0;
         while (text.indexOf(openTag, currentIndex) != -1) {
-          int start = text.indexOf(openTag, currentIndex) + openTag.length();
+          int start = text.indexOf(openTag, currentIndex);
           int end = text.indexOf(closeTag, start);
 
           if (end != -1) {
@@ -113,11 +111,11 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
                 item);
         searchResponses.add(oneResponse);
       }
-      return new SearchReponseArray(searchResponses, false);
+      return new SearchReponseArray(searchResponses, null);
     } catch (Exception e) {
       System.out.println("Search failed");
       e.printStackTrace();
-      return new SearchReponseArray(new ArrayList<>(), true);
+      return new SearchReponseArray(new ArrayList<>(), "Failed to get search results from elastic search.");
     }
   }
 
@@ -128,9 +126,9 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     JSONObject json =
         new JSONObject()
             .put("time", message.getTime())
-            .put("roomID", message.getRoomID())
+            .put("roomID", message.getRoomUid())
             .put("message", message.getMessage())
-            .put("author", message.getAuthorId());
+            .put("author", message.getauthUid());
 
     // Define the JSON data for bulk ingestion
     String jsonPayload =

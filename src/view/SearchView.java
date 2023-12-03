@@ -62,7 +62,7 @@ public class SearchView implements PropertyChangeListener {
     search.addActionListener(
         e -> {
           searchController.executeSearchRequest(
-              searchViewModel.getState().getRoomID(),
+              searchViewModel.getState().getRoomUid(),
               currentState.getSearchedTerm(),
               searchViewModel.getState().getUserUid());
         });
@@ -78,8 +78,8 @@ public class SearchView implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SearchState state = (SearchState) evt.getNewValue();
-    if (state.getHasError()) {
-      JOptionPane.showMessageDialog(contentPane, "Sorry, I couldn't find any past messages!");
+    if (state.getError() != null) {
+      JOptionPane.showMessageDialog(contentPane, state.getError());
     }
   }
 }
