@@ -13,7 +13,6 @@ public class LoadRoomsController {
 
   public void loadRooms(User user) {
     LoadRoomsInputData roomsInputData = new LoadRoomsInputData(user);
-    // Example request to send message
     loadRooms.loadRooms(roomsInputData);
   }
 }
