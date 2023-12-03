@@ -1,30 +1,21 @@
 package entities.search;
 
-import java.time.Instant;
-
 public class SearchRequest {
 
   private final String queryRequest;
 
-  private final Instant time;
+  private final String roomUid;
 
-  private final String roomID;
-
-  public SearchRequest(String queryRequest, Instant time, String roomID) {
+  public SearchRequest(String queryRequest, String roomUid) {
     this.queryRequest = queryRequest;
-    this.time = time;
-    this.roomID = roomID;
+    this.roomUid = roomUid;
   }
 
   public String getQueryRequest() {
     return queryRequest;
   }
 
-  public Instant getTime() {
-    return time;
-  }
-
-  public String getRoomID() {
-    return roomID;
+  public String getRoomUid() {
+    return roomUid;
   }
 }
