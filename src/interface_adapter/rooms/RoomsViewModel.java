@@ -7,14 +7,8 @@ import java.beans.PropertyChangeSupport;
 public class RoomsViewModel extends ViewModel {
   private RoomsState state = new RoomsState();
 
-  private String roomUid;
-
-  private String userUid;
-
-  public RoomsViewModel(String roomUid, String userUid) {
-    super("chat");
-    this.roomUid = roomUid;
-    this.userUid = userUid;
+  public RoomsViewModel() {
+    super("rooms");
   }
 
   public void setState(RoomsState state) {
