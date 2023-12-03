@@ -2,11 +2,10 @@ package data_access;
 
 import entities.auth.User;
 import entities.rooms.Message;
+import entities.rooms.Room;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
-
-import entities.rooms.Room;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

@@ -4,8 +4,8 @@ import interface_adapter.chat.ChatController;
 import interface_adapter.chat.ChatPresenter;
 import interface_adapter.chat.ChatViewModel;
 import use_case.chat.ChatInteractor;
-import use_case.rooms.MessageDataAccessInterface;
 import use_case.chat.ChatUserDataAccessInterface;
+import use_case.rooms.MessageDataAccessInterface;
 import view.ChatView;
 
 public class ChatUseCaseFactory {

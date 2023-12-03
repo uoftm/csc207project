@@ -1,10 +1,7 @@
 package data_access;
 
-import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Room;
-
-import java.util.List;
 import java.util.UUID;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
@@ -45,8 +42,11 @@ public class RoomDAOTest {
     Assert.assertEquals(testRoom.getName(), retrievedRoom.getName());
     Assert.assertEquals(testRoom.getUid(), retrievedRoom.getUid());
     Assert.assertTrue(retrievedRoom.getMessages().isEmpty());
-    Assert.assertEquals(testRoom.getUsers().get(0).getEmail().toLowerCase(), retrievedRoom.getUsers().get(0).getEmail().toLowerCase());
-    Assert.assertEquals(testRoom.getUsers().get(0).getName(), retrievedRoom.getUsers().get(0).getName());
+    Assert.assertEquals(
+        testRoom.getUsers().get(0).getEmail().toLowerCase(),
+        retrievedRoom.getUsers().get(0).getEmail().toLowerCase());
+    Assert.assertEquals(
+        testRoom.getUsers().get(0).getName(), retrievedRoom.getUsers().get(0).getName());
 
     // Delete test room
     roomDao.deleteRoom(testUser, loginDao, testRoom);

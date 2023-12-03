@@ -23,7 +23,8 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
 
   @Override
   public List<String> getAvailableRoomIds(User user) {
-    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String encodedEmail =
+        Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
     String url = String.format(Constants.ROOM_DATA_URL, encodedEmail);
     Request request = new Request.Builder().url(url).get().build();
 
@@ -98,7 +99,8 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
 
   private void addRoomToUserData(DisplayUser newUser, String idToken, Room room) {
     String jsonBody = JSONObject.quote("true");
-    String encodedEmail = Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
+    String encodedEmail =
+        Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
     String url =
         String.format(Constants.SPECIFIC_ROOM_DATA_URL, encodedEmail, room.getUid())
             + "?auth="
@@ -117,12 +119,15 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
   }
 
   @Override
-  public void addUserToRoom(User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room) {
+  public void addUserToRoom(
+      User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room) {
     String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
 
     String jsonBody = "true";
-    String encodedEmail = Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
-    String url = String.format(Constants.ROOM_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
+    String encodedEmail =
+        Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
+    String url =
+        String.format(Constants.ROOM_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
     Request request = new Request.Builder().url(url).put(body).build();
@@ -148,7 +153,8 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
     roomJSON.put("name", roomName);
     // Add room users
     JSONObject roomUsersJSON = new JSONObject();
-    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String encodedEmail =
+        Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
     roomUsersJSON.put(encodedEmail, user.getName());
     roomJSON.put("users", roomUsersJSON);
 
@@ -179,7 +185,8 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
   }
 
   private void deleteRoomFromUserData(DisplayUser user, Room room, String idToken) {
-    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String encodedEmail =
+        Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
     String url =
         String.format(Constants.SPECIFIC_ROOM_DATA_URL, encodedEmail, room.getUid())
             + "?auth="

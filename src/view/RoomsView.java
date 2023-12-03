@@ -32,7 +32,10 @@ public class RoomsView implements PropertyChangeListener {
   private JTextField emailTextField;
   private final RoomsViewModel viewModel;
 
-  public RoomsView(RoomsViewModel viewModel, RoomsController roomsController, LoadRoomsController loadRoomsController) {
+  public RoomsView(
+      RoomsViewModel viewModel,
+      RoomsController roomsController,
+      LoadRoomsController loadRoomsController) {
     this.viewModel = viewModel;
     this.viewModel.addPropertyChangeListener(this);
 

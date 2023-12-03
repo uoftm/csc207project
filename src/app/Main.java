@@ -80,7 +80,8 @@ public class Main {
 
     RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
 
-    RoomsView roomsView = RoomsUseCaseFactory.create(roomsDataAccessObject, userDataAccessObject, roomsViewModel);
+    RoomsView roomsView =
+        RoomsUseCaseFactory.create(roomsDataAccessObject, userDataAccessObject, roomsViewModel);
 
     LoggedInView loggedInView =
         new LoggedInView(loggedInViewModel, roomsView, switchViewController);

@@ -7,16 +7,13 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Base64;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
-import java.util.Base64;
 
 public class FirebaseUserDataAccessObject
     implements SignupUserDataAccessInterface,
@@ -197,7 +194,8 @@ public class FirebaseUserDataAccessObject
   }
 
   private void deleteFirebaseUserData(User user, String idToken) {
-    String encodedEmail = Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String encodedEmail =
+        Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
     String url = String.format(Constants.USER_DATA_URL, encodedEmail) + "?auth=" + idToken;
     Request request = new Request.Builder().url(url).delete().build();
     try {

@@ -13,9 +13,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.OkHttpClient;
-import org.junit.Ignore;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.rooms.MessageDataAccessInterface;
@@ -104,14 +102,18 @@ public class FirebaseRoomsDataAccessObjectTest {
     RoomsDataAccessInterface dao =
         new FirebaseRoomsDataAccessObject(null) {
           @Override
-          public void addUserToRoom(User user, DisplayUser displayUser, LoginUserDataAccessInterface userDao, Room room) {
+          public void addUserToRoom(
+              User user, DisplayUser displayUser, LoginUserDataAccessInterface userDao, Room room) {
             throw new RuntimeException("Failed to add user.");
           }
         };
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
     DisplayUser dummyDisplayUser = createDummyDisplayUser();
-    assertThrows("Failed to add user.", RuntimeException.class, () -> dao.addUserToRoom(dummyUser, dummyDisplayUser, null, dummyRoom));
+    assertThrows(
+        "Failed to add user.",
+        RuntimeException.class,
+        () -> dao.addUserToRoom(dummyUser, dummyDisplayUser, null, dummyRoom));
   }
 
   @Test
@@ -135,7 +137,10 @@ public class FirebaseRoomsDataAccessObjectTest {
         };
     User dummyUser = createDummyUser();
     String roomName = "New Room";
-    assertThrows("Failed to create room.", RuntimeException.class, () -> dao.addRoom(dummyUser, null, roomName));
+    assertThrows(
+        "Failed to create room.",
+        RuntimeException.class,
+        () -> dao.addRoom(dummyUser, null, roomName));
   }
 
   private User createDummyUser() {

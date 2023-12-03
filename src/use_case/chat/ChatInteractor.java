@@ -1,9 +1,8 @@
 package use_case.chat;
 
 import entities.rooms.Message;
-import use_case.rooms.MessageDataAccessInterface;
-
 import java.time.Instant;
+import use_case.rooms.MessageDataAccessInterface;
 
 public class ChatInteractor implements ChatInputBoundary {
   final ChatOutputBoundary outputBoundary;
