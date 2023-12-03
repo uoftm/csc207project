@@ -3,10 +3,15 @@ package app;
 import data_access.FirebaseRoomsDataAccessObject;
 import data_access.FirebaseSettingsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
+import data_access.SearchDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.rooms.RoomsViewModel;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchViewModel;
+import interface_adapter.search.StartSearchController;
+import interface_adapter.searched.SearchedViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
@@ -14,6 +19,7 @@ import java.awt.*;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import use_case.rooms.RoomsDataAccessInterface;
+import use_case.search.SearchDataAccessInterface;
 import use_case.settings.SettingsDataAccessInterface;
 import view.*;
 
@@ -80,12 +86,31 @@ public class Main {
 
     RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
 
-    RoomsView roomsView =
-        RoomsUseCaseFactory.create(roomsDataAccessObject, userDataAccessObject, roomsViewModel);
+    SearchViewModel searchViewModel = new SearchViewModel();
+    SearchedViewModel searchedViewModel = new SearchedViewModel();
+    SearchDataAccessInterface searchDataAccessObject = new SearchDataAccessObject(client);
+    SearchController searchController =
+        SearchUseCaseFactory.createSearchController(
+            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+
+    var searchView = new SearchView(searchController, searchViewModel, switchViewController);
+    viewManagerModel.add(searchView.contentPane, SearchView.viewName);
+
+    var searchedView = new SearchedView(searchedViewModel, switchViewController);
+    viewManagerModel.add(searchedView.contentPane, SearchedView.viewName);
+
+    StartSearchController startSearchController =
+        new StartSearchController(viewManagerModel, searchViewModel);
+
+      RoomsView roomsView =
+              RoomsUseCaseFactory.create(roomsDataAccessObject, userDataAccessObject, roomsViewModel);
+//    RoomsView roomsView =
+//        RoomsUseCaseFactory.create(
+//            roomsDataAccessObject, roomsViewModel, searchController, startSearchController);
 
     LoggedInView loggedInView =
         new LoggedInView(loggedInViewModel, roomsView, switchViewController);
-    views.add(loggedInView.contentPane, loggedInView.viewName);
+    viewManagerModel.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsDataAccessInterface settingsUserDataAccessObject =
         new FirebaseSettingsDataAccessObject();
@@ -93,10 +118,10 @@ public class Main {
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
             settingsViewModel, settingsUserDataAccessObject, switchViewController);
-    views.add(settingsView.contentPane, settingsView.viewName);
+    viewManagerModel.add(settingsView.contentPane, settingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);
-    viewManagerModel.firePropertyChanged();
+    viewManagerModel.fireViewChanged();
 
     application.pack();
     application.setVisible(true);
