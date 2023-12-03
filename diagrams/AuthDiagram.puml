@@ -1,0 +1,200 @@
+@startuml
+
+' Entities
+package entities.auth {
+    interface AbstractUser {
+        +getUid() : String
+        +getName() : String
+    }
+
+    class User {
+        -uid : String
+        -email : String
+        -name : String
+        -password : String
+        -creationTime : LocalDateTime
+        +User(String, String, String, String, LocalDateTime)
+        +getEmail() : String
+        +getPassword() : String
+        +getCreationTime() : LocalDateTime
+    }
+
+    class UserFactory {
+        +create(String, String, String, String, LocalDateTime) : User
+    }
+
+    User ..|> AbstractUser
+}
+
+' Data Access
+package data_access {
+    class FirebaseUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface, DeleteUserDataAccessInterface {
+        -client : OkHttpClient
+        -token : String
+        -user : User
+        +FirebaseUserDataAccessObject(OkHttpClient)
+        +get(String, String) : User
+        +getAvailableRooms(User) : List<Room>
+        +save(User) : void
+        +deleteUser(User) : void
+    }
+}
+
+' Use Cases
+package use_case.login {
+    interface LoginInputBoundary {
+        +execute(LoginInputData) : void
+    }
+
+    class LoginInteractor {
+        -userDataAccessObject : LoginUserDataAccessInterface
+        -loginPresenter : LoginOutputBoundary
+        +LoginInteractor(LoginUserDataAccessInterface, LoginOutputBoundary)
+        +execute(LoginInputData) : void
+    }
+
+    interface LoginOutputBoundary {
+        +prepareSuccessView(LoginOutputData) : void
+        +prepareFailView(String) : void
+    }
+
+    class LoginInputData {
+        -email : String
+        -password : String
+        +LoginInputData(String, String)
+    }
+
+    class LoginOutputData {
+        -user : User
+        -availableRooms : List<Room>
+        -useCaseFailed : boolean
+        +LoginOutputData(User, List<Room>, boolean)
+    }
+
+    LoginInteractor ..> LoginInputBoundary : implements
+    LoginInteractor --> LoginOutputBoundary
+    LoginInteractor --> LoginUserDataAccessInterface
+}
+
+package use_case.signup {
+    interface SignupInputBoundary {
+        +execute(SignupInputData) : void
+    }
+
+    class SignupInteractor {
+        -userDataAccessObject : SignupUserDataAccessInterface
+        -userPresenter : SignupOutputBoundary
+        -userFactory : UserFactory
+        +SignupInteractor(SignupUserDataAccessInterface, SignupOutputBoundary, UserFactory)
+        +execute(SignupInputData) : void
+    }
+
+    interface SignupOutputBoundary {
+        +prepareSuccessView(SignupOutputData) : void
+        +prepareFailView(String) : void
+    }
+
+    class SignupInputData {
+        -email : String
+        -username : String
+        -password : String
+        -repeatPassword : String
+        +SignupInputData(String, String, String, String)
+    }
+
+    class SignupOutputData {
+        -email : String
+        -creationTime : String
+        -useCaseFailed : boolean
+        +SignupOutputData(String, String, boolean)
+    }
+
+    SignupInteractor ..> SignupInputBoundary : implements
+    SignupInteractor --> SignupOutputBoundary
+    SignupInteractor --> SignupUserDataAccessInterface
+}
+
+' Interface Adapter
+package interface_adapter.login {
+    class LoginController {
+        -loginUseCaseInteractor : LoginInputBoundary
+        +LoginController(LoginInputBoundary)
+        +execute(String, String) : void
+    }
+
+    class LoginPresenter implements LoginOutputBoundary {
+        -loginViewModel : LoginViewModel
+        -loggedInViewModel : LoggedInViewModel
+        -roomsViewModel : RoomsViewModel
+        -viewManagerModel : ViewManagerModel
+        +LoginPresenter(ViewManagerModel, LoggedInViewModel, RoomsViewModel, LoginViewModel)
+    }
+
+    class LoginViewModel {
+        -state : LoginState
+        +LoginViewModel()
+        +setState(LoginState) : void
+    }
+
+    class LoginState {
+        -email : String
+        -error : String
+        -password : String
+        +LoginState(LoginState)
+        +LoginState()
+    }
+
+    LoginController --> LoginInputBoundary
+    LoginPresenter --> LoginOutputBoundary
+    LoginPresenter --> LoggedInViewModel
+    LoginPresenter --> RoomsViewModel
+    LoginPresenter --> ViewManagerModel
+}
+
+package interface_adapter.signup {
+    class SignupController {
+        -userSignupUseCaseInteractor : SignupInputBoundary
+        +SignupController(SignupInputBoundary)
+        +execute(String, String, String, String) : void
+    }
+
+    class SignupPresenter implements SignupOutputBoundary {
+        -signupViewModel : SignupViewModel
+        -loginViewModel : LoginViewModel
+        -viewManagerModel : ViewManagerModel
+        +SignupPresenter(ViewManagerModel, SignupViewModel, LoginViewModel)
+    }
+
+    class SignupViewModel {
+        -state : SignupState
+        +SignupViewModel()
+        +setState(SignupState) : void
+    }
+
+    class SignupState {
+        -email : String
+        -username : String
+        -error : String
+        -password : String
+        -repeatPassword : String
+        +SignupState(SignupState)
+        +SignupState()
+    }
+
+    SignupController --> SignupInputBoundary
+    SignupPresenter --> SignupOutputBoundary
+    SignupPresenter --> SignupViewModel
+    SignupPresenter --> LoginViewModel
+    SignupPresenter --> ViewManagerModel
+}
+
+' Relationships
+FirebaseUserDataAccessObject --> User : uses
+FirebaseUserDataAccessObject ..> SignupUserDataAccessInterface : implements
+FirebaseUserDataAccessObject ..> LoginUserDataAccessInterface : implements
+FirebaseUserDataAccessObject ..> DeleteUserDataAccessInterface : implements
+
+LoginController --> LoginViewModel
+SignupController --> SignupViewModel
+
+@enduml

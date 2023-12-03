@@ -79,7 +79,7 @@ public class Main {
     WelcomeView welcomeView = new WelcomeView(switchViewController);
     viewManagerModel.add(welcomeView.contentPane, WelcomeView.viewName);
 
-    RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject();
+    RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();

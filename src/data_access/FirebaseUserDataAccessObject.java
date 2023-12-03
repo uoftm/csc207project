@@ -10,6 +10,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
 import java.util.List;
 import okhttp3.*;
 import org.json.JSONException;
@@ -28,7 +30,6 @@ public class FirebaseUserDataAccessObject
   private final OkHttpClient client;
 
   private String token = null;
-  private User user = null;
 
   public FirebaseUserDataAccessObject(OkHttpClient client) {
     this.client = client;
@@ -202,43 +203,98 @@ public class FirebaseUserDataAccessObject
     saveDisplayName(signupResults.uid, user.getName(), signupResults.idToken);
   }
 
-  // TODO: Remove dummy code and connect to firebase
   @Override
   public List<Room> getAvailableRooms(User user) {
-    DisplayUser dummy_display_user = new DisplayUser("foo", "bar");
-    List<DisplayUser> users = new ArrayList<>();
-    users.add(dummy_display_user);
-
-    Instant timestamp = Instant.now();
-    Message message =
-        new Message(timestamp, "This is a test message.", dummy_display_user.getUid());
-
-    List<Message> messages = new ArrayList<>();
-    messages.add(message);
-
-    Room dummy_room = new Room("baz", "A test room!", users, messages);
+    List<String> roomUids = getAvailableRoomUids(user);
     List<Room> availableRooms = new ArrayList<>();
-    availableRooms.add(dummy_room);
 
-    List<DisplayUser> users2 = new ArrayList<>();
-    DisplayUser dummy_display_user2 = new DisplayUser("foo", "bar");
-    users2.add(dummy_display_user);
-
-    List<Message> messages2 = new ArrayList<>();
-    for (Integer i = 0; i < 20; i++) {
-      Instant timestamp2 = Instant.now();
-      Message message2 =
-          new Message(
-              timestamp,
-              "This is test message number " + i.toString(),
-              dummy_display_user.getUid());
-      messages2.add(message2);
+    for (String roomUid : roomUids) {
+      System.out.println(roomUid);
+      try {
+        Room room = getRoomByUid(user, roomUid);
+        availableRooms.add(room);
+      } catch (RuntimeException e) {
+        System.out.println("Error fetching room: " + roomUid + ". Error: " + e.getMessage());
+      }
     }
 
-    Room dummy_room2 = new Room("Bro Chat", "Another test room!", users2, messages2);
-    availableRooms.add(dummy_room2);
-
     return availableRooms;
+  }
+
+  private List<String> getAvailableRoomUids(User user) {
+    String encodedEmail =
+            Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
+    String url = String.format(Constants.ROOM_DATA_URL, encodedEmail);
+    Request request = new Request.Builder().url(url).get().build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      if (!response.isSuccessful()) {
+        return new ArrayList<>();
+      }
+      System.out.println(response);
+      JSONObject roomResponse = new JSONObject(response.body().string());
+      List<String> roomUids = new ArrayList<>();
+      roomResponse.keys().forEachRemaining(roomUids::add);
+      System.out.println(roomResponse);
+      return roomUids;
+    } catch (IOException | JSONException e) {
+      return new ArrayList<>();
+    }
+  }
+
+  private Room getRoomByUid(User user, String roomId) {
+    String token = getAccessToken(user.getEmail(), user.getPassword());
+
+    String url = String.format(Constants.ROOM_URL, roomId) + "?auth=" + token;
+    Request request = new Request.Builder().url(url).get().build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      if (response.isSuccessful()) {
+        JSONObject rooms = new JSONObject(response.body().string());
+
+        // Get messages
+        List<Message> messages = new ArrayList<>();
+        if (rooms.has("messages")) {
+          JSONObject messagesJSON = rooms.getJSONObject("messages");
+          Iterator<String> timestampIterator = messagesJSON.keys();
+          while (timestampIterator.hasNext()) {
+            String key = timestampIterator.next();
+            Instant timestamp = Instant.ofEpochSecond(Long.parseLong(key));
+            String contents = messagesJSON.getJSONObject(key).getString("contents");
+            String encodedAuthorEmail = messagesJSON.getJSONObject(key).getString("author");
+            String authorEmail = new String(Base64.getDecoder().decode(encodedAuthorEmail));
+            Message message = new Message(timestamp, contents, authorEmail);
+            messages.add(message);
+          }
+        }
+
+        // Get DisplayUsers
+        List<DisplayUser> displayUsers = new ArrayList<>();
+        if (rooms.has("users")) {
+          JSONObject usersJSON = rooms.getJSONObject("users");
+          Iterator<String> encodedEmailIterator = usersJSON.keys();
+          while (encodedEmailIterator.hasNext()) {
+            String encodedEmail = encodedEmailIterator.next();
+            String userEmail = new String(Base64.getDecoder().decode(encodedEmail));
+            String displayName = usersJSON.getString(encodedEmail);
+            DisplayUser displayUser = new DisplayUser(userEmail, displayName);
+            displayUsers.add(displayUser);
+          }
+        }
+
+        // Get name
+        String roomName = rooms.getString("name");
+
+        Room room = new Room(roomId, roomName, displayUsers, messages);
+        return room;
+      } else {
+        throw new IOException();
+      }
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to retrieve user data. Please try again.");
+    }
   }
 
   private void deleteFirebaseUserData(User user, String idToken) {

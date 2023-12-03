@@ -23,7 +23,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
     boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
 
     if (valid) {
-      Response<List<Message>> response = roomsDataAccessObject.loadMessages(room, user);
+      RoomsResponse<List<Message>> response = roomsDataAccessObject.loadMessages(room, user);
       if (response.isError()) {
         RoomsOutputData roomsOutputData =
             new RoomsOutputData(null, null, null, response.getError(), null);
@@ -49,7 +49,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
     boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
 
     if (valid) {
-      Response<String> response = roomsDataAccessObject.sendMessage(room, user, message);
+      RoomsResponse<String> response = roomsDataAccessObject.sendMessage(room, user, message);
       if (response.isError()) {
         RoomsOutputData roomsOutputData =
             new RoomsOutputData(null, null, null, response.getError(), null);
@@ -71,7 +71,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
     boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
 
     if (valid) {
-      Response<String> response = roomsDataAccessObject.addUserToRoom(room, user, email);
+      RoomsResponse<String> response = roomsDataAccessObject.addUserToRoom(room, user, email);
       if (response.isError()) {
         RoomsOutputData roomsOutputData =
             new RoomsOutputData(null, null, null, response.getError(), null);
@@ -93,7 +93,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
     User user = roomsInputData.getUser();
     String roomToCreateName = roomsInputData.getRoomToCreateName();
 
-    Response<Room> response = roomsDataAccessObject.createRoom(user, roomToCreateName);
+    RoomsResponse<Room> response = roomsDataAccessObject.createRoom(user, roomToCreateName);
     if (response.isError()) {
       RoomsOutputData roomsOutputData =
           new RoomsOutputData(null, null, null, response.getError(), null);

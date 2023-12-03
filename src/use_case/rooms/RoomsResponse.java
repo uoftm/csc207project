@@ -1,10 +1,10 @@
 package use_case.rooms;
 
-public class Response<T> {
+public class RoomsResponse<T> {
   private String error;
   private T val;
 
-  public Response(T val) {
+  public RoomsResponse(T val) {
     this.val = val;
   }
 

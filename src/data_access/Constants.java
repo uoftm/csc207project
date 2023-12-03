@@ -13,6 +13,10 @@ public class Constants {
   public static final String DISPLAY_NAME_URL = FIREBASE_URL + "users/%s/displayName.json";
   public static final String LOGIN_URL =
       "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
+  public static final String ROOM_DATA_URL = FIREBASE_URL + "users/%s/rooms.json";
+  public static final String SPECIFIC_ROOM_DATA_URL = FIREBASE_URL + "users/%s/rooms/%s.json";
+  public static final String ROOM_URL = FIREBASE_URL + "rooms/%s.json";
+  public static final String ROOM_USERS_URL = FIREBASE_URL + "rooms/%s/users/%s.json";
 
   public static final String ACCOUNT_LOOKUP_URL =
       "https://identitytoolkit.googleapis.com/v1/accounts:lookup";

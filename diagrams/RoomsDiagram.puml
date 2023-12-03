@@ -1,0 +1,108 @@
+@startuml
+
+package interface_adapter.rooms {
+    class RoomsController {
+        -roomsUseCaseInteractor : RoomsInputBoundary
+    }
+
+    class RoomsPresenter {
+        -roomsViewModel : RoomsViewModel
+    }
+
+    class RoomsViewModel {
+        -state : RoomsState
+    }
+
+    class RoomsState {
+        -roomUid : String
+        -user : User
+        -availableRooms : List<Room>
+        -displayMessages : List<Message>
+        -sendMessage : String
+        -userToAddEmail : String
+        -roomToCreateName : String
+        -error : String
+        -success : String
+        +getUser() : User
+        +setUser(User) : void
+        +getUserUid() : String
+        +getRoomUid() : String
+        +setRoomUid(String) : void
+        +getAvailableRooms() : List<Room>
+        +setAvailableRooms(List<Room>) : void
+        +getDisplayMessages() : List<Message>
+        +setDisplayMessages(List<Message>) : void
+        +getSendMessage() : String
+        +setSendMessage(String) : void
+        +getUserToAddEmail() : String
+        +setUserToAddEmail(String) : void
+        +getRoomToCreateName() : String
+        +setRoomToCreateName(String) : void
+        +getError() : String
+        +setError(String) : void
+        +getSuccess() : String
+        +setSuccess(String) : void
+    }
+
+    RoomsController --> RoomsInputBoundary
+    RoomsPresenter --> RoomsOutputBoundary
+    RoomsViewModel --> RoomsState
+}
+
+package use_case.rooms {
+    interface RoomsDataAccessInterface {
+        +loadMessages(Room, User) : Response<List<Message>>
+        +sendMessage(Room, User, String) : Response<String>
+        +validateRoomAccess(Room, User) : boolean
+        +addUserToRoom(Room, User, String) : Response<String>
+        +createRoom(User, String) : Response<Room>
+    }
+
+    interface RoomsInputBoundary {
+        +loadMessages(RoomsInputData)
+        +sendMessage(RoomsInputData)
+        +addUserToRoom(RoomsInputData)
+        +createRoom(RoomsInputData)
+    }
+
+    class RoomsInteractor {
+        -roomsPresenter : RoomsOutputBoundary
+        -roomsDataAccessObject : RoomsDataAccessInterface
+    }
+
+    interface RoomsOutputBoundary {
+        +prepareSuccessView(RoomsOutputData)
+        +prepareLoadMessagesSuccessView(RoomsOutputData)
+        +prepareCreateRoomSuccessView(RoomsOutputData)
+        +prepareFailView(RoomsOutputData)
+    }
+
+    class RoomsInputData {
+        -room : Room
+        -user : User
+        -message : String
+        -userToAddEmail : String
+        -roomToCreateName : String
+    }
+
+    RoomsInteractor ..> RoomsInputBoundary : implements
+    RoomsInteractor --> RoomsOutputBoundary
+    RoomsInteractor --> RoomsDataAccessInterface
+}
+
+' Additional packages and classes should follow a similar structure
+' Example:
+' package entities.auth {
+'     class User { ... }
+' }
+' package entities.rooms {
+'     class Room { ... }
+'     class Message { ... }
+' }
+
+' Define relationships
+' Example:
+' User --> Room : uses
+' Message --> Room : part of
+
+@enduml
