@@ -1,6 +1,5 @@
 package entities.search;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class SearchResponseDisplay {
@@ -13,13 +12,17 @@ public class SearchResponseDisplay {
   private final List<SearchIndicies> highlightIndices;
   private final String message;
 
-  public SearchResponseDisplay(String time, String userName,
-      String roomName, List<SearchIndicies> highlightIndices, String message) {
+  public SearchResponseDisplay(
+      String time,
+      String userName,
+      String roomName,
+      List<SearchIndicies> highlightIndices,
+      String message) {
     this.time = time;
     this.userName = userName;
     this.roomName = roomName;
     this.highlightIndices = highlightIndices;
-    this.message = message ;
+    this.message = message;
   }
 
   public String getTime() {

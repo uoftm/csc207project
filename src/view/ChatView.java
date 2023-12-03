@@ -19,7 +19,6 @@ public class ChatView implements PropertyChangeListener {
   private JTextField message;
   private JButton send;
   private JPanel rawPane;
-
   private final ChatViewModel viewModel;
 
   public ChatView(ChatController chatController, ChatViewModel viewModel) {

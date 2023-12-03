@@ -2,7 +2,6 @@ package interface_adapter.search;
 
 public class SearchState {
 
-
   private String roomUid;
   private String userUid;
 
@@ -16,8 +15,6 @@ public class SearchState {
     return searchedTerm;
   }
 
-
-
   public String getError() {
     return error;
   }
@@ -29,8 +26,6 @@ public class SearchState {
   public void setSearchedTerm(String searchedTerm) {
     this.searchedTerm = searchedTerm;
   }
-
-
 
   public void setRoomUid(String roomUid) {
     this.roomUid = roomUid;

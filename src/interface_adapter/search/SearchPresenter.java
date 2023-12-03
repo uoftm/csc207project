@@ -5,10 +5,8 @@ import entities.search.SearchResponseDisplay;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.searched.SearchedState;
 import interface_adapter.searched.SearchedViewModel;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import use_case.search.SearchOutputBoundary;
@@ -39,9 +37,10 @@ public class SearchPresenter implements SearchOutputBoundary {
 
       returned.add(
           new SearchResponseDisplay(
-              DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").format(
+              DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")
+                  .format(
                       LocalDateTime.ofInstant(response.getTime(), ZoneId.of("America/New_York"))),
-              //TODO// needs to be modified to have names instead of IDs.
+              // TODO// needs to be modified to have names instead of IDs.
               response.getAuthUid(),
               response.getRoomUid(),
               response.getHighlightIndices(),

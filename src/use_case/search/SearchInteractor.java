@@ -20,12 +20,11 @@ public class SearchInteractor implements SearchInputBoundary {
     SearchRequest request =
         new SearchRequest(searchInputData.getMessage(), searchInputData.getRoomUid());
     SearchOutputData outputData = new SearchOutputData(searchDataAccessObject.getData(request));
-    if (outputData.getResponse().getError() != null){
+    if (outputData.getResponse().getError() != null) {
       searchPresenter.prepareFailedResponse(outputData);
-    }else{
+    } else {
       searchPresenter.prepareSearchResponse(outputData);
     }
-
   }
 
   @Override

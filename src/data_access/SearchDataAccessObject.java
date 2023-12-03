@@ -101,8 +101,10 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
         }
         String fulltext = finalHighlight.replaceAll("<em>|</em>", "");
 
-        // The above while loops involving the open and close Tags gets the indices for the strings to be
-        // highlighted; As in the strings surrounded by "<em>|</em>". It gets the indices for them after
+        // The above while loops involving the open and close Tags gets the indices for the strings
+        // to be
+        // highlighted; As in the strings surrounded by "<em>|</em>". It gets the indices for them
+        // after
         // the correspondent tags are removed. We need to indices to highlight the part of the text
         // that is matched by elastic search in SearchedView.
         SearchResponse oneResponse =
@@ -119,7 +121,8 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
     } catch (Exception e) {
       System.out.println("Search failed");
       e.printStackTrace();
-      return new SearchReponseArray(new ArrayList<>(), "Failed to get search results from elastic search.");
+      return new SearchReponseArray(
+          new ArrayList<>(), "Failed to get search results from elastic search.");
     }
   }
 
