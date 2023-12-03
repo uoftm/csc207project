@@ -78,7 +78,7 @@ public class SearchView implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SearchState state = (SearchState) evt.getNewValue();
-    if (state.getError() != null) {
+    if (state.getIsError()) {
       JOptionPane.showMessageDialog(contentPane, state.getError());
     }
   }

@@ -58,6 +58,7 @@ public class SearchPresenter implements SearchOutputBoundary {
   public void prepareFailedResponse(SearchOutputData responses) {
     SearchState searchState = searchViewModel.getState();
     searchState.setError(responses.getResponse().getError());
+    searchState.setIsError(responses.getResponse().getIsError());
     searchViewModel.firePropertyChanged();
   }
 }

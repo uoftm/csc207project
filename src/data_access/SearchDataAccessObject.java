@@ -117,12 +117,12 @@ public class SearchDataAccessObject implements SearchDataAccessInterface {
                 item);
         searchResponses.add(oneResponse);
       }
-      return new SearchReponseArray(searchResponses, null);
+      return new SearchReponseArray(searchResponses, null, false);
     } catch (Exception e) {
       System.out.println("Search failed");
       e.printStackTrace();
       return new SearchReponseArray(
-          new ArrayList<>(), "Failed to get search results from elastic search.");
+          new ArrayList<>(), "Failed to get search results from elastic search.", true);
     }
   }
 

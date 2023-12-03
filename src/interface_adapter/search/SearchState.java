@@ -7,6 +7,8 @@ public class SearchState {
 
   private String error;
 
+  private Boolean isError;
+
   private String searchedTerm;
 
   public SearchState() {}
@@ -23,6 +25,10 @@ public class SearchState {
     return roomUid;
   }
 
+  public Boolean getIsError() {
+    return isError;
+  }
+
   public void setSearchedTerm(String searchedTerm) {
     this.searchedTerm = searchedTerm;
   }
@@ -33,6 +39,10 @@ public class SearchState {
 
   public void setError(String error) {
     this.error = error;
+  }
+
+  public void setIsError(Boolean error) {
+    isError = error;
   }
 
   public String getUserUid() {
