@@ -1,5 +1,6 @@
 package interface_adapter.rooms;
 
+import entities.rooms.Room;
 import use_case.rooms.LoadRoomsOutputBoundary;
 import use_case.rooms.LoadRoomsOutputData;
 
@@ -14,6 +15,13 @@ public class LoadRoomsPresenter implements LoadRoomsOutputBoundary {
   public void prepareSuccessView(LoadRoomsOutputData output) {
     RoomsState roomsState = roomsViewModel.getState();
     roomsState.setAvailableRooms(output.getRooms());
+
+    // Update display messages for currently selected room
+    if (roomsState.roomIsSelected()) {
+      Room room = roomsState.getRoomByUid();
+      roomsState.setDisplayMessages(room.getMessages());
+    }
+
     roomsViewModel.firePropertyChanged();
   }
 

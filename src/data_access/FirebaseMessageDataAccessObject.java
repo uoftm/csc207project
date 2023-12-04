@@ -19,12 +19,12 @@ public class FirebaseMessageDataAccessObject implements MessageDataAccessInterfa
 
   @Override
   public void sendMessage(
-      Room room, LoginUserDataAccessInterface userDAO, User user, Message message) {
+      Room room, LoginUserDataAccessInterface userDAO, User user, String messageBody) {
     String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
     String messageJSON =
         new JSONObject()
-            .put("contents", message.content)
-            .put("author", message.authorEmail)
+            .put("contents", messageBody)
+            .put("author", user.getEmail())
             .toString();
 
     String url =

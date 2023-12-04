@@ -7,37 +7,20 @@ import java.util.ArrayList;
 import use_case.login.LoginUserDataAccessInterface;
 
 public class RoomsInteractor implements RoomsInputBoundary {
-  // TODO: Split up these distinct calls into their own interactors
   final RoomsOutputBoundary roomsPresenter;
   final RoomsDataAccessInterface roomsDataAccessObject;
-  // TODO: Make a different interface to this dao for the rooms module
+  final MessageDataAccessInterface messageDataAccessInterface;
   final LoginUserDataAccessInterface userDao;
 
   public RoomsInteractor(
       RoomsDataAccessInterface roomsDataAccessObject,
+      MessageDataAccessInterface messageDataAccessInterface,
       LoginUserDataAccessInterface userDao,
       RoomsOutputBoundary roomsOutputBoundary) {
     this.roomsPresenter = roomsOutputBoundary;
     this.roomsDataAccessObject = roomsDataAccessObject;
+    this.messageDataAccessInterface = messageDataAccessInterface;
     this.userDao = userDao;
-  }
-
-  @Override
-  public void loadMessages(RoomsInputData roomsInputData) {
-    try {
-      Room room = roomsInputData.getRoom();
-      User user = roomsInputData.getUser();
-
-      // TODO: Get messages from message DAO
-
-      RoomsOutputData roomsOutputData =
-          new RoomsOutputData(room, user, new ArrayList<>(), null, "Success");
-      roomsPresenter.prepareSuccessView(roomsOutputData);
-    } catch (RuntimeException e) {
-      RoomsOutputData roomsOutputData =
-          new RoomsOutputData(null, null, new ArrayList<>(), e.getMessage(), null);
-      roomsPresenter.prepareFailView(roomsOutputData);
-    }
   }
 
   @Override
@@ -46,9 +29,14 @@ public class RoomsInteractor implements RoomsInputBoundary {
       Room room = roomsInputData.getRoom();
       User user = roomsInputData.getUser();
 
-      String message = roomsInputData.getMessage();
-
-      // TODO: Send message via message DAO
+      try {
+        messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
+        RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, null, null, roomsInputData.getMessage());
+        roomsPresenter.prepareSendMessageSuccessView(roomsOutputData);
+      } catch (RuntimeException e) {
+        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, e.getMessage(), null);
+        roomsPresenter.prepareFailView(roomsOutputData);
+      }
 
       RoomsOutputData roomsOutputData =
           new RoomsOutputData(room, user, new ArrayList<>(), null, "Success");

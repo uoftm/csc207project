@@ -144,17 +144,11 @@ public class RoomsView implements PropertyChangeListener {
           if (evt.getSource().equals(send)) {
             RoomsState currentState = viewModel.getState();
             String message = currentState.getSendMessage();
-            String roomUid = currentState.getRoomUid();
-            if (message != null) {
-              User user = currentState.getUser();
-              for (var room : currentState.getAvailableRooms()) {
-                if (room.getUid().equals(roomUid)) {
-                  roomsController.sendMessage(room, user, message);
-                  searchController.executeRecordData(
-                      Instant.now(), roomUid, message, currentState.getUserUid());
-                  break;
-                }
-              }
+            if (message != null && currentState.roomIsSelected()) {
+                Room room = currentState.getRoomByUid();
+                User user = currentState.getUser();
+                roomsController.sendMessage(room, user, message);
+                searchController.executeRecordData(Instant.now(), currentState.getRoomUid(), message, currentState.getUserUid());
             }
           }
         });
@@ -164,16 +158,8 @@ public class RoomsView implements PropertyChangeListener {
           if (evt.getSource().equals(refreshButton)) {
             RoomsState currentState = viewModel.getState();
             User user = currentState.getUser();
-            String roomUid = currentState.getRoomUid();
 
             loadRoomsController.loadRooms(user);
-
-            // TODO: Is this code a violation of CA? Since we already call another controller
-            for (var room : currentState.getAvailableRooms()) {
-              if (room.getUid().equals(roomUid)) {
-                roomsController.loadMessages(room, user);
-              }
-            }
           }
         });
 

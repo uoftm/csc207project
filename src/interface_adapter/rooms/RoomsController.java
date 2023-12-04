@@ -12,11 +12,6 @@ public class RoomsController {
     this.roomsUseCaseInteractor = roomsUseCaseInteractor;
   }
 
-  public void loadMessages(Room room, User user) {
-    RoomsInputData roomsInputData = new RoomsInputData(room, user, null, null, null);
-    roomsUseCaseInteractor.loadMessages(roomsInputData);
-  }
-
   public void sendMessage(Room room, User user, String message) {
     RoomsInputData roomsInputData = new RoomsInputData(room, user, message, null, null);
     roomsUseCaseInteractor.sendMessage(roomsInputData);

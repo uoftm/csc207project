@@ -6,5 +6,5 @@ import entities.rooms.Room;
 import use_case.login.LoginUserDataAccessInterface;
 
 public interface MessageDataAccessInterface {
-  void sendMessage(Room room, LoginUserDataAccessInterface userDAO, User user, Message message);
+  void sendMessage(Room room, LoginUserDataAccessInterface userDAO, User user, String messageBody);
 }
