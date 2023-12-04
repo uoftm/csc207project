@@ -6,8 +6,14 @@ public class SettingsInputData {
 
   AbstractUser user;
 
+  String updatedUsername;
+
   public SettingsInputData(AbstractUser user) {
     this.user = user;
+  }
+
+  public SettingsInputData(String updatedUsername) {
+    this.updatedUsername = updatedUsername;
   }
 
   AbstractUser getUser() {

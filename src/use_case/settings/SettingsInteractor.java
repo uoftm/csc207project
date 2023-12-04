@@ -22,4 +22,10 @@ public class SettingsInteractor implements SettingsInputBoundary {
     SettingsOutputData settingsOutputData = new SettingsOutputData(user, true);
     settingsPresenter.prepareSuccessView(settingsOutputData);
   }
+
+  @Override
+  public void executeChangeUsername(SettingsInputData settingsInputData) {
+
+    
+  }
 }

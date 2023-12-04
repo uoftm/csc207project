@@ -7,6 +7,8 @@ import interface_adapter.switch_view.SwitchViewController;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class SettingsView implements PropertyChangeListener {
 
@@ -17,6 +19,8 @@ public class SettingsView implements PropertyChangeListener {
   private JPanel body;
   private JLabel title;
   private JButton backButton;
+  private JTextField changeUsernameField;
+  private JButton changeUsernameButton;
 
   public SettingsView(
       SettingsViewModel settingsViewModel,
@@ -37,6 +41,41 @@ public class SettingsView implements PropertyChangeListener {
             switchViewController.switchTo(LoggedInView.viewName);
           }
         });
+
+    changeUsernameButton.addActionListener(
+        evt -> {
+          if (evt.getSource().equals(changeUsernameButton)) {
+            settingsController.executeChangeUsername(
+                settingsViewModel.getState().getUpdatedUsername());
+          }
+        });
+
+    changeUsernameField
+        .getDocument()
+        .addDocumentListener(
+            new DocumentListener() {
+              @Override
+              public void insertUpdate(DocumentEvent e) {
+                update();
+              }
+
+              @Override
+              public void removeUpdate(DocumentEvent e) {
+                update();
+              }
+
+              @Override
+              public void changedUpdate(DocumentEvent e) {
+                update();
+              }
+
+              protected void update() {
+                String text = changeUsernameField.getText();
+                SettingsState currentstate = settingsViewModel.getState();
+                currentstate.setUpdatedUsername(text);
+                settingsViewModel.setState(currentstate);
+              }
+            });
   }
 
   @Override
