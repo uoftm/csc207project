@@ -5,11 +5,11 @@ import java.time.Instant;
 public class Message {
   public String content;
   public Instant timestamp;
-  public String authorId;
+  public String authorEmail;
 
-  public Message(Instant timestamp, String content, String authorId) {
+  public Message(Instant timestamp, String content, String authorEmail) {
     this.timestamp = timestamp;
     this.content = content;
-    this.authorId = authorId;
+    this.authorEmail = authorEmail;
   }
 }

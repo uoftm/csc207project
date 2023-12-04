@@ -1,10 +1,10 @@
 package app;
 
-import interface_adapter.rooms.RoomsController;
-import interface_adapter.rooms.RoomsPresenter;
-import interface_adapter.rooms.RoomsViewModel;
+import interface_adapter.rooms.*;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.StartSearchController;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoadRoomsInteractor;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.rooms.RoomsInteractor;
 import view.RoomsView;
@@ -12,12 +12,23 @@ import view.RoomsView;
 public class RoomsUseCaseFactory {
   public static RoomsView create(
       RoomsDataAccessInterface roomsDataAccessObject,
+      LoginUserDataAccessInterface userDao,
       RoomsViewModel roomsViewModel,
       SearchController searchController,
       StartSearchController startSearchController) {
     RoomsPresenter roomsPresenter = new RoomsPresenter(roomsViewModel);
-    RoomsInteractor roomsInteractor = new RoomsInteractor(roomsDataAccessObject, roomsPresenter);
+    RoomsInteractor roomsInteractor =
+        new RoomsInteractor(roomsDataAccessObject, userDao, roomsPresenter);
     RoomsController roomsController = new RoomsController(roomsInteractor);
-    return new RoomsView(roomsViewModel, roomsController, searchController, startSearchController);
+    LoadRoomsPresenter loadRoomsPresenter = new LoadRoomsPresenter(roomsViewModel);
+    LoadRoomsInteractor loadRoomsInteractor =
+        new LoadRoomsInteractor(roomsDataAccessObject, userDao, loadRoomsPresenter);
+    LoadRoomsController loadRoomsController = new LoadRoomsController(loadRoomsInteractor);
+    return new RoomsView(
+        roomsViewModel,
+        roomsController,
+        loadRoomsController,
+        searchController,
+        startSearchController);
   }
 }

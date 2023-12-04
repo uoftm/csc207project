@@ -23,7 +23,6 @@ public class User implements AbstractUser {
     this.creationTime = creationTime;
   }
 
-  @Override
   public String getUid() {
     return uid;
   }

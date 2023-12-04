@@ -1,70 +1,49 @@
 package data_access;
 
+import entities.auth.User;
 import entities.rooms.Message;
+import entities.rooms.Room;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.*;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+import okhttp3.*;
 import org.json.JSONObject;
-import use_case.chat.ChatMessageDataAccessInterface;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.MessageDataAccessInterface;
 
-public class FirebaseMessageDataAccessObject implements ChatMessageDataAccessInterface {
+public class FirebaseMessageDataAccessObject implements MessageDataAccessInterface {
   private final OkHttpClient client;
 
   public FirebaseMessageDataAccessObject(OkHttpClient client) {
     this.client = client;
   }
 
-  public void save(Message message) {
-    // Stringify message
-    String stringified =
-        new JSONObject().put("content", message.content).put("author", message.authorId).toString();
+  @Override
+  public void sendMessage(
+      Room room, LoginUserDataAccessInterface userDAO, User user, Message message) {
+    String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
+    String messageJSON =
+        new JSONObject()
+            .put("contents", message.content)
+            .put("author", message.authorEmail)
+            .toString();
 
+    String url =
+        String.format(Constants.MESSAGES_URL, room.getUid(), new Date().getTime())
+            + "?auth="
+            + idToken;
     Request request =
         new Request.Builder()
-            .url(Constants.FIREBASE_URL + "messages/" + new Date().getTime() + ".json")
-            .method("PUT", RequestBody.create(stringified, MediaType.get("application/json")))
+            .url(url)
+            .method("PUT", RequestBody.create(messageJSON, MediaType.get("application/json")))
             .build();
 
     try {
-      client.newCall(request).execute();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public List<Message> getAllMessages() {
-    Request request =
-        new Request.Builder()
-            .url(Constants.FIREBASE_URL + "messages.json")
-            .method("GET", null)
-            .build();
-
-    try {
-      JSONObject response = new JSONObject(client.newCall(request).execute().body().string());
-      var out = new ArrayList<Message>();
-      var x = response.keys();
-      while (x.hasNext()) {
-        try {
-          var key = x.next();
-          var time = Instant.ofEpochMilli(Long.parseLong(key));
-          var messageObject = response.getJSONObject(key);
-          var content = messageObject.getString("content");
-          var authorId = messageObject.getString("author");
-          out.add(new Message(time, content, authorId));
-        } catch (RuntimeException e) {
-          System.out.println("Invalid message");
-          System.out.println(e.getLocalizedMessage());
-        }
+      Response response = client.newCall(request).execute();
+      if (!response.isSuccessful()) {
+        throw new IOException();
       }
-      out.sort(Comparator.comparing(a -> a.timestamp));
-
-      return out;
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Unable to send message. Please try again.");
     }
   }
 }

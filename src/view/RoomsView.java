@@ -3,6 +3,7 @@ package view;
 import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
+import interface_adapter.rooms.LoadRoomsController;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
@@ -38,6 +39,7 @@ public class RoomsView implements PropertyChangeListener {
   public RoomsView(
       RoomsViewModel viewModel,
       RoomsController roomsController,
+      LoadRoomsController loadRoomsController,
       SearchController searchController,
       StartSearchController startSearchController) {
     this.viewModel = viewModel;
@@ -164,6 +166,9 @@ public class RoomsView implements PropertyChangeListener {
             User user = currentState.getUser();
             String roomUid = currentState.getRoomUid();
 
+            loadRoomsController.loadRooms(user);
+
+            // TODO: Is this code a violation of CA? Since we already call another controller
             for (var room : currentState.getAvailableRooms()) {
               if (room.getUid().equals(roomUid)) {
                 roomsController.loadMessages(room, user);
@@ -265,9 +270,11 @@ public class RoomsView implements PropertyChangeListener {
 
     if (state.getError() != null) {
       JOptionPane.showMessageDialog(contentPane, state.getError());
+      state.setError(null);
     }
     if (state.getSuccess() != null) {
       JOptionPane.showMessageDialog(contentPane, state.getSuccess());
+      state.setSuccess(null);
     }
   }
 }

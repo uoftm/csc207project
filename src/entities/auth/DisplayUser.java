@@ -1,16 +1,16 @@
 package entities.auth;
 
 public class DisplayUser implements AbstractUser {
-  private final String uid;
+  private final String email;
   private final String name;
 
-  public DisplayUser(String uid, String name) {
-    this.uid = uid;
+  public DisplayUser(String email, String name) {
+    this.email = email;
     this.name = name;
   }
 
-  public String getUid() {
-    return uid;
+  public String getEmail() {
+    return email;
   }
 
   public String getName() {

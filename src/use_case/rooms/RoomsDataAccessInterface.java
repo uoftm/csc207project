@@ -1,18 +1,22 @@
 package use_case.rooms;
 
+import entities.auth.DisplayUser;
 import entities.auth.User;
-import entities.rooms.Message;
 import entities.rooms.Room;
 import java.util.List;
+import use_case.login.LoginUserDataAccessInterface;
 
 public interface RoomsDataAccessInterface {
-  Response<List<Message>> loadMessages(Room room, User user);
+  Room getRoomFromId(User user, LoginUserDataAccessInterface userDAO, String roomId);
 
-  Response<String> sendMessage(Room room, User user, String message);
+  Room addRoom(User user, LoginUserDataAccessInterface userDAO, String roomName);
 
-  boolean validateRoomAccess(Room room, User user);
+  void deleteRoom(User user, LoginUserDataAccessInterface userDAO, Room room);
 
-  Response<String> addUserToRoom(Room room, User user, String email);
+  void addUserToRoom(
+      User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room);
 
-  Response<Room> createRoom(User user, String roomToCreateName);
+  List<String> getAvailableRoomIds(User user);
+
+  void removeUserFromRoom(User currentUser, DisplayUser userToRemove, LoginUserDataAccessInterface userDAO, Room room);
 }

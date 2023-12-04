@@ -1,8 +1,6 @@
 package use_case.login;
 
 import entities.auth.User;
-import entities.rooms.Room;
-import java.util.List;
 
 public class LoginInteractor implements LoginInputBoundary {
   final LoginUserDataAccessInterface userDataAccessObject;
@@ -20,9 +18,8 @@ public class LoginInteractor implements LoginInputBoundary {
     String email = loginInputData.getEmail();
     String password = loginInputData.getPassword();
     try {
-      User user = userDataAccessObject.get(email, password);
-      List<Room> availableRooms = userDataAccessObject.getAvailableRooms(user);
-      LoginOutputData loginOutputData = new LoginOutputData(user, availableRooms, true);
+      User user = userDataAccessObject.getUser(email, password);
+      LoginOutputData loginOutputData = new LoginOutputData(user, true);
       loginPresenter.prepareSuccessView(loginOutputData);
     } catch (RuntimeException e) {
       loginPresenter.prepareFailView(e.getMessage());
