@@ -1,8 +1,8 @@
 package view;
 
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.*;
 
 public class MessageView extends JPanel {
   public MessageView(String message, String displayName) {

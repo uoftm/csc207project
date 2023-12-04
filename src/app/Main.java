@@ -78,7 +78,8 @@ public class Main {
     viewManagerModel.add(welcomeView.contentPane, WelcomeView.viewName);
 
     RoomsDataAccessInterface roomsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
-    MessageDataAccessInterface messageDataAccessObject = new FirebaseMessageDataAccessObject(client);
+    MessageDataAccessInterface messageDataAccessObject =
+        new FirebaseMessageDataAccessObject(client);
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();

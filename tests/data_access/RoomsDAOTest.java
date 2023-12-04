@@ -1,23 +1,20 @@
 package data_access;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+
 import entities.auth.DisplayUser;
 import entities.auth.User;
-import entities.rooms.Message;
 import entities.rooms.Room;
-
 import java.util.List;
 import java.util.UUID;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
-import use_case.rooms.MessageDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
 
 public class RoomsDAOTest extends DAOTest {
   @Test
@@ -111,7 +108,8 @@ public class RoomsDAOTest extends DAOTest {
     Room dummyRoom = addFirebaseDummyRoom(dummyUser);
 
     User dummyUser2 = addFirebaseDummyUser();
-    DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.getEmail(), dummyUser2.getPassword());
+    DisplayUser dummyDisplayUser2 =
+        new DisplayUser(dummyUser2.getEmail(), dummyUser2.getPassword());
     dao.addUserToRoom(dummyUser, dummyDisplayUser2, userDao, dummyRoom);
 
     dao.removeUserFromRoom(dummyUser, dummyDisplayUser2, userDao, dummyRoom);
@@ -131,20 +129,20 @@ public class RoomsDAOTest extends DAOTest {
   @Test
   public void testAddUserToRoomFailure() {
     RoomsDataAccessInterface dao =
-            new FirebaseRoomsDataAccessObject(null) {
-              @Override
-              public void addUserToRoom(
-                      User user, DisplayUser displayUser, LoginUserDataAccessInterface userDao, Room room) {
-                throw new RuntimeException("Failed to add user.");
-              }
-            };
+        new FirebaseRoomsDataAccessObject(null) {
+          @Override
+          public void addUserToRoom(
+              User user, DisplayUser displayUser, LoginUserDataAccessInterface userDao, Room room) {
+            throw new RuntimeException("Failed to add user.");
+          }
+        };
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
     DisplayUser dummyDisplayUser = createDummyDisplayUser();
     assertThrows(
-            "Failed to add user.",
-            RuntimeException.class,
-            () -> dao.addUserToRoom(dummyUser, dummyDisplayUser, null, dummyRoom));
+        "Failed to add user.",
+        RuntimeException.class,
+        () -> dao.addUserToRoom(dummyUser, dummyDisplayUser, null, dummyRoom));
   }
 
   @Test
@@ -163,17 +161,17 @@ public class RoomsDAOTest extends DAOTest {
   @Test
   public void testCreateRoomFailure() {
     RoomsDataAccessInterface dao =
-            new FirebaseRoomsDataAccessObject(null) {
-              @Override
-              public Room addRoom(User user, LoginUserDataAccessInterface userDao, String roomName) {
-                throw new RuntimeException("Failed to create room.");
-              }
-            };
+        new FirebaseRoomsDataAccessObject(null) {
+          @Override
+          public Room addRoom(User user, LoginUserDataAccessInterface userDao, String roomName) {
+            throw new RuntimeException("Failed to create room.");
+          }
+        };
     User dummyUser = createDummyUser();
     String roomName = "New Room";
     assertThrows(
-            "Failed to create room.",
-            RuntimeException.class,
-            () -> dao.addRoom(dummyUser, null, roomName));
+        "Failed to create room.",
+        RuntimeException.class,
+        () -> dao.addRoom(dummyUser, null, roomName));
   }
 }

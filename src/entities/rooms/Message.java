@@ -1,7 +1,6 @@
 package entities.rooms;
 
 import entities.auth.DisplayUser;
-
 import java.time.Instant;
 
 public class Message {

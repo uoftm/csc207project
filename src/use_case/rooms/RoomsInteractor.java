@@ -31,10 +31,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
 
       try {
         messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
-        RoomsOutputData roomsOutputData = new RoomsOutputData(room, user, null, null, roomsInputData.getMessage());
+        RoomsOutputData roomsOutputData =
+            new RoomsOutputData(room, user, null, null, roomsInputData.getMessage());
         roomsPresenter.prepareSendMessageSuccessView(roomsOutputData);
       } catch (RuntimeException e) {
-        RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, e.getMessage(), null);
+        RoomsOutputData roomsOutputData =
+            new RoomsOutputData(null, null, null, e.getMessage(), null);
         roomsPresenter.prepareFailView(roomsOutputData);
       }
 

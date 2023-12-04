@@ -12,6 +12,7 @@ public class DisplayUser implements AbstractUser {
   public String getEmail() {
     return email;
   }
+
   public String getName() {
     return name;
   }

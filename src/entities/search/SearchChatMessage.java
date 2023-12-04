@@ -1,7 +1,5 @@
 package entities.search;
 
-import entities.auth.DisplayUser;
-import entities.rooms.Message;
 import java.time.Instant;
 
 public class SearchChatMessage {

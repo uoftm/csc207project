@@ -145,10 +145,11 @@ public class RoomsView implements PropertyChangeListener {
             RoomsState currentState = viewModel.getState();
             String message = currentState.getSendMessage();
             if (message != null && currentState.roomIsSelected()) {
-                Room room = currentState.getRoomByUid();
-                User user = currentState.getUser();
-                roomsController.sendMessage(room, user, message);
-                searchController.executeRecordData(Instant.now(), currentState.getRoomUid(), message, currentState.getUserUid());
+              Room room = currentState.getRoomByUid();
+              User user = currentState.getUser();
+              roomsController.sendMessage(room, user, message);
+              searchController.executeRecordData(
+                  Instant.now(), currentState.getRoomUid(), message, currentState.getUserUid());
             }
           }
         });
@@ -244,9 +245,9 @@ public class RoomsView implements PropertyChangeListener {
             () -> {
               messagesPaneInternals.revalidate();
               messagesPaneInternals.repaint();
-                JScrollPane scrollPane = (JScrollPane) messagesPane.getComponent(0);
-                JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
-                verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+              JScrollPane scrollPane = (JScrollPane) messagesPane.getComponent(0);
+              JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+              verticalScrollBar.setValue(verticalScrollBar.getMaximum());
             });
       }
     }

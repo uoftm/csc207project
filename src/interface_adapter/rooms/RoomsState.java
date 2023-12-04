@@ -3,8 +3,6 @@ package interface_adapter.rooms;
 import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
-import use_case.rooms.RoomsOutputData;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,16 +39,18 @@ public class RoomsState {
     this.roomUid = roomUid;
   }
 
-  public boolean roomIsSelected() { return this.roomUid != null; }
+  public boolean roomIsSelected() {
+    return this.roomUid != null;
+  }
 
   public Room getRoomByUid() {
     Room selectedRoom = null;
     try {
       for (var room : this.getAvailableRooms())
-          if (room.getUid().equals(this.getRoomUid())) {
-            selectedRoom = room;
-            break;
-          }
+        if (room.getUid().equals(this.getRoomUid())) {
+          selectedRoom = room;
+          break;
+        }
     } catch (RuntimeException e) {
       System.out.println("No room selected");
     }
