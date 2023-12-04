@@ -1,17 +1,19 @@
 package app;
 
 import interface_adapter.rooms.*;
-import use_case.login.LoginUserDataAccessInterface;
-import use_case.rooms.LoadRoomsInteractor;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.StartSearchController;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoadRoomsInteractor;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.rooms.RoomsInteractor;
 import view.RoomsView;
 
 public class RoomsUseCaseFactory {
   public static RoomsView create(
-      RoomsDataAccessInterface roomsDataAccessObject, LoginUserDataAccessInterface userDao, RoomsViewModel roomsViewModel,
+      RoomsDataAccessInterface roomsDataAccessObject,
+      LoginUserDataAccessInterface userDao,
+      RoomsViewModel roomsViewModel,
       SearchController searchController,
       StartSearchController startSearchController) {
     RoomsPresenter roomsPresenter = new RoomsPresenter(roomsViewModel);
@@ -22,6 +24,11 @@ public class RoomsUseCaseFactory {
     LoadRoomsInteractor loadRoomsInteractor =
         new LoadRoomsInteractor(roomsDataAccessObject, userDao, loadRoomsPresenter);
     LoadRoomsController loadRoomsController = new LoadRoomsController(loadRoomsInteractor);
-    return new RoomsView(roomsViewModel, roomsController, loadRoomsController, searchController, startSearchController);
+    return new RoomsView(
+        roomsViewModel,
+        roomsController,
+        loadRoomsController,
+        searchController,
+        startSearchController);
   }
 }

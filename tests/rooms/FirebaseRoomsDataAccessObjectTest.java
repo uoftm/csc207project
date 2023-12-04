@@ -17,7 +17,6 @@ import okhttp3.OkHttpClient;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.rooms.MessageDataAccessInterface;
-import use_case.rooms.Response;
 import use_case.rooms.RoomsDataAccessInterface;
 
 public class FirebaseRoomsDataAccessObjectTest {
@@ -31,7 +30,8 @@ public class FirebaseRoomsDataAccessObjectTest {
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
-    List<Message> response = dao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid()).getMessages();
+    List<Message> response =
+        dao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid()).getMessages();
     assertNotNull(response);
   }
 
@@ -47,21 +47,21 @@ public class FirebaseRoomsDataAccessObjectTest {
         };
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
-    Response<List<Message>> response = dao.loadMessages(dummyRoom, dummyUser);
-    assertTrue(response.isError());
-    assertEquals("Failed to retrieve messages.", response.getError());
+    assertThrows(
+        "Failed to retrieve messages.",
+        RuntimeException.class,
+        () -> dao.getRoomFromId(dummyUser, null, dummyRoom.getUid()).getMessages());
   }
 
   @Test
   public void testSendMessageSuccess() {
     OkHttpClient client = new OkHttpClient();
     MessageDataAccessInterface dao = new FirebaseMessageDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
-    String message = "Test message";
-    Response<String> response = dao.sendMessage(dummyRoom, dummyUser, message);
-    assertFalse(response.isError());
-    assertEquals("success", response.getVal());
+    Message message = createDummyMessage();
+    dao.sendMessage(dummyRoom, userDao, dummyUser, message);
   }
 
   @Test
@@ -69,18 +69,18 @@ public class FirebaseRoomsDataAccessObjectTest {
     MessageDataAccessInterface dao =
         new FirebaseMessageDataAccessObject(null) {
           @Override
-          public Response<String> sendMessage(Room room, User user, String message) {
-            Response<String> response = new Response<>(null);
-            response.setError("Failed to send message.");
-            return response;
+          public void sendMessage(
+              Room room, LoginUserDataAccessInterface userDao, User user, Message message) {
+            throw new RuntimeException("Failed to send message.");
           }
         };
     Room dummyRoom = createDummyRoom();
     User dummyUser = createDummyUser();
-    String message = "Test message";
-    Response<String> response = dao.sendMessage(dummyRoom, dummyUser, message);
-    assertTrue(response.isError());
-    assertEquals("Failed to send message.", response.getError());
+    Message dummyMessage = createDummyMessage();
+    assertThrows(
+        "Failed to send message.",
+        RuntimeException.class,
+        () -> dao.sendMessage(dummyRoom, null, dummyUser, dummyMessage));
   }
 
   @Test
@@ -156,5 +156,9 @@ public class FirebaseRoomsDataAccessObjectTest {
     List<Message> messages = new ArrayList<>();
     messages.add(new Message(Instant.now(), "Dummy message", dummyDisplayUser.getEmail()));
     return new Room("dummyRoomUid", "Dummy Room", users, messages);
+  }
+
+  private Message createDummyMessage() {
+    return new Message(Instant.now(), "Dummy message", "dummy@example.com");
   }
 }

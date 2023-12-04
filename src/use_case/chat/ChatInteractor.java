@@ -4,7 +4,6 @@ import entities.rooms.Message;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
 import use_case.rooms.MessageDataAccessInterface;
 
 public class ChatInteractor implements ChatInputBoundary {

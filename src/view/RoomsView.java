@@ -270,9 +270,11 @@ public class RoomsView implements PropertyChangeListener {
 
     if (state.getError() != null) {
       JOptionPane.showMessageDialog(contentPane, state.getError());
+      state.setError(null);
     }
     if (state.getSuccess() != null) {
       JOptionPane.showMessageDialog(contentPane, state.getSuccess());
+      state.setSuccess(null);
     }
   }
 }

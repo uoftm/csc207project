@@ -4,9 +4,7 @@ import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.*;
-
 import okhttp3.*;
 import org.json.JSONObject;
 import use_case.login.LoginUserDataAccessInterface;
@@ -20,20 +18,24 @@ public class FirebaseMessageDataAccessObject implements MessageDataAccessInterfa
   }
 
   @Override
-  public void sendMessage(Room room, LoginUserDataAccessInterface userDAO, User user, Message message) {
+  public void sendMessage(
+      Room room, LoginUserDataAccessInterface userDAO, User user, Message message) {
     String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
     String messageJSON =
-            new JSONObject()
-                    .put("content", message.content)
-                    .put("author", message.authorEmail)
-                    .toString();
+        new JSONObject()
+            .put("content", message.content)
+            .put("author", message.authorEmail)
+            .toString();
 
-    String url = String.format(Constants.MESSAGES_URL, room.getUid(), new Date().getTime()) + "?auth=" + idToken;
+    String url =
+        String.format(Constants.MESSAGES_URL, room.getUid(), new Date().getTime())
+            + "?auth="
+            + idToken;
     Request request =
-            new Request.Builder()
-                    .url(url)
-                    .method("PUT", RequestBody.create(messageJSON, MediaType.get("application/json")))
-                    .build();
+        new Request.Builder()
+            .url(url)
+            .method("PUT", RequestBody.create(messageJSON, MediaType.get("application/json")))
+            .build();
 
     try {
       Response response = client.newCall(request).execute();
