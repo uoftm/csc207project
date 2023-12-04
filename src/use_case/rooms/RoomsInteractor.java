@@ -1,63 +1,61 @@
 package use_case.rooms;
 
+import entities.auth.DisplayUser;
 import entities.auth.User;
-import entities.rooms.Message;
 import entities.rooms.Room;
-import java.util.List;
+import java.util.ArrayList;
+import use_case.login.LoginUserDataAccessInterface;
 
 public class RoomsInteractor implements RoomsInputBoundary {
+  // TODO: Split up these distinct calls into their own interactors
   final RoomsOutputBoundary roomsPresenter;
   final RoomsDataAccessInterface roomsDataAccessObject;
+  // TODO: Make a different interface to this dao for the rooms module
+  final LoginUserDataAccessInterface userDao;
 
   public RoomsInteractor(
-      RoomsDataAccessInterface roomsDataAccessObject, RoomsOutputBoundary roomsOutputBoundary) {
+      RoomsDataAccessInterface roomsDataAccessObject,
+      LoginUserDataAccessInterface userDao,
+      RoomsOutputBoundary roomsOutputBoundary) {
     this.roomsPresenter = roomsOutputBoundary;
     this.roomsDataAccessObject = roomsDataAccessObject;
+    this.userDao = userDao;
   }
 
   @Override
   public void loadMessages(RoomsInputData roomsInputData) {
-    Room room = roomsInputData.getRoom();
-    User user = roomsInputData.getUser();
+    try {
+      Room room = roomsInputData.getRoom();
+      User user = roomsInputData.getUser();
 
-    boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
+      // TODO: Get messages from message DAO
 
-    if (valid) {
-      Response<List<Message>> response = roomsDataAccessObject.loadMessages(room, user);
-      if (response.isError()) {
-        RoomsOutputData roomsOutputData =
-            new RoomsOutputData(null, null, null, response.getError(), null);
-        roomsPresenter.prepareFailView(roomsOutputData);
-      } else {
-        RoomsOutputData roomsOutputData =
-            new RoomsOutputData(null, null, response.getVal(), null, null);
-        roomsPresenter.prepareLoadMessagesSuccessView(roomsOutputData);
-      }
-    } else {
-      String error = "Access to Room " + room.getName() + " denied";
-      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, error, null);
+      RoomsOutputData roomsOutputData =
+          new RoomsOutputData(room, user, new ArrayList<>(), null, "Success");
+      roomsPresenter.prepareSuccessView(roomsOutputData);
+    } catch (RuntimeException e) {
+      RoomsOutputData roomsOutputData =
+          new RoomsOutputData(null, null, new ArrayList<>(), e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
 
   @Override
   public void sendMessage(RoomsInputData roomsInputData) {
-    Room room = roomsInputData.getRoom();
-    User user = roomsInputData.getUser();
-    String message = roomsInputData.getMessage();
+    try {
+      Room room = roomsInputData.getRoom();
+      User user = roomsInputData.getUser();
 
-    boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
+      String message = roomsInputData.getMessage();
 
-    if (valid) {
-      Response<String> response = roomsDataAccessObject.sendMessage(room, user, message);
-      if (response.isError()) {
-        RoomsOutputData roomsOutputData =
-            new RoomsOutputData(null, null, null, response.getError(), null);
-        roomsPresenter.prepareFailView(roomsOutputData);
-      }
-    } else {
-      String error = "Access to Room " + room.getName() + " denied";
-      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, error, null);
+      // TODO: Send message via message DAO
+
+      RoomsOutputData roomsOutputData =
+          new RoomsOutputData(room, user, new ArrayList<>(), null, "Success");
+      roomsPresenter.prepareSuccessView(roomsOutputData);
+    } catch (RuntimeException e) {
+      RoomsOutputData roomsOutputData =
+          new RoomsOutputData(null, null, new ArrayList<>(), e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
@@ -68,22 +66,14 @@ public class RoomsInteractor implements RoomsInputBoundary {
     User user = roomsInputData.getUser();
     String email = roomsInputData.getEmail();
 
-    boolean valid = roomsDataAccessObject.validateRoomAccess(room, user);
+    DisplayUser displayUserFromEmail = userDao.getDisplayUser(email);
 
-    if (valid) {
-      Response<String> response = roomsDataAccessObject.addUserToRoom(room, user, email);
-      if (response.isError()) {
-        RoomsOutputData roomsOutputData =
-            new RoomsOutputData(null, null, null, response.getError(), null);
-        roomsPresenter.prepareFailView(roomsOutputData);
-      } else {
-        RoomsOutputData roomsOutputData =
-            new RoomsOutputData(null, null, null, null, response.getVal());
-        roomsPresenter.prepareSuccessView(roomsOutputData);
-      }
-    } else {
-      String error = "Access to Room " + room.getName() + " denied";
-      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, error, null);
+    try {
+      roomsDataAccessObject.addUserToRoom(user, displayUserFromEmail, userDao, room);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, null, "Success");
+      roomsPresenter.prepareSuccessView(roomsOutputData);
+    } catch (RuntimeException e) {
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
@@ -93,15 +83,13 @@ public class RoomsInteractor implements RoomsInputBoundary {
     User user = roomsInputData.getUser();
     String roomToCreateName = roomsInputData.getRoomToCreateName();
 
-    Response<Room> response = roomsDataAccessObject.createRoom(user, roomToCreateName);
-    if (response.isError()) {
-      RoomsOutputData roomsOutputData =
-          new RoomsOutputData(null, null, null, response.getError(), null);
-      roomsPresenter.prepareFailView(roomsOutputData);
-    } else {
-      RoomsOutputData roomsOutputData =
-          new RoomsOutputData(response.getVal(), null, null, null, null);
+    try {
+      Room newRoom = roomsDataAccessObject.addRoom(user, userDao, roomToCreateName);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(newRoom, null, null, null, null);
       roomsPresenter.prepareCreateRoomSuccessView(roomsOutputData);
+    } catch (RuntimeException e) {
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, e.getMessage(), null);
+      roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
 }

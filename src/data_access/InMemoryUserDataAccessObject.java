@@ -13,10 +13,6 @@ public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterfa
    * @param identifier the user's username
    * @return whether the user exists
    */
-  @Override
-  public boolean existsByName(String identifier) {
-    return users.containsKey(identifier);
-  }
 
   /**
    * @param user the data to save

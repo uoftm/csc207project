@@ -8,7 +8,7 @@ import org.junit.Test;
 import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
-public class SignupDAOTest {
+public class SignupDAOTest extends DAOTest {
   // Currently, the tests in this class cover the signup portion of the Firebase User DAO code
   // However, they don't clean up after themselves.
   // TODO: Write a delete user function that scrubs all user data
@@ -17,16 +17,14 @@ public class SignupDAOTest {
   public void testSaveUser() {
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject dao = new FirebaseUserDataAccessObject(client);
-    String fakeEmail =
-        String.format("testSaveUser%s@example.com", UUID.randomUUID().toString().substring(0, 10));
-    User testUser = new User(null, fakeEmail, "Jane Doe", "password", null);
+    User testUser = createDummyUser();
 
     // Sign up user
     SignupUserDataAccessInterface signupDao = dao;
     signupDao.save(testUser);
 
     // Confirm the user has the details that were specified on signup
-    User retrievedUser = dao.get(testUser.getEmail(), testUser.getPassword());
+    User retrievedUser = dao.getUser(testUser.getEmail(), testUser.getPassword());
     Assert.assertEquals(retrievedUser.getEmail().toLowerCase(), testUser.getEmail().toLowerCase());
     Assert.assertEquals(retrievedUser.getName(), testUser.getName());
     Assert.assertEquals(retrievedUser.getPassword(), testUser.getPassword());
@@ -37,6 +35,6 @@ public class SignupDAOTest {
 
     // Confirm user deletion
     Assert.assertThrows(
-        RuntimeException.class, () -> dao.get(testUser.getEmail(), testUser.getPassword()));
+        RuntimeException.class, () -> dao.getUser(testUser.getEmail(), testUser.getPassword()));
   }
 }
