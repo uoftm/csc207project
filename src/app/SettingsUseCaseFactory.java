@@ -1,15 +1,14 @@
 package app;
 
+import entities.rooms.Room;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.io.IOException;
 import javax.swing.*;
-import use_case.settings.SettingsDataAccessInterface;
-import use_case.settings.SettingsInputBoundary;
-import use_case.settings.SettingsInteractor;
-import use_case.settings.SettingsOutputBoundary;
+
+import use_case.settings.*;
 import view.SettingsView;
 
 public class SettingsUseCaseFactory {
@@ -18,12 +17,13 @@ public class SettingsUseCaseFactory {
 
   public static SettingsView create(
       SettingsViewModel settingsViewModel,
-      SettingsDataAccessInterface settingsDataAccessObject,
+      UserSettingsDataAccessInterface userSettingsDataAccessObject,
+      RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface,
       SwitchViewController switchViewController) {
 
     try {
       SettingsController settingsController =
-          createSettingsController(settingsViewModel, settingsDataAccessObject);
+          createSettingsController(settingsViewModel, userSettingsDataAccessObject, roomsSettingsDataAccessInterface);
 
       return new SettingsView(settingsViewModel, settingsController, switchViewController);
     } catch (IOException e) {
@@ -33,11 +33,11 @@ public class SettingsUseCaseFactory {
   }
 
   private static SettingsController createSettingsController(
-      SettingsViewModel settingsViewModel, SettingsDataAccessInterface settingsDataAccessObject)
+      SettingsViewModel settingsViewModel, UserSettingsDataAccessInterface userSettingsDataAccessObject, RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface)
       throws IOException {
 
     SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(settingsViewModel);
-    SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
+    SettingsInputBoundary settingsInteractor = new SettingsInteractor(userSettingsDataAccessObject, roomsSettingsDataAccessInterface, settingsOutputBoundary);
 
     return new SettingsController(settingsInteractor);
   }

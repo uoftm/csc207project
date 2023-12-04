@@ -8,14 +8,11 @@ public class SettingsController {
 
   final SettingsInputBoundary settingsUseCaseInteractor;
 
+
   public SettingsController(SettingsInputBoundary settingsUseCaseInteractor) {
     this.settingsUseCaseInteractor = settingsUseCaseInteractor;
   }
 
-  public void execute(AbstractUser user) {
-    SettingsInputData settingsInputData = new SettingsInputData(user);
-    settingsUseCaseInteractor.execute(settingsInputData);
-  }
 
   public void executeChangeUsername(String username) {
     SettingsInputData settingsInputData = new SettingsInputData(username);

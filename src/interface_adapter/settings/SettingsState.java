@@ -6,6 +6,8 @@ public class SettingsState {
   private AbstractUser user;
   private String error = null;
 
+  private Boolean isError;
+
   private String updatedUsername;
 
   public SettingsState(SettingsState state) {
@@ -18,6 +20,10 @@ public class SettingsState {
   public AbstractUser getUser() {
     return user;
   }
+
+  public void setIsError(Boolean isError){this.isError = isError;}
+
+  public Boolean getIsError(){return isError;}
 
   public String getUpdatedUsername() {
     return updatedUsername;

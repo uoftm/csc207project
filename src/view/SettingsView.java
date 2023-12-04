@@ -81,7 +81,7 @@ public class SettingsView implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SettingsState state = (SettingsState) evt.getNewValue();
-    if (state.getError() != null) {
+    if (state.getIsError()) {
       JOptionPane.showMessageDialog(contentPane, state.getError());
     }
   }

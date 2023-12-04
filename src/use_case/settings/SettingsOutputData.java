@@ -1,18 +1,19 @@
 package use_case.settings;
 
-import entities.auth.AbstractUser;
 
 public class SettingsOutputData {
 
-  AbstractUser user;
-  private final boolean useCaseFailed;
+  private String error;
+  private Boolean isError;
 
-  public SettingsOutputData(AbstractUser user, boolean useCaseFailed) {
-    this.user = user;
-    this.useCaseFailed = useCaseFailed;
+  public SettingsOutputData(String error, Boolean isError) {
+    this.error = error;
+    this.isError = isError;
   }
 
-  public AbstractUser getUser() {
-    return user;
-  }
+  public String getError(){return error;}
+
+  public Boolean getIsError(){return isError;}
+
+
 }

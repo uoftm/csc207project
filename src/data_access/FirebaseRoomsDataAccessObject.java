@@ -12,13 +12,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
+import use_case.settings.RoomsSettingsDataAccessInterface;
 
-public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
+public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface, RoomsSettingsDataAccessInterface {
 
   private final OkHttpClient client;
 
   public FirebaseRoomsDataAccessObject(OkHttpClient client) {
     this.client = client;
+  }
+
+  public void propogateDisplayNameChange(User user, String newDisplayName) {
+
   }
 
   @Override

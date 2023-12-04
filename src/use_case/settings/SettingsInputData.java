@@ -16,6 +16,8 @@ public class SettingsInputData {
     this.updatedUsername = updatedUsername;
   }
 
+  String getUpdatedUsername(){return updatedUsername;}
+
   AbstractUser getUser() {
     return user;
   }

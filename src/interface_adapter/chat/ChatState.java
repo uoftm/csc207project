@@ -1,6 +1,8 @@
 package interface_adapter.chat;
 
-public class ChatState {
+public class
+
+ChatState {
   private String message = "";
 
   public ChatState(ChatState copy) {
