@@ -3,13 +3,14 @@ package interface_adapter.rooms;
 import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoomsState {
   private String roomUid;
   private User user;
-  private List<Room> availableRooms;
-  private List<Message> displayMessages;
+  private List<Room> availableRooms = new ArrayList<>();
+  private List<Message> displayMessages = new ArrayList<>();
   private String sendMessage;
   private String userToAddEmail;
   private String roomToCreateName;

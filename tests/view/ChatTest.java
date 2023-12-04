@@ -13,7 +13,7 @@ import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
-import use_case.chat.ChatMessageDataAccessInterface;
+import use_case.rooms.MessageDataAccessInterface;
 
 public class ChatTest {
   @Test
@@ -27,7 +27,7 @@ public class ChatTest {
                 "test-user-name",
                 "password",
                 LocalDateTime.now());
-    ChatMessageDataAccessInterface messageDataAccessObject =
+    MessageDataAccessInterface messageDataAccessObject =
         new FirebaseMessageDataAccessObject(client);
     var chatViewModel = new ChatViewModel(new ArrayList<>());
     ChatView view = ChatUseCaseFactory.create(messageDataAccessObject, chatViewModel, () -> user);
