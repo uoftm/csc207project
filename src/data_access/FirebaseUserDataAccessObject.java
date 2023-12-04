@@ -229,7 +229,7 @@ public class FirebaseUserDataAccessObject
 
   @Override
   public void deleteUser(User user) {
-    // Note: this doesn't remove the user from any rooms for which they may be a member
+    // TODO: Remove the user from any rooms for which they may be a member
     // Before calling this method, please remove the user from their rooms using the Rooms DAO
     String idToken = getAccessToken(user.getEmail(), user.getPassword());
     deleteFirebaseUserData(user, idToken);

@@ -33,12 +33,15 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
       if (!response.isSuccessful()) {
         throw new IOException();
       }
-      JSONObject roomResponse = new JSONObject(response.body().string());
       List<String> roomIds = new ArrayList<>();
-      roomResponse.keys().forEachRemaining(roomIds::add);
+      String responseString = response.body().string();
+      if (!responseString.equals("null")) {
+        JSONObject roomResponse = new JSONObject(responseString);
+        roomResponse.keys().forEachRemaining(roomIds::add);
+      }
       return roomIds;
     } catch (IOException | JSONException e) {
-      throw new RuntimeException("Unable to save display name. Please try again.");
+      throw new RuntimeException("Unable to get available rooms. Please try again.");
     }
   }
 
@@ -61,10 +64,9 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
           Iterator<String> timestampIterator = messagesJSON.keys();
           while (timestampIterator.hasNext()) {
             String key = timestampIterator.next();
-            Instant timestamp = Instant.ofEpochSecond(Long.parseLong(key));
+            Instant timestamp = Instant.ofEpochMilli(Long.parseLong(key));
             String contents = messagesJSON.getJSONObject(key).getString("contents");
-            String encodedAuthorEmail = messagesJSON.getJSONObject(key).getString("author");
-            String authorEmail = new String(Base64.getDecoder().decode(encodedAuthorEmail));
+            String authorEmail = messagesJSON.getJSONObject(key).getString("author");
             Message message = new Message(timestamp, contents, authorEmail);
             messages.add(message);
           }
@@ -119,11 +121,32 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
   }
 
   @Override
+  public void removeUserFromRoom(User currentUser, DisplayUser userToRemove, LoginUserDataAccessInterface userDAO, Room room) {
+    String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
+
+    String encodedEmail =
+            Base64.getEncoder().encodeToString(userToRemove.getEmail().toLowerCase().getBytes());
+    String url = String.format(Constants.ROOM_USERS_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
+    Request request = new Request.Builder().url(url).delete().build();
+
+    try {
+      Response response = client.newCall(request).execute();
+      if (response.isSuccessful()) {
+        deleteRoomFromUserData(userToRemove, room, idToken);
+      } else {
+        throw new IOException();
+      }
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to delete user from room. Please try again.");
+    }
+  }
+
+  @Override
   public void addUserToRoom(
       User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room) {
     String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
 
-    String jsonBody = "true";
+    String jsonBody = JSONObject.quote(newUser.getName());
     String encodedEmail =
         Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
     String url =

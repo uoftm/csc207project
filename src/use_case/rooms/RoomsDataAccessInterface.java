@@ -17,4 +17,6 @@ public interface RoomsDataAccessInterface {
       User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room);
 
   List<String> getAvailableRoomIds(User user);
+
+  void removeUserFromRoom(User currentUser, DisplayUser userToRemove, LoginUserDataAccessInterface userDAO, Room room);
 }

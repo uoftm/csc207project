@@ -23,7 +23,7 @@ public class FirebaseMessageDataAccessObject implements MessageDataAccessInterfa
     String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
     String messageJSON =
         new JSONObject()
-            .put("content", message.content)
+            .put("contents", message.content)
             .put("author", message.authorEmail)
             .toString();
 

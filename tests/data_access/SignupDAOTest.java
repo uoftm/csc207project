@@ -8,7 +8,7 @@ import org.junit.Test;
 import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
-public class SignupDAOTest {
+public class SignupDAOTest extends DAOTest {
   // Currently, the tests in this class cover the signup portion of the Firebase User DAO code
   // However, they don't clean up after themselves.
   // TODO: Write a delete user function that scrubs all user data

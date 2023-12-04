@@ -1,21 +1,28 @@
 package data_access;
 
+import entities.auth.DisplayUser;
 import entities.auth.User;
+import entities.rooms.Message;
 import entities.rooms.Room;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.MessageDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
-public class RoomDAOTest {
-  // Currently, the tests in this class cover the signup portion of the Firebase User DAO code
-  // However, they don't clean up after themselves.
-  // TODO: Write a delete user function that scrubs all user data
-  //  (e.g. display name, membership list of room, deletes account)
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+
+public class RoomDAOTest extends DAOTest {
   @Test
   public void testSaveRoom() {
     OkHttpClient client = new OkHttpClient();
@@ -58,5 +65,179 @@ public class RoomDAOTest {
     // Delete user
     DeleteUserDataAccessInterface deleteDao = userDao;
     deleteDao.deleteUser(testUser);
+  }
+
+  @Test
+  public void testLoadMessagesFailure() {
+    RoomsDataAccessInterface dao =
+            new FirebaseRoomsDataAccessObject(null) {
+              @Override
+              public Room getRoomFromId(
+                      User user, LoginUserDataAccessInterface userDao, String roomId) {
+                throw new RuntimeException("Failed to retrieve messages.");
+              }
+            };
+    Room dummyRoom = createDummyRoom();
+    User dummyUser = createDummyUser();
+    assertThrows(
+            "Failed to retrieve messages.",
+            RuntimeException.class,
+            () -> dao.getRoomFromId(dummyUser, null, dummyRoom.getUid()).getMessages());
+  }
+
+  @Test
+  public void testSendAndLoadMessageSuccess() {
+    OkHttpClient client = new OkHttpClient();
+    MessageDataAccessInterface messageDao = new FirebaseMessageDataAccessObject(client);
+    RoomsDataAccessInterface roomDao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    User dummyUser = addFirebaseDummyUser();
+    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+
+    Message message = createDummyMessage();
+    messageDao.sendMessage(dummyRoom, userDao, dummyUser, message);
+
+    List<Message> response =
+            roomDao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid()).getMessages();
+    Message retrievedMessage = response.get(0);
+
+    Assert.assertTrue(message.timestamp.toEpochMilli() <= retrievedMessage.timestamp.toEpochMilli());
+    Assert.assertEquals(message.content, retrievedMessage.content);
+    Assert.assertEquals(message.authorEmail.toLowerCase(), retrievedMessage.authorEmail.toLowerCase());
+
+    cleanUpRoom(dummyRoom, dummyUser);
+    cleanUpUser(dummyUser);
+  }
+
+  @Test
+  public void testSendMessageFailure() {
+    MessageDataAccessInterface dao =
+            new FirebaseMessageDataAccessObject(null) {
+              @Override
+              public void sendMessage(
+                      Room room, LoginUserDataAccessInterface userDao, User user, Message message) {
+                throw new RuntimeException("Failed to send message.");
+              }
+            };
+    Room dummyRoom = createDummyRoom();
+    User dummyUser = createDummyUser();
+    Message dummyMessage = createDummyMessage();
+    assertThrows(
+            "Failed to send message.",
+            RuntimeException.class,
+            () -> dao.sendMessage(dummyRoom, null, dummyUser, dummyMessage));
+  }
+
+  @Test
+  public void testAddUserToRoomSuccess() {
+    OkHttpClient client = new OkHttpClient();
+    FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+
+    User dummyUser = addFirebaseDummyUser();
+    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+
+    User dummyUser2 = addFirebaseDummyUser();
+    DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.getEmail(), dummyUser2.getName());
+
+    dao.addUserToRoom(dummyUser, dummyDisplayUser2, userDao, dummyRoom);
+    Room retrievedRoom = dao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid());
+
+    List<DisplayUser> retrievedUsers = retrievedRoom.getUsers();
+    Assert.assertEquals(retrievedUsers.size(), 2);
+    DisplayUser originalUser, newUser;
+    if (retrievedUsers.get(0).getEmail().toLowerCase().equals(dummyUser.getEmail().toLowerCase())) {
+      // First retrieved user is the original user
+      originalUser = retrievedUsers.get(0);
+      newUser = retrievedUsers.get(1);
+    } else {
+      // Second retrieved user is the original user
+      originalUser = retrievedUsers.get(1);
+      newUser = retrievedUsers.get(0);
+    }
+    Assert.assertEquals(dummyUser.getEmail().toLowerCase(), originalUser.getEmail().toLowerCase());
+    Assert.assertEquals(dummyUser.getName(), originalUser.getName());
+    Assert.assertEquals(dummyUser2.getEmail().toLowerCase(), newUser.getEmail().toLowerCase());
+    Assert.assertEquals(dummyUser2.getName(), newUser.getName());
+
+    cleanUpRoom(dummyRoom, dummyUser);
+    cleanUpUser(dummyUser);
+    cleanUpUser(dummyUser2);
+  }
+
+  @Test
+  public void testDeleteUserFromRoomSuccess() {
+    OkHttpClient client = new OkHttpClient();
+    FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+
+    User dummyUser = addFirebaseDummyUser();
+    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+
+    User dummyUser2 = addFirebaseDummyUser();
+    DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.getEmail(), dummyUser2.getPassword());
+    dao.addUserToRoom(dummyUser, dummyDisplayUser2, userDao, dummyRoom);
+
+    dao.removeUserFromRoom(dummyUser, dummyDisplayUser2, userDao, dummyRoom);
+
+    Room retrievedRoom = dao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid());
+    Assert.assertEquals(retrievedRoom.getUsers().size(), 1);
+    DisplayUser retrievedUser = retrievedRoom.getUsers().get(0);
+    Assert.assertEquals(retrievedUser.getName(), dummyUser.getName());
+    Assert.assertEquals(retrievedUser.getEmail().toLowerCase(), dummyUser.getEmail().toLowerCase());
+
+    Assert.assertEquals(dao.getAvailableRoomIds(dummyUser2).size(), 0);
+
+    cleanUpRoom(dummyRoom, dummyUser);
+    cleanUpUser(dummyUser);
+  }
+
+  @Test
+  public void testAddUserToRoomFailure() {
+    RoomsDataAccessInterface dao =
+            new FirebaseRoomsDataAccessObject(null) {
+              @Override
+              public void addUserToRoom(
+                      User user, DisplayUser displayUser, LoginUserDataAccessInterface userDao, Room room) {
+                throw new RuntimeException("Failed to add user.");
+              }
+            };
+    Room dummyRoom = createDummyRoom();
+    User dummyUser = createDummyUser();
+    DisplayUser dummyDisplayUser = createDummyDisplayUser();
+    assertThrows(
+            "Failed to add user.",
+            RuntimeException.class,
+            () -> dao.addUserToRoom(dummyUser, dummyDisplayUser, null, dummyRoom));
+  }
+
+  @Test
+  public void testCreateRoomSuccess() {
+    OkHttpClient client = new OkHttpClient();
+    RoomsDataAccessInterface dao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    User dummyUser = addFirebaseDummyUser();
+    Room room = dao.addRoom(dummyUser, userDao, "New Room");
+    assertNotNull(room);
+
+    cleanUpRoom(room, dummyUser);
+    cleanUpUser(dummyUser);
+  }
+
+  @Test
+  public void testCreateRoomFailure() {
+    RoomsDataAccessInterface dao =
+            new FirebaseRoomsDataAccessObject(null) {
+              @Override
+              public Room addRoom(User user, LoginUserDataAccessInterface userDao, String roomName) {
+                throw new RuntimeException("Failed to create room.");
+              }
+            };
+    User dummyUser = createDummyUser();
+    String roomName = "New Room";
+    assertThrows(
+            "Failed to create room.",
+            RuntimeException.class,
+            () -> dao.addRoom(dummyUser, null, roomName));
   }
 }
