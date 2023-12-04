@@ -67,7 +67,8 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
             Instant timestamp = Instant.ofEpochMilli(Long.parseLong(key));
             String contents = messagesJSON.getJSONObject(key).getString("contents");
             String authorEmail = messagesJSON.getJSONObject(key).getString("author");
-            Message message = new Message(timestamp, contents, authorEmail);
+            String displayName = messagesJSON.getJSONObject(key).getString("author");
+            Message message = new Message(timestamp, contents, new DisplayUser(authorEmail, displayName));
             messages.add(message);
           }
         }

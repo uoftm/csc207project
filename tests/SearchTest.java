@@ -1,6 +1,6 @@
 import static org.junit.Assert.*;
 
-import data_access.SearchDataAccessObject;
+import data_access.ElasticsearchDataAccessObject;
 import entities.search.SearchChatMessage;
 import entities.search.SearchRequest;
 import java.time.Instant;
@@ -9,8 +9,8 @@ import org.junit.Test;
 
 public class SearchTest {
   private final OkHttpClient okHttpClient = new OkHttpClient();
-  private final SearchDataAccessObject searchDataAccessObject =
-      new SearchDataAccessObject(okHttpClient);
+  private final ElasticsearchDataAccessObject searchDataAccessObject =
+      new ElasticsearchDataAccessObject(okHttpClient);
 
   @Test
   public void saveData() {

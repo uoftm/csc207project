@@ -25,7 +25,7 @@ public class MessagesDAOTest extends DAOTest {
         Room dummyRoom = addFirebaseDummyRoom(dummyUser);
 
         Message message = createDummyMessage();
-        messageDao.sendMessage(dummyRoom, userDao, dummyUser, message);
+        messageDao.sendMessage(dummyRoom, userDao, dummyUser, message.content);
 
         List<Message> response =
                 roomDao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid()).getMessages();
@@ -33,7 +33,7 @@ public class MessagesDAOTest extends DAOTest {
 
         Assert.assertTrue(message.timestamp.toEpochMilli() <= retrievedMessage.timestamp.toEpochMilli());
         Assert.assertEquals(message.content, retrievedMessage.content);
-        Assert.assertEquals(message.authorEmail.toLowerCase(), retrievedMessage.authorEmail.toLowerCase());
+        Assert.assertEquals(message.displayUser.getName().toLowerCase(), retrievedMessage.displayUser.getEmail().toLowerCase());
 
         cleanUpRoom(dummyRoom, dummyUser);
         cleanUpUser(dummyUser);
@@ -54,23 +54,5 @@ public class MessagesDAOTest extends DAOTest {
                 "Failed to retrieve messages.",
                 RuntimeException.class,
                 () -> dao.getRoomFromId(dummyUser, null, dummyRoom.getUid()).getMessages());
-    }
-    @Test
-    public void testSendMessageFailure() {
-        MessageDataAccessInterface dao =
-                new FirebaseMessageDataAccessObject(null) {
-                    @Override
-                    public void sendMessage(
-                            Room room, LoginUserDataAccessInterface userDao, User user, Message message) {
-                        throw new RuntimeException("Failed to send message.");
-                    }
-                };
-        Room dummyRoom = createDummyRoom();
-        User dummyUser = createDummyUser();
-        Message dummyMessage = createDummyMessage();
-        assertThrows(
-                "Failed to send message.",
-                RuntimeException.class,
-                () -> dao.sendMessage(dummyRoom, null, dummyUser, dummyMessage));
     }
 }

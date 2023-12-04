@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public abstract class DAOTest {
     Message createDummyMessage() {
-        return new Message(Instant.now(), "Dummy message", "dummy@example.com");
+        return new Message(Instant.now(), "Dummy message", new DisplayUser("dummy@example.com", "name"));
     }
     User createDummyUser() {
         String fakeEmail =
@@ -36,7 +36,7 @@ public abstract class DAOTest {
         List<DisplayUser> users = new ArrayList<>();
         users.add(dummyDisplayUser);
         List<Message> messages = new ArrayList<>();
-        messages.add(new Message(Instant.now(), "Dummy message", dummyDisplayUser.getEmail()));
+        messages.add(new Message(Instant.now(), "Dummy message", dummyDisplayUser));
         return new Room("dummyRoomUid", "Dummy Room", users, messages);
     }
 

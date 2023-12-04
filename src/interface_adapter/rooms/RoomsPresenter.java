@@ -30,7 +30,7 @@ public class RoomsPresenter implements RoomsOutputBoundary {
     List<Message> messages = roomsState.getDisplayMessages();
     DisplayUser displayUser = response.getUser().toDisplayUser();
 
-    Message message = new Message(Instant.now(), messageBody, displayUser.getEmail());
+    Message message = new Message(Instant.now(), messageBody, displayUser);
     messages.add(message);
 
     roomsState.setDisplayMessages(messages);

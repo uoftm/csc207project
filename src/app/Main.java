@@ -82,7 +82,7 @@ public class Main {
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();
-    SearchDataAccessInterface searchDataAccessObject = new SearchDataAccessObject(client);
+    SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
             searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);

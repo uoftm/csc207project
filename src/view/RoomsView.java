@@ -235,7 +235,7 @@ public class RoomsView implements PropertyChangeListener {
         messagesPaneInternals.repaint();
 
         for (var message : messages) {
-          var messageView = new MessageView(message.content);
+          var messageView = new MessageView(message.content, message.displayUser.getName());
           messagesPaneInternals.add(messageView);
         }
 
@@ -244,6 +244,9 @@ public class RoomsView implements PropertyChangeListener {
             () -> {
               messagesPaneInternals.revalidate();
               messagesPaneInternals.repaint();
+                JScrollPane scrollPane = (JScrollPane) messagesPane.getComponent(0);
+                JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+                verticalScrollBar.setValue(verticalScrollBar.getMaximum());
             });
       }
     }
