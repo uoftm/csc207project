@@ -67,7 +67,9 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
             Instant timestamp = Instant.ofEpochMilli(Long.parseLong(key));
             String contents = messagesJSON.getJSONObject(key).getString("contents");
             String authorEmail = messagesJSON.getJSONObject(key).getString("author");
-            Message message = new Message(timestamp, contents, authorEmail);
+            String displayName = messagesJSON.getJSONObject(key).getString("author");
+            Message message =
+                new Message(timestamp, contents, new DisplayUser(authorEmail, displayName));
             messages.add(message);
           }
         }
@@ -121,12 +123,14 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface {
   }
 
   @Override
-  public void removeUserFromRoom(User currentUser, DisplayUser userToRemove, LoginUserDataAccessInterface userDAO, Room room) {
+  public void removeUserFromRoom(
+      User currentUser, DisplayUser userToRemove, LoginUserDataAccessInterface userDAO, Room room) {
     String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
 
     String encodedEmail =
-            Base64.getEncoder().encodeToString(userToRemove.getEmail().toLowerCase().getBytes());
-    String url = String.format(Constants.ROOM_USERS_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
+        Base64.getEncoder().encodeToString(userToRemove.getEmail().toLowerCase().getBytes());
+    String url =
+        String.format(Constants.ROOM_USERS_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
     Request request = new Request.Builder().url(url).delete().build();
 
     try {

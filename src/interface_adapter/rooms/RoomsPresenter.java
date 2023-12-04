@@ -1,9 +1,10 @@
 package interface_adapter.rooms;
 
+import entities.auth.DisplayUser;
 import entities.rooms.Message;
 import entities.rooms.Room;
+import java.time.Instant;
 import java.util.List;
-import javax.swing.*;
 import use_case.rooms.RoomsOutputBoundary;
 import use_case.rooms.RoomsOutputData;
 
@@ -22,17 +23,19 @@ public class RoomsPresenter implements RoomsOutputBoundary {
   }
 
   @Override
-  public void prepareLoadMessagesSuccessView(RoomsOutputData response) {
+  public void prepareSendMessageSuccessView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();
-    List<Message> messages = response.getMessages();
-    roomsState.setDisplayMessages(messages);
 
-    String roomUid = roomsState.getRoomUid();
-    for (var room : roomsState.getAvailableRooms()) {
-      if (room.getUid().equals(roomUid)) {
-        room.setMessages(messages);
-      }
-    }
+    String messageBody = response.getSuccess();
+    List<Message> messages = roomsState.getDisplayMessages();
+    DisplayUser displayUser = response.getUser().toDisplayUser();
+
+    Message message = new Message(Instant.now(), messageBody, displayUser);
+    messages.add(message);
+
+    roomsState.setDisplayMessages(messages);
+    response.getRoom().setMessages(messages);
+    roomsState.setSuccess(null);
 
     roomsViewModel.firePropertyChanged();
   }

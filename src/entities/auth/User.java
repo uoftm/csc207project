@@ -43,4 +43,8 @@ public class User implements AbstractUser {
   public LocalDateTime getCreationTime() {
     return creationTime;
   }
+
+  public DisplayUser toDisplayUser() {
+    return new DisplayUser(this.getEmail(), this.getName());
+  }
 }
