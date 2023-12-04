@@ -2,7 +2,6 @@ package view;
 
 import static java.lang.Thread.sleep;
 
-import app.ChatUseCaseFactory;
 import data_access.FirebaseMessageDataAccessObject;
 import entities.auth.User;
 import entities.auth.UserFactory;

@@ -35,6 +35,7 @@ public class RoomsPresenter implements RoomsOutputBoundary {
 
     roomsState.setDisplayMessages(messages);
     response.getRoom().setMessages(messages);
+    roomsState.setSuccess(null);
 
     roomsViewModel.firePropertyChanged();
   }
