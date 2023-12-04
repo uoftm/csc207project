@@ -17,9 +17,7 @@ public class SignupDAOTest extends DAOTest {
   public void testSaveUser() {
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject dao = new FirebaseUserDataAccessObject(client);
-    String fakeEmail =
-        String.format("testSaveUser%s@example.com", UUID.randomUUID().toString().substring(0, 10));
-    User testUser = new User(null, fakeEmail, "Jane Doe", "password", null);
+    User testUser = createDummyUser();
 
     // Sign up user
     SignupUserDataAccessInterface signupDao = dao;
