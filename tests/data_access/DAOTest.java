@@ -16,9 +16,8 @@ import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public abstract class DAOTest {
-  Message createDummyMessage() {
-    return new Message(
-        Instant.now(), "Dummy message", new DisplayUser("dummy@example.com", "name"));
+  Message createDummyMessage(DisplayUser dummyDisplayUser) {
+    return new Message(Instant.now(), "Dummy message", dummyDisplayUser);
   }
 
   User createDummyUser() {
