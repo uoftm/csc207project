@@ -2,7 +2,6 @@ package interface_adapter.switch_view;
 
 import interface_adapter.ViewManagerModel;
 import use_case.switch_view.SwitchViewOutputBoundary;
-import use_case.switch_view.SwitchViewOutputData;
 
 public class SwitchViewPresenter implements SwitchViewOutputBoundary {
 
@@ -13,8 +12,8 @@ public class SwitchViewPresenter implements SwitchViewOutputBoundary {
   }
 
   @Override
-  public void present(SwitchViewOutputData outputData) {
+  public void present(String outputData) {
     // Logic to handle view switching
-    this.viewManagerModel.setActiveView(outputData.getViewName());
+    this.viewManagerModel.setActiveView(outputData);
   }
 }

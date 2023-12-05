@@ -1,7 +1,6 @@
 package interface_adapter.switch_view;
 
 import use_case.switch_view.SwitchViewInputBoundary;
-import use_case.switch_view.SwitchViewInputData;
 
 public class SwitchViewController {
 
@@ -12,7 +11,6 @@ public class SwitchViewController {
   }
 
   public void switchTo(String viewName) {
-    SwitchViewInputData switchViewInputData = new SwitchViewInputData(viewName);
-    switchViewInteractor.execute(switchViewInputData);
+    switchViewInteractor.execute(viewName);
   }
 }

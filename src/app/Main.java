@@ -12,6 +12,7 @@ import interface_adapter.searched.SearchedViewModel;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
+import interface_adapter.switch_view.SwitchViewPresenter;
 import java.awt.*;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
@@ -19,6 +20,9 @@ import use_case.rooms.MessageDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
 import use_case.settings.SettingsDataAccessInterface;
+import use_case.switch_view.SwitchViewInputBoundary;
+import use_case.switch_view.SwitchViewInteractor;
+import use_case.switch_view.SwitchViewOutputBoundary;
 import view.*;
 
 public class Main {
@@ -53,7 +57,11 @@ public class Main {
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject(client);
 
-    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+    SwitchViewOutputBoundary switchViewOutputBoundary = new SwitchViewPresenter(viewManagerModel);
+    SwitchViewInputBoundary switchViewInteractor =
+        new SwitchViewInteractor(switchViewOutputBoundary);
+
+    SwitchViewController switchViewController = new SwitchViewController(switchViewInteractor);
 
     SignupView signupView =
         SignupUseCaseFactory.create(

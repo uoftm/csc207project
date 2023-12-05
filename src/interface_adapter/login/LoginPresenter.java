@@ -8,7 +8,6 @@ import interface_adapter.rooms.RoomsViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 import use_case.switch_view.SwitchViewOutputBoundary;
-import use_case.switch_view.SwitchViewOutputData;
 
 public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoundary {
 
@@ -51,7 +50,7 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
   }
 
   @Override
-  public void present(SwitchViewOutputData outputData) {
-    this.viewManagerModel.setActiveView(outputData.getViewName());
+  public void present(String outputData) {
+    this.viewManagerModel.setActiveView(outputData);
   }
 }
