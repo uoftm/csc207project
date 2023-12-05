@@ -23,7 +23,7 @@ public class MessagesDAOTest extends DAOTest {
     User dummyUser = addFirebaseDummyUser();
     Room dummyRoom = addFirebaseDummyRoom(dummyUser);
 
-    Message message = createDummyMessage();
+    Message message = createDummyMessage(dummyUser.toDisplayUser());
     messageDao.sendMessage(dummyRoom, userDao, dummyUser, message.content);
 
     List<Message> response =
@@ -34,7 +34,7 @@ public class MessagesDAOTest extends DAOTest {
         message.timestamp.toEpochMilli() <= retrievedMessage.timestamp.toEpochMilli());
     Assert.assertEquals(message.content, retrievedMessage.content);
     Assert.assertEquals(
-        message.displayUser.getName().toLowerCase(),
+        message.displayUser.getEmail().toLowerCase(),
         retrievedMessage.displayUser.getEmail().toLowerCase());
 
     cleanUpRoom(dummyRoom, dummyUser);
@@ -42,20 +42,16 @@ public class MessagesDAOTest extends DAOTest {
   }
 
   @Test
-  public void testLoadMessagesFailure() {
-    RoomsDataAccessInterface dao =
-        new FirebaseRoomsDataAccessObject(null) {
-          @Override
-          public Room getRoomFromId(
-              User user, LoginUserDataAccessInterface userDao, String roomId) {
-            throw new RuntimeException("Failed to retrieve messages.");
-          }
-        };
-    Room dummyRoom = createDummyRoom();
-    User dummyUser = createDummyUser();
+  public void testSendMessageFailure() {
+    OkHttpClient client = new OkHttpClient();
+    MessageDataAccessInterface messageDao = new FirebaseMessageDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+
+    User invalidUser = createDummyUser();
+    Room invalidRoom = createDummyRoom();
+
     assertThrows(
-        "Failed to retrieve messages.",
         RuntimeException.class,
-        () -> dao.getRoomFromId(dummyUser, null, dummyRoom.getUid()).getMessages());
+        () -> messageDao.sendMessage(invalidRoom, userDao, invalidUser, "Invalid message"));
   }
 }
