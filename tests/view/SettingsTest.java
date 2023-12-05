@@ -14,7 +14,6 @@ import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import java.time.LocalDateTime;
 import javax.swing.*;
-
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,13 +36,16 @@ public class SettingsTest {
     UserSettingsDataAccessInterface userSettingsDataAccessObject =
         new FirebaseUserDataAccessObject(client);
     RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject =
-            new FirebaseRoomsDataAccessObject(client);
+        new FirebaseRoomsDataAccessObject(client);
     SettingsViewModel settingsViewModel = new SettingsViewModel();
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
 
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
-            settingsViewModel, userSettingsDataAccessObject, roomsSettingsDataAccessObject, switchViewController);
+            settingsViewModel,
+            userSettingsDataAccessObject,
+            roomsSettingsDataAccessObject,
+            switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
 
     JFrame jf = new JFrame();

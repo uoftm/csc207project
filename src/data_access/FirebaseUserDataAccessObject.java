@@ -3,13 +3,12 @@ package data_access;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.auth.UserFactory;
+import entities.settings.SettingsChangeResponse;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
-
-import entities.settings.SettingsChangeResponse;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +42,7 @@ public class FirebaseUserDataAccessObject
     }
   }
 
-  public SettingsChangeResponse changeDisplayName(User user, String newDisplayName) {
+  public void changeDisplayName(User user, String newDisplayName) {
 
   }
 

@@ -1,12 +1,5 @@
 package use_case.settings;
 
-import entities.auth.AbstractUser;
-import entities.auth.User;
-import entities.settings.SettingsChangeResponse;
-import use_case.login.LoginUserDataAccessInterface;
-import use_case.settings.UserSettingsDataAccessInterface;
-
-
 
 public class SettingsInteractor implements SettingsInputBoundary {
   // TODO: Add this after other code is merged
@@ -25,19 +18,18 @@ public class SettingsInteractor implements SettingsInputBoundary {
     this.settingsPresenter = settingsOutputBoundary;
   }
 
-
   @Override
   public void executeChangeUsername(SettingsInputData settingsInputData) {
-
-    userSettingsDataAccessObject.changeDisplayName(settingsInputData.getUser(), settingsInputData.getUpdatedUsername());
-    roomsSettingsDataAccessObject.propogateDisplayNameChange(settingsInputData.getUser(), settingsInputData.getUpdatedUsername());
-    SettingsOutputData settingsOutputData = new SettingsOutputData(SettingsChangeResponse())
-    if (settingsOutputData.getResponse().getIsError()) {
-      settingsPresenter.prepareFailView(settingsOutputData);
-    } else {
+    try {
+      userSettingsDataAccessObject.changeDisplayName(
+              settingsInputData.getUser(), settingsInputData.getUpdatedUsername());
+      roomsSettingsDataAccessObject.propogateDisplayNameChange(
+              settingsInputData.getUser(), settingsInputData.getUpdatedUsername());
+      SettingsOutputData settingsOutputData = new SettingsOutputData(null, false);
       settingsPresenter.prepareSuccessView(settingsOutputData);
+    } catch (RuntimeException e) {
+      SettingsOutputData settingsOutputData = new SettingsOutputData(e.getMessage(), true);
+      settingsPresenter.prepareFailView(settingsOutputData);
     }
-
-    
   }
 }

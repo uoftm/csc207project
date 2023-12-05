@@ -30,8 +30,6 @@ public class SearchTest {
   public void testGetNoData() {
     SearchRequest searchRequest = new SearchRequest("a", "Bro");
     assertEquals(
-            searchDataAccessObject.getData(searchRequest).getError(), "No search results found.");
+        searchDataAccessObject.getData(searchRequest).getError(), "No search results found.");
   }
-
-
 }

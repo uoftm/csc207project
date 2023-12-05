@@ -23,11 +23,17 @@ public class SettingsState {
     return user;
   }
 
-  public User setUser() { return user; }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-  public void setIsError(Boolean isError){this.isError = isError;}
+  public void setIsError(Boolean isError) {
+    this.isError = isError;
+  }
 
-  public Boolean getIsError(){return isError;}
+  public Boolean getIsError() {
+    return isError;
+  }
 
   public String getUpdatedUsername() {
     return updatedUsername;

@@ -46,7 +46,7 @@ public class SettingsView implements PropertyChangeListener {
         evt -> {
           if (evt.getSource().equals(changeUsernameButton)) {
             settingsController.executeChangeUsername(
-                settingsViewModel.getState().getUpdatedUsername());
+                settingsViewModel.getState().getUpdatedUsername(), settingsViewModel.getState().getUser());
           }
         });
 

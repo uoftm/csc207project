@@ -14,7 +14,8 @@ import use_case.login.LoginUserDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.settings.RoomsSettingsDataAccessInterface;
 
-public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface, RoomsSettingsDataAccessInterface {
+public class FirebaseRoomsDataAccessObject
+    implements RoomsDataAccessInterface, RoomsSettingsDataAccessInterface {
 
   private final OkHttpClient client;
 
@@ -22,9 +23,7 @@ public class FirebaseRoomsDataAccessObject implements RoomsDataAccessInterface, 
     this.client = client;
   }
 
-  public void propogateDisplayNameChange(User user, String newDisplayName) {
-
-  }
+  public void propogateDisplayNameChange(User user, String newDisplayName) {}
 
   @Override
   public List<String> getAvailableRoomIds(User user) {

@@ -1,6 +1,5 @@
 package interface_adapter.settings;
 
-import interface_adapter.search.SearchState;
 import use_case.settings.SettingsOutputBoundary;
 import use_case.settings.SettingsOutputData;
 

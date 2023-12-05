@@ -8,15 +8,14 @@ public class SettingsInputData {
 
   String updatedUsername;
 
-  public SettingsInputData(User user) {
+  public SettingsInputData(String updatedUsername, User user) {
+    this.updatedUsername = updatedUsername;
     this.user = user;
   }
 
-  public SettingsInputData(String updatedUsername) {
-    this.updatedUsername = updatedUsername;
+  String getUpdatedUsername() {
+    return updatedUsername;
   }
-
-  String getUpdatedUsername(){return updatedUsername;}
 
   User getUser() {
     return user;
