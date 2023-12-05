@@ -1,7 +1,6 @@
 package data_access;
 
 import entities.auth.User;
-import java.util.UUID;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;

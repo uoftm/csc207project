@@ -144,17 +144,12 @@ public class RoomsView implements PropertyChangeListener {
           if (evt.getSource().equals(send)) {
             RoomsState currentState = viewModel.getState();
             String message = currentState.getSendMessage();
-            String roomUid = currentState.getRoomUid();
-            if (message != null) {
+            if (message != null && currentState.roomIsSelected()) {
+              Room room = currentState.getRoomByUid();
               User user = currentState.getUser();
-              for (var room : currentState.getAvailableRooms()) {
-                if (room.getUid().equals(roomUid)) {
-                  roomsController.sendMessage(room, user, message);
-                  searchController.executeRecordData(
-                      Instant.now(), roomUid, message, currentState.getUserUid());
-                  break;
-                }
-              }
+              roomsController.sendMessage(room, user, message);
+              searchController.executeRecordData(
+                  Instant.now(), currentState.getRoomUid(), message, currentState.getUserUid());
             }
           }
         });
@@ -164,16 +159,8 @@ public class RoomsView implements PropertyChangeListener {
           if (evt.getSource().equals(refreshButton)) {
             RoomsState currentState = viewModel.getState();
             User user = currentState.getUser();
-            String roomUid = currentState.getRoomUid();
 
             loadRoomsController.loadRooms(user);
-
-            // TODO: Is this code a violation of CA? Since we already call another controller
-            for (var room : currentState.getAvailableRooms()) {
-              if (room.getUid().equals(roomUid)) {
-                roomsController.loadMessages(room, user);
-              }
-            }
           }
         });
 
@@ -249,7 +236,7 @@ public class RoomsView implements PropertyChangeListener {
         messagesPaneInternals.repaint();
 
         for (var message : messages) {
-          var messageView = new MessageView(message.content);
+          var messageView = new MessageView(message.content, message.displayUser.getName());
           messagesPaneInternals.add(messageView);
         }
 
@@ -258,6 +245,9 @@ public class RoomsView implements PropertyChangeListener {
             () -> {
               messagesPaneInternals.revalidate();
               messagesPaneInternals.repaint();
+              JScrollPane scrollPane = (JScrollPane) messagesPane.getComponent(0);
+              JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+              verticalScrollBar.setValue(verticalScrollBar.getMaximum());
             });
       }
     }

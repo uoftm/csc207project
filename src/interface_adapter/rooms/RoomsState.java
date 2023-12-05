@@ -39,6 +39,24 @@ public class RoomsState {
     this.roomUid = roomUid;
   }
 
+  public boolean roomIsSelected() {
+    return this.roomUid != null;
+  }
+
+  public Room getRoomByUid() {
+    Room selectedRoom = null;
+    try {
+      for (var room : this.getAvailableRooms())
+        if (room.getUid().equals(this.getRoomUid())) {
+          selectedRoom = room;
+          break;
+        }
+    } catch (RuntimeException e) {
+      System.out.println("No room selected");
+    }
+    return selectedRoom;
+  }
+
   public List<Room> getAvailableRooms() {
     return availableRooms;
   }

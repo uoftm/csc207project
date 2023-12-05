@@ -1,15 +1,16 @@
 package entities.rooms;
 
+import entities.auth.DisplayUser;
 import java.time.Instant;
 
 public class Message {
   public String content;
   public Instant timestamp;
-  public String authorEmail;
+  public DisplayUser displayUser;
 
-  public Message(Instant timestamp, String content, String authorEmail) {
+  public Message(Instant timestamp, String content, DisplayUser displayUser) {
     this.timestamp = timestamp;
     this.content = content;
-    this.authorEmail = authorEmail;
+    this.displayUser = displayUser;
   }
 }

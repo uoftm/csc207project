@@ -9,11 +9,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import use_case.search.SearchDataAccessInterface;
 
-public class SearchDataAccessObject implements SearchDataAccessInterface {
+public class ElasticsearchDataAccessObject implements SearchDataAccessInterface {
 
   private OkHttpClient client;
 
-  public SearchDataAccessObject(OkHttpClient okHttpClient) {
+  public ElasticsearchDataAccessObject(OkHttpClient okHttpClient) {
     this.client = okHttpClient;
   }
 
