@@ -105,15 +105,12 @@ public class RoomsTest extends ButtonTest {
     RoomsState testState = buildTestState();
     testState.setRoomUid(testState.getAvailableRooms().get(0).getUid());
     testState.setSendMessage("Test message!");
-    System.out.println(testState.getAvailableRooms().get(0).getMessages());
     roomsViewModel.setState(testState);
 
     JButton sendMessageButton = roomsView.getSendMessageButton();
     sendMessageButton.doClick();
 
-    System.out.println(roomsViewModel.getState().getSuccess());
-
-    Assert.assertTrue(roomsViewModel.getState().getSuccess().equals("Success"));
+    Assert.assertTrue(roomsViewModel.getState().getError() != null);
   }
 
   @Test

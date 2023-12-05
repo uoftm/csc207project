@@ -21,11 +21,7 @@ public class FirebaseMessageDataAccessObject implements MessageDataAccessInterfa
       Room room, LoginUserDataAccessInterface userDAO, User user, String messageBody) {
     String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
     String messageJSON =
-        new JSONObject()
-            .put("contents", messageBody)
-            .put("displayName", user.getEmail())
-            .put("author", user.getEmail())
-            .toString();
+        new JSONObject().put("contents", messageBody).put("author", user.getEmail()).toString();
 
     String url =
         String.format(Constants.MESSAGES_URL, room.getUid(), new Date().getTime())
