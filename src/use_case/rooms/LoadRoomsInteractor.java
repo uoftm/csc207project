@@ -27,9 +27,6 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
       List<Room> rooms = new ArrayList<>();
       for (String roomId : availableRoomIds) {
         Room room = roomsDataAccessObject.getRoomFromId(roomsInputData.user, userDao, roomId);
-        System.out.println(room.getUid());
-        System.out.println(room.getMessages().get(0).content);
-        System.out.println(room.getUsers().toString());
         rooms.add(room);
       }
       LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(rooms, false, null);
