@@ -25,7 +25,7 @@ public class RoomSettingsPresenter implements RoomSettingsOutputBoundary {
     RoomsState state = roomsViewModel.getState();
     var availableRooms = state.getAvailableRooms();
     availableRooms.remove(room);
-    state.setRoomUid(null);
+    state.setRoomUid(null); // Clear the displayed room (display blank)
     roomsViewModel.setState(state);
     roomsViewModel.firePropertyChanged();
 
