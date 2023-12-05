@@ -22,13 +22,21 @@ public class RoomSettingsInteractor implements RoomSettingsInputBoundary {
 
   @Override
   public void deleteRoom(User user, Room activeRoom) {
-    roomsDataAccessObject.deleteRoom(user, userDataAccessObject, activeRoom);
-    outputBoundary.deletedRoom(activeRoom);
+    try {
+      roomsDataAccessObject.deleteRoom(user, userDataAccessObject, activeRoom);
+      outputBoundary.prepareDeleteRoomSuccessView(activeRoom);
+    } catch (RuntimeException e) {
+      outputBoundary.prepareDeleteRoomFailView(e.getMessage());
+    }
   }
 
   @Override
-  public void saveRoomName(User user, Room activeRoom, String roomName) {
-    roomsDataAccessObject.changeRoomName(user, userDataAccessObject, activeRoom, roomName);
-    outputBoundary.savedRoomName(activeRoom, roomName);
+  public void changeRoomName(User user, Room activeRoom, String newRoomName) {
+    try {
+      roomsDataAccessObject.changeRoomName(user, userDataAccessObject, activeRoom, newRoomName);
+      outputBoundary.prepareChangeRoomNameSuccessView(activeRoom, newRoomName);
+    } catch (RuntimeException e) {
+      outputBoundary.prepareChangeRoomFailView(e.getMessage());
+    }
   }
 }

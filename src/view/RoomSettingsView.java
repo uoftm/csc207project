@@ -56,6 +56,9 @@ public class RoomSettingsView implements PropertyChangeListener {
       var room = (Room) evt.getNewValue();
       roomName.setText(room.getName());
     }
+    if (evt.getPropertyName().equals("error")) {
+      JOptionPane.showMessageDialog(contentPane, evt.getNewValue());
+    }
   }
 
   public JButton getBackButton() {

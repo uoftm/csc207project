@@ -9,14 +9,19 @@ import view.LoggedInView;
 
 public class RoomSettingsPresenter implements RoomSettingsOutputBoundary {
   private final RoomsViewModel roomsViewModel;
+  private final RoomSettingsViewModel roomSettingsViewModel;
   private final ViewManagerModel viewManagerModel;
 
-  public RoomSettingsPresenter(RoomsViewModel roomsViewModel, ViewManagerModel viewManagerModel) {
+  public RoomSettingsPresenter(
+      RoomsViewModel roomsViewModel,
+      RoomSettingsViewModel roomSettingsViewModel,
+      ViewManagerModel viewManagerModel) {
     this.roomsViewModel = roomsViewModel;
+    this.roomSettingsViewModel = roomSettingsViewModel;
     this.viewManagerModel = viewManagerModel;
   }
 
-  public void deletedRoom(Room room) {
+  public void prepareDeleteRoomSuccessView(Room room) {
     RoomsState state = roomsViewModel.getState();
     var availableRooms = state.getAvailableRooms();
     availableRooms.remove(room);
@@ -27,7 +32,11 @@ public class RoomSettingsPresenter implements RoomSettingsOutputBoundary {
     viewManagerModel.setActiveView(LoggedInView.viewName);
   }
 
-  public void savedRoomName(Room activeRoom, String roomName) {
+  public void prepareChangeRoomFailView(String message) {
+    roomSettingsViewModel.setError(message);
+  }
+
+  public void prepareChangeRoomNameSuccessView(Room activeRoom, String roomName) {
     RoomsState state = roomsViewModel.getState();
     var availableRooms = state.getAvailableRooms();
     for (Room room : availableRooms) {
@@ -40,5 +49,9 @@ public class RoomSettingsPresenter implements RoomSettingsOutputBoundary {
     roomsViewModel.firePropertyChanged();
 
     viewManagerModel.setActiveView(LoggedInView.viewName);
+  }
+
+  public void prepareDeleteRoomFailView(String message) {
+    roomSettingsViewModel.setError(message);
   }
 }

@@ -130,7 +130,7 @@ public class Main {
     viewManagerModel.add(settingsView.contentPane, settingsView.viewName);
 
     RoomSettingsOutputBoundary outputBoundary =
-        new RoomSettingsPresenter(roomsViewModel, viewManagerModel);
+        new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
     RoomSettingsInteractor roomSettingsInteractor =
         new RoomSettingsInteractor(roomsDataAccessObject, userDataAccessObject, outputBoundary);
     RoomSettingsController roomSettingsController =

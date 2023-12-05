@@ -12,7 +12,7 @@ public class RoomSettingsController {
   }
 
   public void saveRoomName(User user, Room activeRoom, String roomName) {
-    inputBoundary.saveRoomName(user, activeRoom, roomName);
+    inputBoundary.changeRoomName(user, activeRoom, roomName);
   }
 
   /**

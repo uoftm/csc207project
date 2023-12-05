@@ -171,12 +171,8 @@ public class RoomsView implements PropertyChangeListener {
         evt -> {
           if (evt.getSource().equals(settingsButton)) {
             RoomsState currentState = viewModel.getState();
-            String roomUid = currentState.getRoomUid();
-            for (var room : currentState.getAvailableRooms()) {
-              if (room.getUid().equals(roomUid)) {
-                openRoomSettingsController.open(room, currentState.getUser());
-              }
-            }
+            Room room = currentState.getRoomByUid();
+            openRoomSettingsController.open(room, currentState.getUser());
           }
         });
 

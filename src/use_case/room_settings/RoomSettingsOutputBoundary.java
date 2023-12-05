@@ -3,7 +3,11 @@ package use_case.room_settings;
 import entities.rooms.Room;
 
 public interface RoomSettingsOutputBoundary {
-  void deletedRoom(Room room);
+  void prepareDeleteRoomSuccessView(Room room);
 
-  void savedRoomName(Room activeRoom, String roomName);
+  void prepareChangeRoomFailView(String message);
+
+  void prepareChangeRoomNameSuccessView(Room activeRoom, String roomName);
+
+  void prepareDeleteRoomFailView(String message);
 }

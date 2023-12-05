@@ -6,8 +6,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class RoomSettingsViewModel {
-  private Room activeRoom = null;
-  private User user = null;
+  private Room activeRoom;
+  private User user;
+  private String error;
 
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
@@ -18,6 +19,15 @@ public class RoomSettingsViewModel {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public void setError(String error) {
+    this.error = error;
+    support.firePropertyChange("error", null, error);
+  }
+
+  public String getError() {
+    return error;
   }
 
   public Room getActiveRoom() {
