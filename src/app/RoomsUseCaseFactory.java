@@ -1,5 +1,6 @@
 package app;
 
+import interface_adapter.room_settings.OpenRoomSettingsController;
 import interface_adapter.rooms.*;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.StartSearchController;
@@ -17,7 +18,8 @@ public class RoomsUseCaseFactory {
       LoginUserDataAccessInterface userDao,
       RoomsViewModel roomsViewModel,
       SearchController searchController,
-      StartSearchController startSearchController) {
+      StartSearchController startSearchController,
+      OpenRoomSettingsController openRoomSettingsController) {
     RoomsPresenter roomsPresenter = new RoomsPresenter(roomsViewModel);
     RoomsInteractor roomsInteractor =
         new RoomsInteractor(
@@ -32,6 +34,7 @@ public class RoomsUseCaseFactory {
         roomsController,
         loadRoomsController,
         searchController,
-        startSearchController);
+        startSearchController,
+        openRoomSettingsController);
   }
 }
