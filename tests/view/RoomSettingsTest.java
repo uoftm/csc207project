@@ -136,6 +136,12 @@ public class RoomSettingsTest {
     Assert.assertEquals(1, roomsDataAccessObject.changeRoomNameCalls);
     Assert.assertEquals("Test Room 2", activeRoom.getName());
 
+    // The user of the tests must click no then yes to pass this test
+    roomSettingsView.getDeleteRoomButton().doClick();
+    sleep(100);
+    Assert.assertEquals(0, roomsDataAccessObject.deleteRoomCalls);
+    Assert.assertEquals(1, availableRooms.size());
+
     roomSettingsView.getDeleteRoomButton().doClick();
     sleep(100);
     Assert.assertEquals(1, roomsDataAccessObject.deleteRoomCalls);

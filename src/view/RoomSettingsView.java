@@ -45,7 +45,15 @@ public class RoomSettingsView implements PropertyChangeListener {
     deleteRoomButton.addActionListener(
         e -> {
           if (e.getSource().equals(deleteRoomButton)) {
-            roomSettingsController.deleteRoom(viewModel.getUser(), viewModel.getActiveRoom());
+            var confirm =
+                JOptionPane.showConfirmDialog(
+                    contentPane,
+                    "Are you sure you want to delete this room?",
+                    "Delete Room",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+              roomSettingsController.deleteRoom(viewModel.getUser(), viewModel.getActiveRoom());
+            }
           }
         });
   }
