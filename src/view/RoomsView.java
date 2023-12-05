@@ -263,7 +263,6 @@ public class RoomsView implements PropertyChangeListener {
     }
     if (state.getSuccess() != null) {
       JOptionPane.showMessageDialog(contentPane, state.getSuccess());
-      state.setSuccess(null);
     }
   }
 
@@ -278,5 +277,9 @@ public class RoomsView implements PropertyChangeListener {
 
   public JButton getAddUserButton() {
     return addUserButton;
+  }
+
+  public JButton getSendMessageButton() {
+    return send;
   }
 }
