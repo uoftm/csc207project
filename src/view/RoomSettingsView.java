@@ -57,4 +57,20 @@ public class RoomSettingsView implements PropertyChangeListener {
       roomName.setText(room.getName());
     }
   }
+
+  public JButton getBackButton() {
+    return backButton;
+  }
+
+  public JButton getSaveButton() {
+    return saveButton;
+  }
+
+  public JTextField getRoomName() {
+    return roomName;
+  }
+
+  public JButton getDeleteRoomButton() {
+    return deleteRoomButton;
+  }
 }

@@ -21,7 +21,7 @@ public abstract class DAOTest {
         Instant.now(), "Dummy message", new DisplayUser("dummy@example.com", "name"));
   }
 
-  User createDummyUser() {
+  public static User createDummyUser() {
     String fakeEmail =
         String.format("testSaveUser%s@example.com", UUID.randomUUID().toString().substring(0, 10));
     return new User(null, fakeEmail, "Dummy User", "password", LocalDateTime.now());
@@ -31,7 +31,7 @@ public abstract class DAOTest {
     return new DisplayUser("dummy@example.com", "dummyUid");
   }
 
-  Room createDummyRoom() {
+  public static Room createDummyRoom() {
     DisplayUser dummyDisplayUser = new DisplayUser("dummyUid", "Dummy User");
     List<DisplayUser> users = new ArrayList<>();
     users.add(dummyDisplayUser);
