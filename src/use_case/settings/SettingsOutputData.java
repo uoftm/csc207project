@@ -1,19 +1,17 @@
 package use_case.settings;
 
 
+import entities.settings.SettingsChangeResponse;
+
 public class SettingsOutputData {
 
-  private String error;
-  private Boolean isError;
+  private SettingsChangeResponse response;
 
-  public SettingsOutputData(String error, Boolean isError) {
-    this.error = error;
-    this.isError = isError;
+  public SettingsOutputData(SettingsChangeResponse response) {
+    this.response = response;
   }
 
-  public String getError(){return error;}
-
-  public Boolean getIsError(){return isError;}
+  public SettingsChangeResponse getResponse(){return response;}
 
 
 }

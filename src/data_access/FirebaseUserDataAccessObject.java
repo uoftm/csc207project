@@ -8,6 +8,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
+
+import entities.settings.SettingsChangeResponse;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +43,7 @@ public class FirebaseUserDataAccessObject
     }
   }
 
-  public void changeDisplayName(User user, String newDisplayName) {
+  public SettingsChangeResponse changeDisplayName(User user, String newDisplayName) {
 
   }
 

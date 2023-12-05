@@ -1,9 +1,9 @@
 package interface_adapter.settings;
 
-import entities.auth.AbstractUser;
+import entities.auth.User;
 
 public class SettingsState {
-  private AbstractUser user;
+  private User user;
   private String error = null;
 
   private Boolean isError;
@@ -13,13 +13,17 @@ public class SettingsState {
   public SettingsState(SettingsState state) {
     user = state.user;
     error = state.error;
+    isError = state.isError;
+    updatedUsername = state.updatedUsername;
   }
 
   public SettingsState() {}
 
-  public AbstractUser getUser() {
+  public User getUser() {
     return user;
   }
+
+  public User setUser() { return user; }
 
   public void setIsError(Boolean isError){this.isError = isError;}
 

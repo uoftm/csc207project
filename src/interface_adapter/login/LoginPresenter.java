@@ -41,6 +41,7 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
     this.roomsViewModel.firePropertyChanged();
 
     this.viewManagerModel.setActiveView(loggedInViewModel.getViewName());
+    loggedInViewModel.getState().setUser(response.getUser());
     this.viewManagerModel.fireViewChanged();
   }
 

@@ -1,14 +1,14 @@
 package use_case.settings;
 
-import entities.auth.AbstractUser;
+import entities.auth.User;
 
 public class SettingsInputData {
 
-  AbstractUser user;
+  User user;
 
   String updatedUsername;
 
-  public SettingsInputData(AbstractUser user) {
+  public SettingsInputData(User user) {
     this.user = user;
   }
 
@@ -18,7 +18,7 @@ public class SettingsInputData {
 
   String getUpdatedUsername(){return updatedUsername;}
 
-  AbstractUser getUser() {
+  User getUser() {
     return user;
   }
 }
