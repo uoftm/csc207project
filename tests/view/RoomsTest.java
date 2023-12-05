@@ -50,7 +50,7 @@ public class RoomsTest extends ButtonTest {
     refresh.doClick();
 
     // User can load blank rooms with request to Firebase
-    Assert.assertTrue(roomsViewModel.getState().getError() == null);
+    Assert.assertNull(roomsViewModel.getState().getError());
   }
 
   @Test
@@ -110,7 +110,7 @@ public class RoomsTest extends ButtonTest {
     JButton sendMessageButton = roomsView.getSendMessageButton();
     sendMessageButton.doClick();
 
-    Assert.assertTrue(roomsViewModel.getState().getError() != null);
+    Assert.assertNotNull(roomsViewModel.getState().getError());
   }
 
   @Test
