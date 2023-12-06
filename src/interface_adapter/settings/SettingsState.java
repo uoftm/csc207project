@@ -4,16 +4,18 @@ import entities.auth.User;
 
 public class SettingsState {
   private User user;
-  private String error = null;
+  private String message = null;
 
-  private Boolean isError;
+  private Boolean isError = false;
+  private Boolean isSuccess = false;
 
   private String updatedUsername;
 
   public SettingsState(SettingsState state) {
     user = state.user;
-    error = state.error;
+    message = state.message;
     isError = state.isError;
+    isSuccess = state.isSuccess;
     updatedUsername = state.updatedUsername;
   }
 
@@ -34,6 +36,8 @@ public class SettingsState {
   public Boolean getIsError() {
     return isError;
   }
+  public void setIsSuccess(Boolean isSuccess) { this.isSuccess = isSuccess; }
+  public Boolean getIsSuccess() { return isSuccess; }
 
   public String getUpdatedUsername() {
     return updatedUsername;
@@ -43,11 +47,11 @@ public class SettingsState {
     this.updatedUsername = username;
   }
 
-  public String getError() {
-    return error;
+  public String getMessage() {
+    return message;
   }
 
-  public void setError(String error) {
-    this.error = error;
+  public void setMessage(String message) {
+    this.message = message;
   }
 }

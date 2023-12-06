@@ -13,14 +13,16 @@ public class SettingsPresenter implements SettingsOutputBoundary {
 
   @Override
   public void prepareSuccessView(SettingsOutputData outputData) {
-    // On success, switch back to the same view for now
-    System.out.println("success");
+    SettingsState settingsState = settingsViewModel.getState();
+    settingsState.setMessage("Successfully updated username");
+    settingsState.setIsSuccess(true);
+    settingsViewModel.firePropertyChanged();
   }
 
   @Override
   public void prepareFailView(SettingsOutputData outputData) {
     SettingsState settingsState = settingsViewModel.getState();
-    settingsState.setError(outputData.getError());
+    settingsState.setMessage(outputData.getError());
     settingsState.setIsError(outputData.getIsError());
     settingsViewModel.firePropertyChanged();
   }

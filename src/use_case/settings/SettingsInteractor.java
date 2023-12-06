@@ -26,7 +26,7 @@ public class SettingsInteractor implements SettingsInputBoundary {
   @Override
   public void executeChangeUsername(SettingsInputData settingsInputData) {
     try {
-      // TODO: Actually change the name
+      settingsInputData.getUser().setName(settingsInputData.updatedUsername);
       userSettingsDataAccessObject.propogateDisplayNameChange(
               settingsInputData.getUser());
       roomsSettingsDataAccessObject.propogateDisplayNameChange(
