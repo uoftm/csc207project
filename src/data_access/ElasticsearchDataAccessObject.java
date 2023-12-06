@@ -19,8 +19,8 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
 
   public SearchReponseArray getData(SearchRequest searchRequest) {
 
-    String esUrl = Constants.esUrl;
-    String apiKey = Constants.apiKey;
+    String esUrl = Constants.ES_URL;
+    String apiKey = Constants.ES_API_KEY;
 
     String index = "search-chats";
 
@@ -127,8 +127,8 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
   }
 
   public void saveData(SearchChatMessage message) {
-    String esUrl = Constants.esUrl;
-    String apiKey = Constants.apiKey;
+    String esUrl = Constants.ES_URL;
+    String apiKey = Constants.ES_API_KEY;
 
     JSONObject json =
         new JSONObject()
