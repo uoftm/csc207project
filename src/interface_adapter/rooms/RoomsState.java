@@ -28,7 +28,7 @@ public class RoomsState {
   }
 
   public String getUserUid() {
-    return user.getUid();
+    return user.uid();
   }
 
   public String getRoomUid() {

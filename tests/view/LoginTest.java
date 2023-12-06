@@ -28,7 +28,7 @@ public class LoginTest extends ButtonTest {
     JButton login = loginView.getLoginButton();
     login.doClick();
 
-    Assert.assertTrue(loginViewModel.getState().getError() != null);
+    Assert.assertNotNull(loginViewModel.getState().getError());
   }
 
   @Test

@@ -72,7 +72,6 @@ public abstract class DAOTest {
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
-    Room room = roomsDao.addRoom(user, userDao, "Dummy Room");
-    return room;
+    return roomsDao.addRoom(user, userDao, "Dummy Room");
   }
 }

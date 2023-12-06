@@ -11,7 +11,7 @@ import use_case.search.SearchDataAccessInterface;
 
 public class ElasticsearchDataAccessObject implements SearchDataAccessInterface {
 
-  private OkHttpClient client;
+  private final OkHttpClient client;
 
   public ElasticsearchDataAccessObject(OkHttpClient okHttpClient) {
     this.client = okHttpClient;
@@ -25,7 +25,7 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
     String index = "search-chats";
 
     JSONObject roomIDQuery =
-        new JSONObject().put("term", new JSONObject().put("roomID", searchRequest.getRoomUid()));
+        new JSONObject().put("term", new JSONObject().put("roomID", searchRequest.roomUid()));
     JSONObject messageQuery =
         new JSONObject()
             .put(
@@ -34,7 +34,7 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
                     .put(
                         "message",
                         new JSONObject()
-                            .put("query", searchRequest.getQueryRequest())
+                            .put("query", searchRequest.queryRequest())
                             .put("fuzziness", "AUTO")));
 
     JSONObject boolQuery =

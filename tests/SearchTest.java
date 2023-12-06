@@ -23,7 +23,7 @@ public class SearchTest {
   public void testGetData() {
     SearchRequest searchRequest = new SearchRequest("dog", "2");
     assertEquals(
-        searchDataAccessObject.getData(searchRequest).getResponses().get(0).getFullText(),
+        searchDataAccessObject.getData(searchRequest).getResponses().get(0).fullText(),
         "I love dogs");
   }
 }

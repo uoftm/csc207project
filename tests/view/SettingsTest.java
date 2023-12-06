@@ -50,6 +50,6 @@ public class SettingsTest {
       throw new RuntimeException(e);
     }
 
-    Assert.assertTrue(jf != null);
+    Assert.assertNotNull(jf);
   }
 }

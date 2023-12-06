@@ -5,7 +5,6 @@ import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.searched.SearchedViewModel;
-import javax.swing.*;
 import use_case.search.SearchDataAccessInterface;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInteractor;

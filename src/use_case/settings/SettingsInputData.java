@@ -4,7 +4,7 @@ import entities.auth.AbstractUser;
 
 public class SettingsInputData {
 
-  AbstractUser user;
+  final AbstractUser user;
 
   public SettingsInputData(AbstractUser user) {
     this.user = user;

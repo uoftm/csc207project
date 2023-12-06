@@ -19,8 +19,8 @@ import javax.swing.*;
 
 public class RoomsView implements PropertyChangeListener {
   public JPanel contentPane;
-  private JPanel messagesPaneInternals;
-  private JPanel roomsPaneInternals;
+  private final JPanel messagesPaneInternals;
+  private final JPanel roomsPaneInternals;
   private JTextField messageTextField;
   private JButton send;
   private JPanel messagesPane;
@@ -211,7 +211,7 @@ public class RoomsView implements PropertyChangeListener {
         messagesPaneInternals.repaint();
 
         for (var message : messages) {
-          var messageView = new MessageView(message.content, message.displayUser.getName());
+          var messageView = new MessageView(message.content, message.displayUser.name());
           messagesPaneInternals.add(messageView);
         }
 
@@ -227,7 +227,7 @@ public class RoomsView implements PropertyChangeListener {
       }
     }
 
-    if (name.equals("")) {
+    if (name.isEmpty()) {
       roomNameLabel2.setText("Select a room");
     } else {
       roomNameLabel2.setText("Add friend to " + name);

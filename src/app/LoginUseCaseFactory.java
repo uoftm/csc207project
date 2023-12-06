@@ -7,8 +7,6 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-import java.io.IOException;
-import javax.swing.*;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -28,20 +26,15 @@ public class LoginUseCaseFactory {
       LoginUserDataAccessInterface userDataAccessObject,
       SwitchViewController switchViewController) {
 
-    try {
-      LoginController loginController =
-          createLoginController(
-              viewManagerModel,
-              loginViewModel,
-              loggedInViewModel,
-              roomsViewModel,
-              userDataAccessObject);
+    LoginController loginController =
+        createLoginController(
+            viewManagerModel,
+            loginViewModel,
+            loggedInViewModel,
+            roomsViewModel,
+            userDataAccessObject);
 
-      return new LoginView(loginViewModel, loginController, switchViewController);
-    } catch (IOException e) {
-      JOptionPane.showMessageDialog(null, "Could not open user data file.");
-      return null;
-    }
+    return new LoginView(loginViewModel, loginController, switchViewController);
   }
 
   private static LoginController createLoginController(
@@ -49,8 +42,7 @@ public class LoginUseCaseFactory {
       LoginViewModel loginViewModel,
       LoggedInViewModel loggedInViewModel,
       RoomsViewModel roomsViewModel,
-      LoginUserDataAccessInterface userDataAccessObject)
-      throws IOException {
+      LoginUserDataAccessInterface userDataAccessObject) {
 
     LoginOutputBoundary loginOutputBoundary =
         new LoginPresenter(viewManagerModel, loggedInViewModel, roomsViewModel, loginViewModel);

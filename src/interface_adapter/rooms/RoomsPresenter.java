@@ -18,7 +18,7 @@ public class RoomsPresenter implements RoomsOutputBoundary {
   @Override
   public void prepareSuccessView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();
-    roomsState.setSuccess(response.getSuccess());
+    roomsState.setSuccess(response.success());
     roomsViewModel.firePropertyChanged();
   }
 
@@ -26,15 +26,15 @@ public class RoomsPresenter implements RoomsOutputBoundary {
   public void prepareSendMessageSuccessView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();
 
-    String messageBody = response.getSuccess();
+    String messageBody = response.success();
     List<Message> messages = roomsState.getDisplayMessages();
-    DisplayUser displayUser = response.getUser().toDisplayUser();
+    DisplayUser displayUser = response.user().toDisplayUser();
 
     Message message = new Message(Instant.now(), messageBody, displayUser);
     messages.add(message);
 
     roomsState.setDisplayMessages(messages);
-    response.getRoom().setMessages(messages);
+    response.room().setMessages(messages);
     roomsState.setSuccess(null);
 
     roomsViewModel.firePropertyChanged();
@@ -44,16 +44,16 @@ public class RoomsPresenter implements RoomsOutputBoundary {
   public void prepareCreateRoomSuccessView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();
     List<Room> rooms = roomsState.getAvailableRooms();
-    rooms.add(response.getRoom());
+    rooms.add(response.room());
     roomsState.setAvailableRooms(rooms);
-    roomsState.setRoomUid(response.getRoom().getUid());
+    roomsState.setRoomUid(response.room().getUid());
     roomsViewModel.firePropertyChanged();
   }
 
   @Override
   public void prepareFailView(RoomsOutputData response) {
     RoomsState roomsState = roomsViewModel.getState();
-    roomsState.setError(response.getError());
+    roomsState.setError(response.error());
     roomsViewModel.firePropertyChanged();
   }
 }

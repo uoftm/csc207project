@@ -7,8 +7,6 @@ import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-import java.io.IOException;
-import javax.swing.*;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -27,24 +25,17 @@ public class SignupUseCaseFactory {
       SignupUserDataAccessInterface userDataAccessObject,
       SwitchViewController switchViewController) {
 
-    try {
-      SignupController signupController =
-          createUserSignupUseCase(
-              viewManagerModel, signupViewModel, loginViewModel, userDataAccessObject);
-      return new SignupView(signupController, signupViewModel, switchViewController);
-    } catch (IOException e) {
-      JOptionPane.showMessageDialog(null, "Could not open user data file.");
-    }
-
-    return null;
+    SignupController signupController =
+        createUserSignupUseCase(
+            viewManagerModel, signupViewModel, loginViewModel, userDataAccessObject);
+    return new SignupView(signupController, signupViewModel, switchViewController);
   }
 
   private static SignupController createUserSignupUseCase(
       ViewManagerModel viewManagerModel,
       SignupViewModel signupViewModel,
       LoginViewModel loginViewModel,
-      SignupUserDataAccessInterface userDataAccessObject)
-      throws IOException {
+      SignupUserDataAccessInterface userDataAccessObject) {
 
     // Notice how we pass this method's parameters to the Presenter.
     SignupOutputBoundary signupOutputBoundary =

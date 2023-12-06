@@ -15,6 +15,6 @@ public class SwitchViewPresenter implements SwitchViewOutputBoundary {
   @Override
   public void present(SwitchViewOutputData outputData) {
     // Logic to handle view switching
-    this.viewManagerModel.setActiveView(outputData.getViewName());
+    this.viewManagerModel.setActiveView(outputData.viewName());
   }
 }

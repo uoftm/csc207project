@@ -4,7 +4,7 @@ import entities.rooms.Room;
 import java.util.List;
 
 public class LoadRoomsOutputData {
-  List<Room> rooms;
+  final List<Room> rooms;
   private final boolean useCaseFailed;
   private final String error; // null iff useCaseFailed is false
 

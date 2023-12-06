@@ -13,18 +13,15 @@ public class SearchedView implements PropertyChangeListener {
 
   public static final String viewName = "search results";
 
-  private final SearchedViewModel searchedViewModel;
-
   private JButton backButton;
   public JPanel contentPane;
   private JPanel rawPanel;
 
-  private JPanel paneInternals;
+  private final JPanel paneInternals;
 
   public SearchedView(
       SearchedViewModel searchedViewModel, SwitchViewController switchViewController) {
-    this.searchedViewModel = searchedViewModel;
-    this.searchedViewModel.addPropertyChangeListener(this);
+    searchedViewModel.addPropertyChangeListener(this);
 
     rawPanel.setLayout(new BoxLayout(rawPanel, BoxLayout.Y_AXIS));
 
@@ -54,14 +51,14 @@ public class SearchedView implements PropertyChangeListener {
     for (var response : state.getResponses()) {
       JPanel eachMessagePanel = new JPanel();
       eachMessagePanel.setLayout(new FlowLayout());
-      JLabel labelOne = new JLabel(response.getTime());
-      JLabel labelTwo = new JLabel(response.getRoomName());
-      JLabel labelThree = new JLabel(response.getUserName());
+      JLabel labelOne = new JLabel(response.time());
+      JLabel labelTwo = new JLabel(response.roomName());
+      JLabel labelThree = new JLabel(response.userName());
       JTextPane textPane = new JTextPane();
-      textPane.setText(response.getMessage());
+      textPane.setText(response.message());
       textPane.setEditable(false);
 
-      for (var index : response.getHighlightIndices()) {
+      for (var index : response.highlightIndices()) {
         try {
           textPane.getHighlighter().addHighlight(index.getStart(), index.getEnd(), highlighter);
         } catch (Exception e) {

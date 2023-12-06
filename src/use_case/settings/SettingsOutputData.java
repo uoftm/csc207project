@@ -4,7 +4,7 @@ import entities.auth.AbstractUser;
 
 public class SettingsOutputData {
 
-  AbstractUser user;
+  final AbstractUser user;
   private final boolean useCaseFailed;
 
   public SettingsOutputData(AbstractUser user, boolean useCaseFailed) {

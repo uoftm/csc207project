@@ -52,6 +52,6 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
 
   @Override
   public void present(SwitchViewOutputData outputData) {
-    this.viewManagerModel.setActiveView(outputData.getViewName());
+    this.viewManagerModel.setActiveView(outputData.viewName());
   }
 }

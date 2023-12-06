@@ -11,7 +11,7 @@ public class SwitchViewInteractor implements SwitchViewInputBoundary {
   public void execute(SwitchViewInputData inputData) {
     // Logic to switch views
     // For example, sending the view name to the presenter
-    SwitchViewOutputData outputData = new SwitchViewOutputData(inputData.getViewName());
+    SwitchViewOutputData outputData = new SwitchViewOutputData(inputData.viewName());
     outputBoundary.present(outputData);
   }
 }

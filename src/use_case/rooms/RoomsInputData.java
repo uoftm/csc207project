@@ -4,11 +4,11 @@ import entities.auth.User;
 import entities.rooms.Room;
 
 public class RoomsInputData {
-  Room room;
-  User user;
-  String message;
-  String userToAddEmail;
-  String roomToCreateName;
+  final Room room;
+  final User user;
+  final String message;
+  final String userToAddEmail;
+  final String roomToCreateName;
 
   public RoomsInputData(
       Room room, User user, String message, String userToAddEmail, String roomToCreateName) {

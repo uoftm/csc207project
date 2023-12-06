@@ -164,6 +164,44 @@ public class RoomSettingsTest {
 
   @Test
   public void testRoomSettingsFailures() throws InterruptedException {
+    RoomSettingsController roomSettingsController = getRoomSettingsController();
+    RoomSettingsView roomSettingsView =
+        new RoomSettingsView(roomSettingsViewModel, roomSettingsController, switchViewController);
+    views.add(roomSettingsView.contentPane, roomSettingsView.viewName);
+
+    JFrame jf = new JFrame();
+    jf.setContentPane(roomSettingsView.contentPane);
+    jf.pack();
+    jf.setVisible(true);
+
+    Room activeRoom = DAOTest.createDummyRoom();
+    roomSettingsViewModel.setActiveRoom(activeRoom);
+    roomSettingsViewModel.setUser(DAOTest.createDummyUser());
+
+    var roomsState = roomsViewModel.getState();
+    var availableRooms = roomsState.getAvailableRooms();
+    availableRooms.add(activeRoom);
+    roomsViewModel.setState(roomsState);
+    roomsViewModel.firePropertyChanged();
+
+    sleep(1000);
+
+    roomSettingsView.getRoomName().setText("Test Room 2");
+    sleep(100);
+    roomSettingsView.getSaveButton().doClick();
+    sleep(100);
+    Assert.assertEquals("Failed to change room name.", roomSettingsViewModel.getError());
+
+    roomSettingsView.getDeleteRoomButton().doClick();
+    sleep(100);
+    Assert.assertEquals("Failed to delete room.", roomSettingsViewModel.getError());
+
+    roomSettingsView.getBackButton().doClick();
+    sleep(100);
+    Assert.assertEquals(LoggedInView.viewName, viewManagerModel.getActiveView());
+  }
+
+  private RoomSettingsController getRoomSettingsController() {
     var roomsDataAccessObject =
         new RoomsDataAccessInterface() {
 
@@ -215,39 +253,6 @@ public class RoomSettingsTest {
 
     RoomSettingsController roomSettingsController =
         new RoomSettingsController(roomSettingsInteractor);
-    RoomSettingsView roomSettingsView =
-        new RoomSettingsView(roomSettingsViewModel, roomSettingsController, switchViewController);
-    views.add(roomSettingsView.contentPane, roomSettingsView.viewName);
-
-    JFrame jf = new JFrame();
-    jf.setContentPane(roomSettingsView.contentPane);
-    jf.pack();
-    jf.setVisible(true);
-
-    Room activeRoom = DAOTest.createDummyRoom();
-    roomSettingsViewModel.setActiveRoom(activeRoom);
-    roomSettingsViewModel.setUser(DAOTest.createDummyUser());
-
-    var roomsState = roomsViewModel.getState();
-    var availableRooms = roomsState.getAvailableRooms();
-    availableRooms.add(activeRoom);
-    roomsViewModel.setState(roomsState);
-    roomsViewModel.firePropertyChanged();
-
-    sleep(1000);
-
-    roomSettingsView.getRoomName().setText("Test Room 2");
-    sleep(100);
-    roomSettingsView.getSaveButton().doClick();
-    sleep(100);
-    Assert.assertEquals("Failed to change room name.", roomSettingsViewModel.getError());
-
-    roomSettingsView.getDeleteRoomButton().doClick();
-    sleep(100);
-    Assert.assertEquals("Failed to delete room.", roomSettingsViewModel.getError());
-
-    roomSettingsView.getBackButton().doClick();
-    sleep(100);
-    Assert.assertEquals(LoggedInView.viewName, viewManagerModel.getActiveView());
+    return roomSettingsController;
   }
 }

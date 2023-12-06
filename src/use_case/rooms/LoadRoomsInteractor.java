@@ -23,10 +23,10 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
   public void loadRooms(LoadRoomsInputData roomsInputData) {
     try {
       List<String> availableRoomIds =
-          roomsDataAccessObject.getAvailableRoomIds(roomsInputData.user);
+          roomsDataAccessObject.getAvailableRoomIds(roomsInputData.user());
       List<Room> rooms = new ArrayList<>();
       for (String roomId : availableRoomIds) {
-        Room room = roomsDataAccessObject.getRoomFromId(roomsInputData.user, userDao, roomId);
+        Room room = roomsDataAccessObject.getRoomFromId(roomsInputData.user(), userDao, roomId);
         rooms.add(room);
       }
       LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(rooms, false, null);

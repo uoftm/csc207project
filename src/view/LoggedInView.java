@@ -10,7 +10,6 @@ import javax.swing.*;
 public class LoggedInView implements PropertyChangeListener {
 
   public static final String viewName = "logged in";
-  private final LoggedInViewModel loggedInViewModel;
 
   private JLabel username;
 
@@ -21,7 +20,6 @@ public class LoggedInView implements PropertyChangeListener {
   private JPanel navBody;
   private JPanel navMiddle;
   private JPanel rooms;
-  private JPanel panel1;
 
   public LoggedInView(
       LoggedInViewModel loggedInViewModel,
@@ -36,8 +34,7 @@ public class LoggedInView implements PropertyChangeListener {
     navMiddle.setBackground(ViewConstants.background);
     navMiddle.setPreferredSize(ViewConstants.navMiddle);
 
-    this.loggedInViewModel = loggedInViewModel;
-    this.loggedInViewModel.addPropertyChangeListener(this);
+    loggedInViewModel.addPropertyChangeListener(this);
 
     logoutButton.addActionListener(
         evt -> {

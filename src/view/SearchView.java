@@ -17,7 +17,7 @@ public class SearchView implements PropertyChangeListener {
   public JPanel contentPane;
   private JButton backButton;
 
-  private SearchViewModel searchViewModel;
+  private final SearchViewModel searchViewModel;
 
   public SearchView(
       SearchController searchController,
@@ -43,12 +43,11 @@ public class SearchView implements PropertyChangeListener {
     SearchState currentState = searchViewModel.getState();
 
     search.addActionListener(
-        e -> {
-          searchController.executeSearchRequest(
-              searchViewModel.getState().getRoomUid(),
-              currentState.getSearchedTerm(),
-              searchViewModel.getState().getUserUid());
-        });
+        e ->
+            searchController.executeSearchRequest(
+                searchViewModel.getState().getRoomUid(),
+                currentState.getSearchedTerm(),
+                searchViewModel.getState().getUserUid()));
 
     backButton.addActionListener(
         evt -> {
