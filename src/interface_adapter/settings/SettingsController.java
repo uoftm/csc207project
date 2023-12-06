@@ -12,8 +12,8 @@ public class SettingsController {
     this.settingsUseCaseInteractor = settingsUseCaseInteractor;
   }
 
-  public void executeChangeUsername(String username, User user) {
-    SettingsInputData settingsInputData = new SettingsInputData(username, user);
+  public void executeChangeUsername(String username) {
+    SettingsInputData settingsInputData = new SettingsInputData(username);
     settingsUseCaseInteractor.executeChangeUsername(settingsInputData);
   }
 }

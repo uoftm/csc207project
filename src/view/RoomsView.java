@@ -1,6 +1,5 @@
 package view;
 
-import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
 import interface_adapter.room_settings.OpenRoomSettingsController;
@@ -110,10 +109,9 @@ public class RoomsView implements PropertyChangeListener {
             String message = currentState.getSendMessage();
             if (message != null && currentState.roomIsSelected()) {
               Room room = currentState.getRoomByUid();
-              User user = currentState.getUser();
-              roomsController.sendMessage(room, user, message);
-              searchController.executeRecordData(
-                  Instant.now(), currentState.getRoomUid(), message, currentState.getUserUid());
+              roomsController.sendMessage(room, message);
+              // TODO: Fix search controller call
+              searchController.executeRecordData(Instant.now(), currentState.getRoomUid(), message);
             }
           }
         });
@@ -122,9 +120,8 @@ public class RoomsView implements PropertyChangeListener {
         evt -> {
           if (evt.getSource().equals(refreshButton)) {
             RoomsState currentState = viewModel.getState();
-            User user = currentState.getUser();
-
-            loadRoomsController.loadRooms(user);
+            // TODO: Fix load rooms
+            loadRoomsController.loadRooms();
           }
         });
 
@@ -134,7 +131,8 @@ public class RoomsView implements PropertyChangeListener {
             RoomsState currentState = viewModel.getState();
             if (currentState.roomIsSelected()) {
               Room room = currentState.getRoomByUid();
-              openRoomSettingsController.open(room, currentState.getUser());
+              // TODO: Fix open room
+              openRoomSettingsController.open(room);
             }
           }
         });
@@ -146,10 +144,9 @@ public class RoomsView implements PropertyChangeListener {
             String email = currentState.getUserToAddEmail();
             String roomUid = currentState.getRoomUid();
             if (email != null) {
-              User user = currentState.getUser();
               for (var room : currentState.getAvailableRooms()) {
                 if (room.getUid().equals(roomUid)) {
-                  roomsController.addUserToRoom(room, user, email);
+                  roomsController.addUserToRoom(room, email);
                   break;
                 }
               }
@@ -163,9 +160,7 @@ public class RoomsView implements PropertyChangeListener {
             RoomsState currentState = viewModel.getState();
             String roomToCreateName = currentState.getRoomToCreateName();
             if (roomToCreateName != null) {
-              User user = currentState.getUser();
-
-              roomsController.createRoom(user, roomToCreateName);
+              roomsController.createRoom(roomToCreateName);
             }
           }
         });
@@ -174,9 +169,9 @@ public class RoomsView implements PropertyChangeListener {
         evt -> {
           if (evt.getSource().equals(searchButton)) {
             RoomsState currentState = viewModel.getState();
-            String uid = currentState.getUserUid();
             String roomUid = currentState.getRoomUid();
-            startSearchController.search(roomUid, uid);
+            // TODO: Fix search
+            startSearchController.search(roomUid);
           }
         });
   }

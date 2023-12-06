@@ -46,8 +46,7 @@ public class SearchView implements PropertyChangeListener {
         e -> {
           searchController.executeSearchRequest(
               searchViewModel.getState().getRoomUid(),
-              currentState.getSearchedTerm(),
-              searchViewModel.getState().getUserUid());
+              currentState.getSearchedTerm());
         });
 
     backButton.addActionListener(

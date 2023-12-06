@@ -8,7 +8,6 @@ import java.util.List;
 
 public class RoomsState {
   private String roomUid;
-  private User user;
   private List<Room> availableRooms = new ArrayList<>();
   private List<Message> displayMessages = new ArrayList<>();
   private String sendMessage;
@@ -18,18 +17,6 @@ public class RoomsState {
   private String success;
 
   public RoomsState() {}
-
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  public String getUserUid() {
-    return user.getUid();
-  }
 
   public String getRoomUid() {
     return roomUid;

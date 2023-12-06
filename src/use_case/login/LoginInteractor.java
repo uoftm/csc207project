@@ -1,16 +1,20 @@
 package use_case.login;
 
 import entities.auth.User;
+import use_case.rooms.LoggedInDataAccessInterface;
 
 public class LoginInteractor implements LoginInputBoundary {
   final LoginUserDataAccessInterface userDataAccessObject;
   final LoginOutputBoundary loginPresenter;
+  final LoggedInDataAccessInterface inMemoryDAO;
 
   public LoginInteractor(
       LoginUserDataAccessInterface userDataAccessInterface,
+      LoggedInDataAccessInterface inMemoryDAO,
       LoginOutputBoundary loginOutputBoundary) {
     this.userDataAccessObject = userDataAccessInterface;
     this.loginPresenter = loginOutputBoundary;
+    this.inMemoryDAO = inMemoryDAO;
   }
 
   @Override
@@ -19,8 +23,8 @@ public class LoginInteractor implements LoginInputBoundary {
     String password = loginInputData.getPassword();
     try {
       User user = userDataAccessObject.getUser(email, password);
-      LoginOutputData loginOutputData = new LoginOutputData(user, true);
-      loginPresenter.prepareSuccessView(loginOutputData);
+      inMemoryDAO.setUser(user);
+      loginPresenter.prepareSuccessView();
     } catch (RuntimeException e) {
       loginPresenter.prepareFailView(e.getMessage());
     }

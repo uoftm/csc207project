@@ -20,9 +20,8 @@ public class OpenRoomSettingsController {
     this.viewManagerModel = viewManagerModel;
   }
 
-  public void open(Room activeRoom, User user) {
+  public void open(Room activeRoom) {
     roomSettingsViewModel.setActiveRoom(activeRoom);
-    roomSettingsViewModel.setUser(user);
 
     viewManagerModel.setActiveView(RoomSettingsView.viewName);
   }

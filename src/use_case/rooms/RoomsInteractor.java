@@ -11,23 +11,26 @@ public class RoomsInteractor implements RoomsInputBoundary {
   final RoomsDataAccessInterface roomsDataAccessObject;
   final MessageDataAccessInterface messageDataAccessInterface;
   final LoginUserDataAccessInterface userDao;
+  final LoggedInDataAccessInterface loggedInDAO;
 
   public RoomsInteractor(
       RoomsDataAccessInterface roomsDataAccessObject,
       MessageDataAccessInterface messageDataAccessInterface,
       LoginUserDataAccessInterface userDao,
+      LoggedInDataAccessInterface loggedInDAO,
       RoomsOutputBoundary roomsOutputBoundary) {
     this.roomsPresenter = roomsOutputBoundary;
     this.roomsDataAccessObject = roomsDataAccessObject;
     this.messageDataAccessInterface = messageDataAccessInterface;
     this.userDao = userDao;
+    this.loggedInDAO = loggedInDAO;
   }
 
   @Override
   public void sendMessage(RoomsInputData roomsInputData) {
     try {
       Room room = roomsInputData.getRoom();
-      User user = roomsInputData.getUser();
+      User user = loggedInDAO.getUser();
 
       try {
         messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
@@ -53,7 +56,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
   @Override
   public void addUserToRoom(RoomsInputData roomsInputData) {
     Room room = roomsInputData.getRoom();
-    User user = roomsInputData.getUser();
+    User user = loggedInDAO.getUser();
     String email = roomsInputData.getEmail();
 
     DisplayUser displayUserFromEmail = userDao.getDisplayUser(email);
@@ -73,7 +76,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
 
   @Override
   public void createRoom(RoomsInputData roomsInputData) {
-    User user = roomsInputData.getUser();
+    User user = loggedInDAO.getUser();
     String roomToCreateName = roomsInputData.getRoomToCreateName();
 
     try {

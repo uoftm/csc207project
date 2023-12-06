@@ -12,13 +12,13 @@ public class SearchController {
     this.searchInteractor = searchInteractor;
   }
 
-  public void executeSearchRequest(String roomID, String message, String authID) {
-    SearchInputData inputData = new SearchInputData(null, roomID, message, authID);
+  public void executeSearchRequest(String roomID, String message) {
+    SearchInputData inputData = new SearchInputData(null, roomID, message);
     searchInteractor.executeSearchRequest(inputData);
   }
 
-  public void executeRecordData(Instant time, String roomID, String message, String authID) {
-    SearchInputData inputData = new SearchInputData(time, roomID, message, authID);
+  public void executeRecordData(Instant time, String roomID, String message) {
+    SearchInputData inputData = new SearchInputData(time, roomID, message);
     searchInteractor.executeRecordData(inputData);
   }
 }

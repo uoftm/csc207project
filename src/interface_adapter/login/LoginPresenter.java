@@ -1,12 +1,9 @@
 package interface_adapter.login;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
-import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
 import use_case.login.LoginOutputBoundary;
-import use_case.login.LoginOutputData;
 import use_case.switch_view.SwitchViewOutputBoundary;
 import use_case.switch_view.SwitchViewOutputData;
 
@@ -18,10 +15,10 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
   private final ViewManagerModel viewManagerModel;
 
   public LoginPresenter(
-      ViewManagerModel viewManagerModel,
-      LoggedInViewModel loggedInViewModel,
-      RoomsViewModel roomsViewModel,
-      LoginViewModel loginViewModel) {
+          ViewManagerModel viewManagerModel,
+          LoggedInViewModel loggedInViewModel,
+          RoomsViewModel roomsViewModel,
+          LoginViewModel loginViewModel) {
     this.viewManagerModel = viewManagerModel;
     this.loggedInViewModel = loggedInViewModel;
     this.roomsViewModel = roomsViewModel;
@@ -29,17 +26,9 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
   }
 
   @Override
-  public void prepareSuccessView(LoginOutputData response) {
-    LoggedInState loggedInState = loggedInViewModel.getState();
-    loggedInState.setUser(response.getUser());
-    this.loggedInViewModel.setState(loggedInState);
+  public void prepareSuccessView() {
     this.loggedInViewModel.firePropertyChanged();
-
-    RoomsState roomsState = roomsViewModel.getState();
-    roomsState.setUser(response.getUser());
-    this.roomsViewModel.setState(roomsState);
     this.roomsViewModel.firePropertyChanged();
-
     this.viewManagerModel.setActiveView(loggedInViewModel.getViewName());
   }
 

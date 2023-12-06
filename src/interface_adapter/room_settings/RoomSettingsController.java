@@ -11,17 +11,16 @@ public class RoomSettingsController {
     this.inputBoundary = inputBoundary;
   }
 
-  public void saveRoomName(User user, Room activeRoom, String roomName) {
-    inputBoundary.changeRoomName(user, activeRoom, roomName);
+  public void saveRoomName(Room activeRoom, String roomName) {
+    inputBoundary.changeRoomName(activeRoom, roomName);
   }
 
   /**
    * Delete the currently active room
    *
-   * @param user The user that is logged in
    * @param activeRoom The room that is currently active
    */
-  public void deleteRoom(User user, Room activeRoom) {
-    inputBoundary.deleteRoom(user, activeRoom);
+  public void deleteRoom(Room activeRoom) {
+    inputBoundary.deleteRoom(activeRoom);
   }
 }

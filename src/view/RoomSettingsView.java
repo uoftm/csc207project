@@ -38,7 +38,7 @@ public class RoomSettingsView implements PropertyChangeListener {
         e -> {
           if (e.getSource().equals(saveButton)) {
             roomSettingsController.saveRoomName(
-                viewModel.getUser(), viewModel.getActiveRoom(), roomName.getText());
+                viewModel.getActiveRoom(), roomName.getText());
           }
         });
 
@@ -52,7 +52,7 @@ public class RoomSettingsView implements PropertyChangeListener {
                     "Delete Room",
                     JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-              roomSettingsController.deleteRoom(viewModel.getUser(), viewModel.getActiveRoom());
+              roomSettingsController.deleteRoom(viewModel.getActiveRoom());
             }
           }
         });

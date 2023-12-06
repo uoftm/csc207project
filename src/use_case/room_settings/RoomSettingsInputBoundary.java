@@ -4,7 +4,7 @@ import entities.auth.User;
 import entities.rooms.Room;
 
 public interface RoomSettingsInputBoundary {
-  void deleteRoom(User user, Room activeRoom);
+  void deleteRoom(Room activeRoom);
 
-  void changeRoomName(User user, Room activeRoom, String newRoomName);
+  void changeRoomName(Room activeRoom, String newRoomName);
 }
