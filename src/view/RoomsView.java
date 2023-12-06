@@ -3,6 +3,7 @@ package view;
 import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
+import interface_adapter.room_settings.OpenRoomSettingsController;
 import interface_adapter.rooms.LoadRoomsController;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
@@ -10,8 +11,6 @@ import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.StartSearchController;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.Instant;
@@ -34,6 +33,7 @@ public class RoomsView implements PropertyChangeListener {
   private JLabel roomNameLabel2;
   private JTextField emailTextField;
   private JButton searchButton;
+  private JButton roomSettingsButton;
   private final RoomsViewModel viewModel;
 
   public RoomsView(
@@ -41,7 +41,8 @@ public class RoomsView implements PropertyChangeListener {
       RoomsController roomsController,
       LoadRoomsController loadRoomsController,
       SearchController searchController,
-      StartSearchController startSearchController) {
+      StartSearchController startSearchController,
+      OpenRoomSettingsController openRoomSettingsController) {
     this.viewModel = viewModel;
     this.viewModel.addPropertyChangeListener(this);
 
@@ -66,78 +67,41 @@ public class RoomsView implements PropertyChangeListener {
 
     roomsPane.add(roomsScrollPane);
 
-    messageTextField.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            RoomsState currentState = viewModel.getState();
-            String currentMessage = currentState.getSendMessage();
-            String message = "";
-            if (currentMessage != null) {
-              message = currentMessage;
-            }
-            currentState.setSendMessage(message + e.getKeyChar());
-            viewModel.firePropertyChanged();
-          }
+    messageTextField
+        .getDocument()
+        .addDocumentListener(
+            new DocumentUpdateListener() {
+              public void update() {
+                RoomsState currentState = viewModel.getState();
+                currentState.setSendMessage(messageTextField.getText());
+                viewModel.firePropertyChanged();
+              }
+            });
 
-          @Override
-          public void keyPressed(KeyEvent e) {}
-
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
-
-    emailTextField.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            RoomsState currentState = viewModel.getState();
-            String currentEmail = currentState.getUserToAddEmail();
-            String email = "";
-            if (currentEmail != null) {
-              email = currentEmail;
-            }
-            currentState.setUserToAddEmail(email + e.getKeyChar());
-            viewModel.firePropertyChanged();
-          }
-
-          @Override
-          public void keyPressed(KeyEvent e) {}
-
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
+    emailTextField
+        .getDocument()
+        .addDocumentListener(
+            new DocumentUpdateListener() {
+              public void update() {
+                RoomsState currentState = viewModel.getState();
+                currentState.setUserToAddEmail(emailTextField.getText());
+                viewModel.firePropertyChanged();
+              }
+            });
 
     // This is to resolve a crazy frontend issue
-    createRoomTextField.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            // Handle in keyPressed
-          }
+    createRoomTextField
+        .getDocument()
+        .addDocumentListener(
+            new DocumentUpdateListener() {
 
-          @Override
-          public void keyPressed(KeyEvent e) {
-            RoomsState currentState = viewModel.getState();
-            String currentRoomToCreateName = currentState.getRoomToCreateName();
-            String roomToCreateName =
-                currentRoomToCreateName != null ? currentRoomToCreateName : "";
-
-            if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE) {
-              if (!roomToCreateName.isEmpty()) {
-                roomToCreateName = roomToCreateName.substring(0, roomToCreateName.length() - 1);
+              public void update() {
+                RoomsState currentState = viewModel.getState();
+                String roomToCreateName = createRoomTextField.getText();
+                currentState.setRoomToCreateName(roomToCreateName);
+                viewModel.firePropertyChanged();
               }
-            } else {
-              roomToCreateName += e.getKeyChar();
-            }
-
-            currentState.setRoomToCreateName(roomToCreateName);
-            viewModel.firePropertyChanged();
-          }
-
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
+            });
 
     send.addActionListener(
         evt -> {
@@ -161,6 +125,17 @@ public class RoomsView implements PropertyChangeListener {
             User user = currentState.getUser();
 
             loadRoomsController.loadRooms(user);
+          }
+        });
+
+    roomSettingsButton.addActionListener(
+        evt -> {
+          if (evt.getSource().equals(roomSettingsButton)) {
+            RoomsState currentState = viewModel.getState();
+            if (currentState.roomIsSelected()) {
+              Room room = currentState.getRoomByUid();
+              openRoomSettingsController.open(room, currentState.getUser());
+            }
           }
         });
 
