@@ -7,8 +7,6 @@ import interface_adapter.switch_view.SwitchViewController;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 public class SearchView implements PropertyChangeListener {
   public static final String viewName = "search";
@@ -31,22 +29,7 @@ public class SearchView implements PropertyChangeListener {
     searchBoxText
         .getDocument()
         .addDocumentListener(
-            new DocumentListener() {
-              @Override
-              public void insertUpdate(DocumentEvent e) {
-                update();
-              }
-
-              @Override
-              public void removeUpdate(DocumentEvent e) {
-                update();
-              }
-
-              @Override
-              public void changedUpdate(DocumentEvent e) {
-                update();
-              }
-
+            new DocumentUpdateListener() {
               protected void update() {
                 String text = searchBoxText.getText();
 
