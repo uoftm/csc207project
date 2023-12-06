@@ -60,10 +60,13 @@ public class RoomsInteractor implements RoomsInputBoundary {
 
     try {
       roomsDataAccessObject.addUserToRoom(user, displayUserFromEmail, userDao, room);
-      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, null, "Success");
+      RoomsOutputData roomsOutputData =
+          new RoomsOutputData(null, null, null, null, "Successfully added " + email);
       roomsPresenter.prepareSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, e.getMessage(), null);
+      RoomsOutputData roomsOutputData =
+          new RoomsOutputData(
+              null, null, null, "Unable to add " + email + " to room:" + e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }

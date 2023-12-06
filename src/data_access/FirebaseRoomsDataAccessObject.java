@@ -82,9 +82,11 @@ public class FirebaseRoomsDataAccessObject
             Instant timestamp = Instant.ofEpochMilli(Long.parseLong(key));
             String contents = messagesJSON.getJSONObject(key).getString("contents");
             String authorEmail = messagesJSON.getJSONObject(key).getString("author");
-            String displayName = messagesJSON.getJSONObject(key).getString("author");
             Message message =
-                new Message(timestamp, contents, new DisplayUser(authorEmail, displayName));
+                new Message(
+                    timestamp,
+                    contents,
+                    new DisplayUser(authorEmail, authorEmail)); // Decide on this after other PRs
             messages.add(message);
           }
         }
@@ -264,6 +266,24 @@ public class FirebaseRoomsDataAccessObject
       }
     } catch (IOException | JSONException e) {
       throw new RuntimeException("Unable to delete room. Please try again.");
+    }
+  }
+
+  @Override
+  public void changeRoomName(
+      User user, LoginUserDataAccessInterface userDAO, Room activeRoom, String roomName) {
+    String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
+    String jsonBody = JSONObject.quote(roomName);
+    String url = String.format(Constants.ROOM_NAME_URL, activeRoom.getUid()) + "?auth=" + idToken;
+    RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
+    Request request = new Request.Builder().url(url).put(body).build();
+    try {
+      Response response = client.newCall(request).execute();
+      if (!response.isSuccessful()) {
+        throw new IOException();
+      }
+    } catch (IOException | JSONException e) {
+      throw new RuntimeException("Unable to change room name. Please try again.");
     }
   }
 }

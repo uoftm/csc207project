@@ -4,6 +4,10 @@ import data_access.*;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.room_settings.OpenRoomSettingsController;
+import interface_adapter.room_settings.RoomSettingsController;
+import interface_adapter.room_settings.RoomSettingsPresenter;
+import interface_adapter.room_settings.RoomSettingsViewModel;
 import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
@@ -16,6 +20,8 @@ import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
+import use_case.room_settings.RoomSettingsInteractor;
+import use_case.room_settings.RoomSettingsOutputBoundary;
 import use_case.rooms.MessageDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
@@ -97,6 +103,10 @@ public class Main {
     StartSearchController startSearchController =
         new StartSearchController(viewManagerModel, searchViewModel);
 
+    RoomSettingsViewModel roomSettingsViewModel = new RoomSettingsViewModel();
+    OpenRoomSettingsController openRoomSettingsController =
+        new OpenRoomSettingsController(roomSettingsViewModel, viewManagerModel);
+
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
             roomsDataAccessObject,
@@ -104,7 +114,8 @@ public class Main {
             userDataAccessObject,
             roomsViewModel,
             searchController,
-            startSearchController);
+            startSearchController,
+            openRoomSettingsController);
 
     StartSettingsController startSettingsController = new StartSettingsController(settingsViewModel);
     LoggedInView loggedInView =
@@ -115,6 +126,17 @@ public class Main {
         SettingsUseCaseFactory.create(
             settingsViewModel, userDataAccessObject, roomsDataAccessObject, userDataAccessObject, switchViewController);
     viewManagerModel.add(settingsView.contentPane, settingsView.viewName);
+
+    RoomSettingsOutputBoundary outputBoundary =
+        new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
+    RoomSettingsInteractor roomSettingsInteractor =
+        new RoomSettingsInteractor(roomsDataAccessObject, userDataAccessObject, outputBoundary);
+    RoomSettingsController roomSettingsController =
+        new RoomSettingsController(roomSettingsInteractor);
+
+    RoomSettingsView roomSettingsView =
+        new RoomSettingsView(roomSettingsViewModel, roomSettingsController, switchViewController);
+    viewManagerModel.add(roomSettingsView.contentPane, RoomSettingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);
 

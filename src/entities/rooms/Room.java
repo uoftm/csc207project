@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Room {
   private final String uid;
-  private final String name;
+  private String name;
   private List<DisplayUser> users;
   private List<Message> messages;
 
@@ -34,5 +34,9 @@ public class Room {
 
   public void setMessages(List<Message> messages) {
     this.messages = messages;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

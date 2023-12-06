@@ -20,4 +20,7 @@ public interface RoomsDataAccessInterface {
 
   void removeUserFromRoom(
       User currentUser, DisplayUser userToRemove, LoginUserDataAccessInterface userDAO, Room room);
+
+  void changeRoomName(
+      User user, LoginUserDataAccessInterface userDAO, Room activeRoom, String roomName);
 }

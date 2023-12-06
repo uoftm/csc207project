@@ -5,8 +5,6 @@ import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
@@ -57,72 +55,51 @@ public class SignupView implements PropertyChangeListener {
           }
         });
 
-    email.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            SignupState currentState = signupViewModel.getState();
-            String text = email.getText() + e.getKeyChar();
-            currentState.setEmail(text);
-            signupViewModel.setState(currentState);
-          }
+    email
+        .getDocument()
+        .addDocumentListener(
+            new DocumentUpdateListener() {
+              public void update() {
+                SignupState currentState = signupViewModel.getState();
+                currentState.setEmail(email.getText());
+                signupViewModel.setState(currentState);
+              }
+            });
 
-          @Override
-          public void keyPressed(KeyEvent e) {}
+    username
+        .getDocument()
+        .addDocumentListener(
+            new DocumentUpdateListener() {
+              public void update() {
+                SignupState currentState = signupViewModel.getState();
+                currentState.setUsername(username.getText());
+                signupViewModel.setState(currentState);
+              }
+            });
 
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
+    password
+        .getDocument()
+        .addDocumentListener(
+            new DocumentUpdateListener() {
+              @Override
+              public void update() {
+                SignupState currentState = signupViewModel.getState();
+                currentState.setPassword(String.valueOf(password.getPassword()));
+                signupViewModel.setState(currentState);
+              }
+            });
 
-    username.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            SignupState currentState = signupViewModel.getState();
-            String text = username.getText() + e.getKeyChar();
-            currentState.setUsername(text);
-            signupViewModel.setState(currentState);
-          }
-
-          @Override
-          public void keyPressed(KeyEvent e) {}
-
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
-
-    password.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            SignupState currentState = signupViewModel.getState();
-            currentState.setPassword(String.valueOf(password.getPassword()) + e.getKeyChar());
-            signupViewModel.setState(currentState);
-          }
-
-          @Override
-          public void keyPressed(KeyEvent e) {}
-
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
-
-    repeatPassword.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            SignupState currentState = signupViewModel.getState();
-            currentState.setRepeatPassword(
-                String.valueOf(repeatPassword.getPassword()) + e.getKeyChar());
-            signupViewModel.setState(currentState);
-          }
-
-          @Override
-          public void keyPressed(KeyEvent e) {}
-
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
+    repeatPassword
+        .getDocument()
+        .addDocumentListener(
+            new DocumentUpdateListener() {
+              @Override
+              public void update() {
+                SignupState currentState = signupViewModel.getState();
+                currentState.setRepeatPassword(String.valueOf(repeatPassword.getPassword()));
+                signupViewModel.setState(currentState);
+              }
+            });
   }
 
   public JButton getSignupButton() {
