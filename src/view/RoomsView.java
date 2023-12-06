@@ -3,6 +3,7 @@ package view;
 import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
+import interface_adapter.room_settings.OpenRoomSettingsController;
 import interface_adapter.rooms.LoadRoomsController;
 import interface_adapter.rooms.RoomsController;
 import interface_adapter.rooms.RoomsState;
@@ -34,6 +35,7 @@ public class RoomsView implements PropertyChangeListener {
   private JLabel roomNameLabel2;
   private JTextField emailTextField;
   private JButton searchButton;
+  private JButton roomSettingsButton;
   private final RoomsViewModel viewModel;
 
   public RoomsView(
@@ -41,7 +43,8 @@ public class RoomsView implements PropertyChangeListener {
       RoomsController roomsController,
       LoadRoomsController loadRoomsController,
       SearchController searchController,
-      StartSearchController startSearchController) {
+      StartSearchController startSearchController,
+      OpenRoomSettingsController openRoomSettingsController) {
     this.viewModel = viewModel;
     this.viewModel.addPropertyChangeListener(this);
 
@@ -161,6 +164,17 @@ public class RoomsView implements PropertyChangeListener {
             User user = currentState.getUser();
 
             loadRoomsController.loadRooms(user);
+          }
+        });
+
+    roomSettingsButton.addActionListener(
+        evt -> {
+          if (evt.getSource().equals(roomSettingsButton)) {
+            RoomsState currentState = viewModel.getState();
+            if (currentState.roomIsSelected()) {
+              Room room = currentState.getRoomByUid();
+              openRoomSettingsController.open(room, currentState.getUser());
+            }
           }
         });
 

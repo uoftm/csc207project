@@ -174,4 +174,36 @@ public class RoomsDAOTest extends DAOTest {
         RuntimeException.class,
         () -> dao.addRoom(dummyUser, null, roomName));
   }
+
+  @Test
+  public void changeRoomNameSuccess() {
+    OkHttpClient client = new OkHttpClient();
+    RoomsDataAccessInterface dao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    User dummyUser = addFirebaseDummyUser();
+    Room room = dao.addRoom(dummyUser, userDao, "New Room");
+    dao.changeRoomName(dummyUser, userDao, room, "Test Room 2");
+    Room retrievedRoom = dao.getRoomFromId(dummyUser, userDao, room.getUid());
+    Assert.assertEquals("Test Room 2", retrievedRoom.getName());
+    cleanUpRoom(room, dummyUser);
+    cleanUpUser(dummyUser);
+  }
+
+  @Test
+  public void changeRoomNameFailure() {
+    RoomsDataAccessInterface dao =
+        new FirebaseRoomsDataAccessObject(null) {
+          @Override
+          public void changeRoomName(
+              User user, LoginUserDataAccessInterface userDao, Room activeRoom, String roomName) {
+            throw new RuntimeException("Unable to change room name. Please try again.");
+          }
+        };
+    User dummyUser = createDummyUser();
+    Room room = createDummyRoom();
+    assertThrows(
+        "Failed to change room name.",
+        RuntimeException.class,
+        () -> dao.changeRoomName(dummyUser, null, room, "Test Room 2"));
+  }
 }
