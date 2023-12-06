@@ -27,7 +27,11 @@ import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.RoomsDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
+import use_case.settings.DeleteUserDataAccessInterface;
+import use_case.signup.SignupUserDataAccessInterface;
 
 public class RoomsTest extends ButtonTest {
 
@@ -55,7 +59,43 @@ public class RoomsTest extends ButtonTest {
   }
 
   @Test
-  public void testRoomCreation() {
+  public void testRoomCreationSuccess() {
+    OkHttpClient client = new OkHttpClient();
+    RoomsDataAccessInterface dao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    User dummyUser = addFirebaseDummyUser();
+
+    RoomsViewModel roomsViewModel = new RoomsViewModel();
+    RoomsView roomsView =
+        RoomsUseCaseFactory.create(
+            dao,
+            new FirebaseMessageDataAccessObject(client),
+            userDao,
+            roomsViewModel,
+            null,
+            null,
+            null);
+
+    RoomsState testState = buildTestState();
+    testState.setRoomToCreateName("New Room");
+    testState.setUser(dummyUser);
+    roomsViewModel.setState(testState);
+
+    JButton createRoomButton = roomsView.getCreateRoomButton();
+    createRoomButton.doClick();
+
+    Assert.assertNull(testState.getError());
+
+    // Remove from Firebase
+    String roomUid = testState.getRoomUid();
+    Assert.assertNotNull(roomUid);
+    Room room = testState.getRoomByUid();
+    cleanUpRoom(room, dummyUser);
+    cleanUpUser(dummyUser);
+  }
+
+  @Test
+  public void testRoomCreationFailed() {
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     OkHttpClient client = new OkHttpClient();
     RoomsView roomsView =
@@ -175,5 +215,31 @@ public class RoomsTest extends ButtonTest {
     Room room = new Room("dummyRoomUid", "Dummy Room", users, null);
     room.setMessages(messages);
     return room;
+  }
+
+  // TODO: Restructure tests folder to import this (after search, settings tests are merged)
+  User addFirebaseDummyUser() {
+    /**
+     * This adds a dummy user to Firebase and returns that user The caller *must* clean up the user
+     * after use
+     */
+    User dummyUser = createDummyUser();
+    OkHttpClient client = new OkHttpClient();
+    SignupUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    userDao.save(dummyUser);
+    return dummyUser;
+  }
+
+  void cleanUpUser(User user) {
+    OkHttpClient client = new OkHttpClient();
+    DeleteUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    userDao.deleteUser(user);
+  }
+
+  void cleanUpRoom(Room room, User user) {
+    OkHttpClient client = new OkHttpClient();
+    RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface loginDao = new FirebaseUserDataAccessObject(client);
+    roomsDao.deleteRoom(user, loginDao, room);
   }
 }
