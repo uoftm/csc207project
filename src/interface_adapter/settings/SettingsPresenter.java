@@ -17,6 +17,7 @@ public class SettingsPresenter implements SettingsOutputBoundary {
 
   @Override
   public void prepareSuccessView(SettingsOutputData outputData) {
+    loggedInViewModel.setLoggedInUser(outputData.getUsername());
     loggedInViewModel.firePropertyChanged();
     SettingsState settingsState = settingsViewModel.getState();
     settingsState.setMessage("Successfully updated username");

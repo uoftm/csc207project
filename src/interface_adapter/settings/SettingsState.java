@@ -1,6 +1,5 @@
 package interface_adapter.settings;
 
-
 public class SettingsState {
   private String message = null;
 

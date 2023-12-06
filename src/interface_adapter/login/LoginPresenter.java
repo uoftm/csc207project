@@ -4,6 +4,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.rooms.RoomsViewModel;
 import use_case.login.LoginOutputBoundary;
+import use_case.login.LoginOutputData;
 import use_case.switch_view.SwitchViewOutputBoundary;
 import use_case.switch_view.SwitchViewOutputData;
 
@@ -26,7 +27,8 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
   }
 
   @Override
-  public void prepareSuccessView() {
+  public void prepareSuccessView(LoginOutputData loginOutputData) {
+    this.loggedInViewModel.setLoggedInUser(loginOutputData.getUsername());
     this.loggedInViewModel.firePropertyChanged();
     this.roomsViewModel.firePropertyChanged();
     this.viewManagerModel.setActiveView(loggedInViewModel.getViewName());

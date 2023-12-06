@@ -124,8 +124,7 @@ public class Main {
             openRoomSettingsController);
 
     LoggedInView loggedInView =
-        LoggedInUseCaseFactory.create(
-            loggedInViewModel, inMemoryDAO, roomsView, switchViewController);
+        new LoggedInView(loggedInViewModel, roomsView, switchViewController);
     viewManagerModel.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsView settingsView =

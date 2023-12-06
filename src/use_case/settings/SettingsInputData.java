@@ -1,6 +1,5 @@
 package use_case.settings;
 
-
 public class SettingsInputData {
   private String newUsername;
 

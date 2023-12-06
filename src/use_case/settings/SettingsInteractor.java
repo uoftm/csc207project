@@ -33,10 +33,10 @@ public class SettingsInteractor implements SettingsInputBoundary {
       inMemoryDAO.setUser(user);
       userSettingsDataAccessObject.propogateDisplayNameChange(user);
       roomsSettingsDataAccessObject.propogateDisplayNameChange(user, userDao);
-      SettingsOutputData settingsOutputData = new SettingsOutputData(null);
+      SettingsOutputData settingsOutputData = new SettingsOutputData(null, user.getName());
       settingsPresenter.prepareSuccessView(settingsOutputData);
     } catch (RuntimeException e) {
-      SettingsOutputData settingsOutputData = new SettingsOutputData(e.getMessage());
+      SettingsOutputData settingsOutputData = new SettingsOutputData(e.getMessage(), null);
       settingsPresenter.prepareFailView(settingsOutputData);
     }
   }

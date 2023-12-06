@@ -1,6 +1,5 @@
 package view;
 
-import interface_adapter.logged_in.LoggedInController;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.beans.PropertyChangeEvent;
@@ -11,7 +10,6 @@ public class LoggedInView implements PropertyChangeListener {
 
   public static final String viewName = "logged in";
   private final LoggedInViewModel loggedInViewModel;
-  private final LoggedInController loggedInController;
 
   private JLabel username;
 
@@ -27,7 +25,6 @@ public class LoggedInView implements PropertyChangeListener {
   public LoggedInView(
       LoggedInViewModel loggedInViewModel,
       RoomsView roomsView,
-      LoggedInController loggedInController,
       SwitchViewController switchViewController) {
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);
@@ -56,11 +53,11 @@ public class LoggedInView implements PropertyChangeListener {
         });
 
     rooms.add(roomsView.contentPane);
-    this.loggedInController = loggedInController;
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    loggedInController.execute();
+    String newUsername = (String) evt.getNewValue();
+    username.setText(newUsername);
   }
 }
