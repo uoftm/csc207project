@@ -44,9 +44,10 @@ public class RoomsDAOTest extends DAOTest {
     Assert.assertEquals(testRoom.getUid(), retrievedRoom.getUid());
     Assert.assertTrue(retrievedRoom.getMessages().isEmpty());
     Assert.assertEquals(
-        testRoom.getUsers().get(0).email().toLowerCase(),
-        retrievedRoom.getUsers().get(0).email().toLowerCase());
-    Assert.assertEquals(testRoom.getUsers().get(0).name(), retrievedRoom.getUsers().get(0).name());
+        testRoom.getUsers().get(0).getEmail().toLowerCase(),
+        retrievedRoom.getUsers().get(0).getEmail().toLowerCase());
+    Assert.assertEquals(
+        testRoom.getUsers().get(0).getName(), retrievedRoom.getUsers().get(0).getName());
 
     // Delete test room
     roomDao.deleteRoom(testUser, loginDao, testRoom);
@@ -70,7 +71,7 @@ public class RoomsDAOTest extends DAOTest {
     Room dummyRoom = addFirebaseDummyRoom(dummyUser);
 
     User dummyUser2 = addFirebaseDummyUser();
-    DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.email(), dummyUser2.name());
+    DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.getEmail(), dummyUser2.getName());
 
     dao.addUserToRoom(dummyUser, dummyDisplayUser2, userDao, dummyRoom);
     Room retrievedRoom = dao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid());
@@ -78,7 +79,7 @@ public class RoomsDAOTest extends DAOTest {
     List<DisplayUser> retrievedUsers = retrievedRoom.getUsers();
     Assert.assertEquals(retrievedUsers.size(), 2);
     DisplayUser originalUser, newUser;
-    if (retrievedUsers.get(0).email().equalsIgnoreCase(dummyUser.email())) {
+    if (retrievedUsers.get(0).getEmail().equalsIgnoreCase(dummyUser.getEmail())) {
       // First retrieved user is the original user
       originalUser = retrievedUsers.get(0);
       newUser = retrievedUsers.get(1);
@@ -87,10 +88,10 @@ public class RoomsDAOTest extends DAOTest {
       originalUser = retrievedUsers.get(1);
       newUser = retrievedUsers.get(0);
     }
-    Assert.assertEquals(dummyUser.email().toLowerCase(), originalUser.email().toLowerCase());
-    Assert.assertEquals(dummyUser.name(), originalUser.name());
-    Assert.assertEquals(dummyUser2.email().toLowerCase(), newUser.email().toLowerCase());
-    Assert.assertEquals(dummyUser2.name(), newUser.name());
+    Assert.assertEquals(dummyUser.getEmail().toLowerCase(), originalUser.getEmail().toLowerCase());
+    Assert.assertEquals(dummyUser.getName(), originalUser.getName());
+    Assert.assertEquals(dummyUser2.getEmail().toLowerCase(), newUser.getEmail().toLowerCase());
+    Assert.assertEquals(dummyUser2.getName(), newUser.getName());
 
     cleanUpRoom(dummyRoom, dummyUser);
     cleanUpUser(dummyUser);
@@ -107,7 +108,8 @@ public class RoomsDAOTest extends DAOTest {
     Room dummyRoom = addFirebaseDummyRoom(dummyUser);
 
     User dummyUser2 = addFirebaseDummyUser();
-    DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.email(), dummyUser2.password());
+    DisplayUser dummyDisplayUser2 =
+        new DisplayUser(dummyUser2.getEmail(), dummyUser2.getPassword());
     dao.addUserToRoom(dummyUser, dummyDisplayUser2, userDao, dummyRoom);
 
     dao.removeUserFromRoom(dummyUser, dummyDisplayUser2, userDao, dummyRoom);
@@ -115,8 +117,8 @@ public class RoomsDAOTest extends DAOTest {
     Room retrievedRoom = dao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid());
     Assert.assertEquals(retrievedRoom.getUsers().size(), 1);
     DisplayUser retrievedUser = retrievedRoom.getUsers().get(0);
-    Assert.assertEquals(retrievedUser.name(), dummyUser.name());
-    Assert.assertEquals(retrievedUser.email().toLowerCase(), dummyUser.email().toLowerCase());
+    Assert.assertEquals(retrievedUser.getName(), dummyUser.getName());
+    Assert.assertEquals(retrievedUser.getEmail().toLowerCase(), dummyUser.getEmail().toLowerCase());
 
     Assert.assertEquals(dao.getAvailableRoomIds(dummyUser2).size(), 0);
 

@@ -127,7 +127,7 @@ public class FirebaseUserDataAccessObject
       String uid = userObject.optString("localId");
       String email = userObject.optString("email");
       DisplayUser displayUser = getDisplayUser(email);
-      String displayName = displayUser.name();
+      String displayName = displayUser.getName();
       long createdAt = Long.parseLong(userObject.optString("createdAt"));
       LocalDateTime dateTime =
           LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
@@ -142,7 +142,7 @@ public class FirebaseUserDataAccessObject
 
   private SignupResults signup(User user) {
     JSONObject jsonBody =
-        new JSONObject().put("email", user.email()).put("password", user.password());
+        new JSONObject().put("email", user.getEmail()).put("password", user.getPassword());
 
     String signupUrl = Constants.SIGNUP_URL + "?key=" + Constants.FIREBASE_AUTH_ID;
 
@@ -190,11 +190,12 @@ public class FirebaseUserDataAccessObject
   @Override
   public void save(User user) {
     SignupResults signupResults = signup(user);
-    saveUserToFirebase(user.email(), user.name(), signupResults.idToken);
+    saveUserToFirebase(user.getEmail(), user.getName(), signupResults.idToken);
   }
 
   private void deleteFirebaseUserData(User user, String idToken) {
-    String encodedEmail = Base64.getEncoder().encodeToString(user.email().toLowerCase().getBytes());
+    String encodedEmail =
+        Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
     String url = String.format(Constants.USER_DATA_URL, encodedEmail) + "?auth=" + idToken;
     Request request = new Request.Builder().url(url).delete().build();
     try {
@@ -208,7 +209,7 @@ public class FirebaseUserDataAccessObject
   }
 
   private void deleteUserFromAuth(User user) {
-    String idToken = getAccessToken(user.email(), user.password());
+    String idToken = getAccessToken(user.getEmail(), user.getPassword());
     JSONObject jsonBody = new JSONObject().put("idToken", idToken);
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
@@ -230,7 +231,7 @@ public class FirebaseUserDataAccessObject
   public void deleteUser(User user) {
     // TODO: Remove the user from any rooms for which they may be a member
     // Before calling this method, please remove the user from their rooms using the Rooms DAO
-    String idToken = getAccessToken(user.email(), user.password());
+    String idToken = getAccessToken(user.getEmail(), user.getPassword());
     deleteFirebaseUserData(user, idToken);
     deleteUserFromAuth(user);
   }

@@ -1,7 +1,7 @@
 package entities.auth;
 
 public interface AbstractUser {
-  String email();
+  String getEmail();
 
-  String name();
+  String getName();
 }

@@ -131,7 +131,7 @@ public class RoomsTest extends ButtonTest {
             null);
 
     RoomsState testState = buildTestState();
-    testState.setUserToAddEmail(createDummyDisplayUser().email());
+    testState.setUserToAddEmail(createDummyDisplayUser().getEmail());
     roomsViewModel.setState(testState);
 
     JButton addUserButton = roomsView.getAddUserButton();

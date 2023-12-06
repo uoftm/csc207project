@@ -34,8 +34,8 @@ public class MessagesDAOTest extends DAOTest {
         message.timestamp.toEpochMilli() <= retrievedMessage.timestamp.toEpochMilli());
     Assert.assertEquals(message.content, retrievedMessage.content);
     Assert.assertEquals(
-        message.displayUser.email().toLowerCase(),
-        retrievedMessage.displayUser.email().toLowerCase());
+        message.displayUser.getEmail().toLowerCase(),
+        retrievedMessage.displayUser.getEmail().toLowerCase());
 
     cleanUpRoom(dummyRoom, dummyUser);
     cleanUpUser(dummyUser);

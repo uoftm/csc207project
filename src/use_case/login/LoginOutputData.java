@@ -12,11 +12,11 @@ public class LoginOutputData {
   }
 
   public String getUsername() {
-    return user.name();
+    return user.getName();
   }
 
   public String getUid() {
-    return user.uid();
+    return user.getUid();
   }
 
   public User getUser() {

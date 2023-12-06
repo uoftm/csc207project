@@ -23,10 +23,10 @@ public class SignupDAOTest extends DAOTest {
     signupDao.save(testUser);
 
     // Confirm the user has the details that were specified on signup
-    User retrievedUser = dao.getUser(testUser.email(), testUser.password());
-    Assert.assertEquals(retrievedUser.email().toLowerCase(), testUser.email().toLowerCase());
-    Assert.assertEquals(retrievedUser.name(), testUser.name());
-    Assert.assertEquals(retrievedUser.password(), testUser.password());
+    User retrievedUser = dao.getUser(testUser.getEmail(), testUser.getPassword());
+    Assert.assertEquals(retrievedUser.getEmail().toLowerCase(), testUser.getEmail().toLowerCase());
+    Assert.assertEquals(retrievedUser.getName(), testUser.getName());
+    Assert.assertEquals(retrievedUser.getPassword(), testUser.getPassword());
 
     // Delete user
     DeleteUserDataAccessInterface deleteDao = dao;
@@ -34,6 +34,6 @@ public class SignupDAOTest extends DAOTest {
 
     // Confirm user deletion
     Assert.assertThrows(
-        RuntimeException.class, () -> dao.getUser(testUser.email(), testUser.password()));
+        RuntimeException.class, () -> dao.getUser(testUser.getEmail(), testUser.getPassword()));
   }
 }
