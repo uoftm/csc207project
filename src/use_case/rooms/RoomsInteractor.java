@@ -11,26 +11,26 @@ public class RoomsInteractor implements RoomsInputBoundary {
   final RoomsDataAccessInterface roomsDataAccessObject;
   final MessageDataAccessInterface messageDataAccessInterface;
   final LoginUserDataAccessInterface userDao;
-  final LoggedInDataAccessInterface loggedInDAO;
+  final LoggedInDataAccessInterface inMemoryDAO;
 
   public RoomsInteractor(
       RoomsDataAccessInterface roomsDataAccessObject,
       MessageDataAccessInterface messageDataAccessInterface,
       LoginUserDataAccessInterface userDao,
-      LoggedInDataAccessInterface loggedInDAO,
+      LoggedInDataAccessInterface inMemoryDAO,
       RoomsOutputBoundary roomsOutputBoundary) {
     this.roomsPresenter = roomsOutputBoundary;
     this.roomsDataAccessObject = roomsDataAccessObject;
     this.messageDataAccessInterface = messageDataAccessInterface;
     this.userDao = userDao;
-    this.loggedInDAO = loggedInDAO;
+    this.inMemoryDAO = inMemoryDAO;
   }
 
   @Override
   public void sendMessage(RoomsInputData roomsInputData) {
     try {
       Room room = roomsInputData.getRoom();
-      User user = loggedInDAO.getUser();
+      User user = inMemoryDAO.getUser();
 
       try {
         messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
@@ -56,13 +56,14 @@ public class RoomsInteractor implements RoomsInputBoundary {
   @Override
   public void addUserToRoom(RoomsInputData roomsInputData) {
     Room room = roomsInputData.getRoom();
-    User user = loggedInDAO.getUser();
+    User user = inMemoryDAO.getUser();
     String email = roomsInputData.getEmail();
 
     DisplayUser displayUserFromEmail = userDao.getDisplayUser(email);
 
     try {
-      roomsDataAccessObject.addUserToRoom(user, displayUserFromEmail, userDao, room);
+      String idToken = inMemoryDAO.getIdToken();
+      roomsDataAccessObject.addUserToRoom(idToken, user, displayUserFromEmail, room);
       RoomsOutputData roomsOutputData =
           new RoomsOutputData(null, null, null, null, "Successfully added " + email);
       roomsPresenter.prepareSuccessView(roomsOutputData);
@@ -76,11 +77,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
 
   @Override
   public void createRoom(RoomsInputData roomsInputData) {
-    User user = loggedInDAO.getUser();
+    User user = inMemoryDAO.getUser();
     String roomToCreateName = roomsInputData.getRoomToCreateName();
 
     try {
-      Room newRoom = roomsDataAccessObject.addRoom(user, userDao, roomToCreateName);
+      String idToken = inMemoryDAO.getIdToken();
+      Room newRoom = roomsDataAccessObject.addRoom(idToken, user, roomToCreateName);
       RoomsOutputData roomsOutputData = new RoomsOutputData(newRoom, null, null, null, null);
       roomsPresenter.prepareCreateRoomSuccessView(roomsOutputData);
     } catch (RuntimeException e) {

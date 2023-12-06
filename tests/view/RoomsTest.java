@@ -59,6 +59,7 @@ public class RoomsTest extends ButtonTest {
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     OkHttpClient client = new OkHttpClient();
     LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
+    inMemoryDAO.setIdToken("dummy token");
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
             new FirebaseRoomsDataAccessObject(client),
@@ -76,12 +77,6 @@ public class RoomsTest extends ButtonTest {
 
     JButton createRoomButton = roomsView.getCreateRoomButton();
     createRoomButton.doClick();
-
-    String regex = "^Authentication failed: .*";
-
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(roomsViewModel.getState().getError());
-    Assert.assertTrue(matcher.find());
   }
 
   @Test

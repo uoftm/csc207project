@@ -12,7 +12,6 @@ import java.util.UUID;
 import okhttp3.OkHttpClient;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
-import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public abstract class DAOTest {
@@ -53,15 +52,17 @@ public abstract class DAOTest {
 
   void cleanUpUser(User user) {
     OkHttpClient client = new OkHttpClient();
-    DeleteUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
-    userDao.deleteUser(user);
+    FirebaseUserDataAccessObject userDao = new FirebaseUserDataAccessObject(client);
+    String idToken = userDao.getAccessToken(user.getEmail(), user.getPassword());
+    userDao.deleteUser(idToken, user);
   }
 
   void cleanUpRoom(Room room, User user) {
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface loginDao = new FirebaseUserDataAccessObject(client);
-    roomsDao.deleteRoom(user, loginDao, room);
+    String idToken = loginDao.getAccessToken(user.getEmail(), user.getPassword());
+    roomsDao.deleteRoom(idToken, user, room);
   }
 
   Room addFirebaseDummyRoom(User user) {
@@ -72,7 +73,8 @@ public abstract class DAOTest {
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
-    Room room = roomsDao.addRoom(user, userDao, "Dummy Room");
+    String idToken = userDao.getAccessToken(user.getEmail(), user.getPassword());
+    Room room = roomsDao.addRoom(idToken, user, "Dummy Room");
     return room;
   }
 }

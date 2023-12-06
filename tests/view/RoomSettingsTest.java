@@ -45,7 +45,7 @@ public class RoomSettingsTest {
     userDataAccessObject =
         new LoginUserDataAccessInterface() {
           @Override
-          public User getUser(String email, String password) {
+          public User getUser(String idToken, String email, String password) {
             return null;
           }
 
@@ -63,6 +63,7 @@ public class RoomSettingsTest {
     roomSettingsViewModel = new RoomSettingsViewModel();
     roomsViewModel = new RoomsViewModel();
     inMemoryDAO = new InMemoryUserDataAccessObject();
+    inMemoryDAO.setIdToken("dummy token");
     roomSettingsPresenter =
         new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
   }
@@ -76,27 +77,23 @@ public class RoomSettingsTest {
           public int changeRoomNameCalls = 0;
 
           @Override
-          public Room getRoomFromId(
-              User user, LoginUserDataAccessInterface userDAO, String roomId) {
+          public Room getRoomFromId(String idToken, User user, String roomId) {
             return null;
           }
 
           @Override
-          public Room addRoom(User user, LoginUserDataAccessInterface userDAO, String roomName) {
+          public Room addRoom(String idToken, User user, String roomName) {
             return null;
           }
 
           @Override
-          public void deleteRoom(User user, LoginUserDataAccessInterface userDAO, Room room) {
+          public void deleteRoom(String idToken, User user, Room room) {
             deleteRoomCalls++;
           }
 
           @Override
           public void addUserToRoom(
-              User currentUser,
-              DisplayUser newUser,
-              LoginUserDataAccessInterface userDAO,
-              Room room) {}
+              String idToken, User currentUser, DisplayUser newUser, Room room) {}
 
           @Override
           public List<String> getAvailableRoomIds(User user) {
@@ -105,21 +102,16 @@ public class RoomSettingsTest {
 
           @Override
           public void removeUserFromRoom(
-              User currentUser,
-              DisplayUser userToRemove,
-              LoginUserDataAccessInterface userDAO,
-              Room room) {}
+              String idToken, User currentUser, DisplayUser userToRemove, Room room) {}
 
           @Override
-          public void changeRoomName(
-              User user, LoginUserDataAccessInterface userDAO, Room activeRoom, String roomName) {
+          public void changeRoomName(String idToken, User user, Room activeRoom, String roomName) {
             changeRoomNameCalls++;
             Assert.assertEquals("Test Room 2", roomName);
           }
         };
     RoomSettingsInteractor roomSettingsInteractor =
-        new RoomSettingsInteractor(
-            roomsDataAccessObject, userDataAccessObject, inMemoryDAO, roomSettingsPresenter);
+        new RoomSettingsInteractor(roomsDataAccessObject, inMemoryDAO, roomSettingsPresenter);
 
     RoomSettingsController roomSettingsController =
         new RoomSettingsController(roomSettingsInteractor);
@@ -172,27 +164,23 @@ public class RoomSettingsTest {
         new RoomsDataAccessInterface() {
 
           @Override
-          public Room getRoomFromId(
-              User user, LoginUserDataAccessInterface userDAO, String roomId) {
+          public Room getRoomFromId(String idToken, User user, String roomId) {
             return null;
           }
 
           @Override
-          public Room addRoom(User user, LoginUserDataAccessInterface userDAO, String roomName) {
+          public Room addRoom(String idToken, User user, String roomName) {
             return null;
           }
 
           @Override
-          public void deleteRoom(User user, LoginUserDataAccessInterface userDAO, Room room) {
+          public void deleteRoom(String idToken, User user, Room room) {
             throw new RuntimeException("Failed to delete room.");
           }
 
           @Override
           public void addUserToRoom(
-              User currentUser,
-              DisplayUser newUser,
-              LoginUserDataAccessInterface userDAO,
-              Room room) {}
+              String idToken, User currentUser, DisplayUser newUser, Room room) {}
 
           @Override
           public List<String> getAvailableRoomIds(User user) {
@@ -201,21 +189,16 @@ public class RoomSettingsTest {
 
           @Override
           public void removeUserFromRoom(
-              User currentUser,
-              DisplayUser userToRemove,
-              LoginUserDataAccessInterface userDAO,
-              Room room) {}
+              String idToken, User currentUser, DisplayUser userToRemove, Room room) {}
 
           @Override
-          public void changeRoomName(
-              User user, LoginUserDataAccessInterface userDAO, Room activeRoom, String roomName) {
+          public void changeRoomName(String idToken, User user, Room activeRoom, String roomName) {
             throw new RuntimeException("Failed to change room name.");
           }
         };
 
     RoomSettingsInteractor roomSettingsInteractor =
-        new RoomSettingsInteractor(
-            roomsDataAccessObject, userDataAccessObject, inMemoryDAO, roomSettingsPresenter);
+        new RoomSettingsInteractor(roomsDataAccessObject, inMemoryDAO, roomSettingsPresenter);
 
     RoomSettingsController roomSettingsController =
         new RoomSettingsController(roomSettingsInteractor);

@@ -4,22 +4,18 @@ import entities.auth.User;
 import entities.rooms.Room;
 import java.util.ArrayList;
 import java.util.List;
-import use_case.login.LoginUserDataAccessInterface;
 
 public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
   final LoadRoomsOutputBoundary roomsPresenter;
   final RoomsDataAccessInterface roomsDataAccessObject;
-  final LoginUserDataAccessInterface userDao;
   final LoggedInDataAccessInterface inMemoryDAO;
 
   public LoadRoomsInteractor(
       RoomsDataAccessInterface roomsDataAccessObject,
-      LoginUserDataAccessInterface userDao,
       LoggedInDataAccessInterface inMemoryDAO,
       LoadRoomsOutputBoundary roomsOutputBoundary) {
     this.roomsPresenter = roomsOutputBoundary;
     this.roomsDataAccessObject = roomsDataAccessObject;
-    this.userDao = userDao;
     this.inMemoryDAO = inMemoryDAO;
   }
 
@@ -30,7 +26,8 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
       List<String> availableRoomIds = roomsDataAccessObject.getAvailableRoomIds(user);
       List<Room> rooms = new ArrayList<>();
       for (String roomId : availableRoomIds) {
-        Room room = roomsDataAccessObject.getRoomFromId(user, userDao, roomId);
+        String idToken = inMemoryDAO.getIdToken();
+        Room room = roomsDataAccessObject.getRoomFromId(idToken, user, roomId);
         rooms.add(room);
       }
       LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(rooms, false, null);

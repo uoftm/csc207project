@@ -22,8 +22,11 @@ public class LoginInteractor implements LoginInputBoundary {
     String email = loginInputData.getEmail();
     String password = loginInputData.getPassword();
     try {
-      User user = userDataAccessObject.getUser(email, password);
+      String idToken = userDataAccessObject.getAccessToken(email, password);
+      inMemoryDAO.setIdToken(idToken);
+      User user = userDataAccessObject.getUser(idToken, email, password);
       inMemoryDAO.setUser(user);
+
       LoginOutputData loginOutputData = new LoginOutputData(user.getName());
       loginPresenter.prepareSuccessView(loginOutputData);
     } catch (RuntimeException e) {

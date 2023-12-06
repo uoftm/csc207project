@@ -133,7 +133,6 @@ public class Main {
             loggedInViewModel,
             userDataAccessObject,
             roomsDataAccessObject,
-            userDataAccessObject,
             inMemoryDAO,
             switchViewController);
     viewManagerModel.add(settingsView.contentPane, settingsView.viewName);
@@ -141,8 +140,7 @@ public class Main {
     RoomSettingsOutputBoundary outputBoundary =
         new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
     RoomSettingsInteractor roomSettingsInteractor =
-        new RoomSettingsInteractor(
-            roomsDataAccessObject, userDataAccessObject, inMemoryDAO, outputBoundary);
+        new RoomSettingsInteractor(roomsDataAccessObject, inMemoryDAO, outputBoundary);
     RoomSettingsController roomSettingsController =
         new RoomSettingsController(roomSettingsInteractor);
 

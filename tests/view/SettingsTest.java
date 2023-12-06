@@ -47,7 +47,6 @@ public class SettingsTest {
             null,
             userDao,
             roomsSettingsDataAccessObject,
-            userDao,
             inMemoryDAO,
             switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);

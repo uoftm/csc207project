@@ -29,7 +29,7 @@ public class RoomsUseCaseFactory {
     RoomsController roomsController = new RoomsController(roomsInteractor);
     LoadRoomsPresenter loadRoomsPresenter = new LoadRoomsPresenter(roomsViewModel);
     LoadRoomsInteractor loadRoomsInteractor =
-        new LoadRoomsInteractor(roomsDataAccessObject, userDao, inMemoryDAO, loadRoomsPresenter);
+        new LoadRoomsInteractor(roomsDataAccessObject, inMemoryDAO, loadRoomsPresenter);
     LoadRoomsController loadRoomsController = new LoadRoomsController(loadRoomsInteractor);
     return new RoomsView(
         roomsViewModel,
