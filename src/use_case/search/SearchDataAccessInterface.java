@@ -8,5 +8,5 @@ public interface SearchDataAccessInterface {
 
   SearchReponseArray getData(SearchRequest request);
 
-  void saveData(SearchChatMessage message);
+  SearchReponseArray saveData(SearchChatMessage message);
 }

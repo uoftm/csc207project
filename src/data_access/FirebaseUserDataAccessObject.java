@@ -3,7 +3,6 @@ package data_access;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.auth.UserFactory;
-import entities.settings.SettingsChangeResponse;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,9 +41,7 @@ public class FirebaseUserDataAccessObject
     }
   }
 
-  public void changeDisplayName(User user, String newDisplayName) {
-
-  }
+  public void changeDisplayName(User user, String newDisplayName) {}
 
   public String getAccessToken(String email, String password) {
     // Authentication Request

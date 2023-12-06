@@ -17,9 +17,7 @@ import java.awt.*;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import use_case.rooms.MessageDataAccessInterface;
-import use_case.rooms.RoomsDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
-import use_case.settings.RoomsSettingsDataAccessInterface;
 import view.*;
 
 public class Main {
@@ -106,9 +104,11 @@ public class Main {
             searchController,
             startSearchController);
 
-    StartSettingsController startSettingsController = new StartSettingsController(settingsViewModel);
+    StartSettingsController startSettingsController =
+        new StartSettingsController(settingsViewModel);
     LoggedInView loggedInView =
-        new LoggedInView(loggedInViewModel, roomsView, switchViewController, startSettingsController);
+        new LoggedInView(
+            loggedInViewModel, roomsView, switchViewController, startSettingsController);
     viewManagerModel.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsView settingsView =

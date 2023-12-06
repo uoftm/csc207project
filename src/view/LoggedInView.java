@@ -26,7 +26,10 @@ public class LoggedInView implements PropertyChangeListener {
   private JPanel panel1;
 
   public LoggedInView(
-          LoggedInViewModel loggedInViewModel, RoomsView roomsView, SwitchViewController switchViewController, StartSettingsController startSettingsController) {
+      LoggedInViewModel loggedInViewModel,
+      RoomsView roomsView,
+      SwitchViewController switchViewController,
+      StartSettingsController startSettingsController) {
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);
 

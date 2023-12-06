@@ -1,6 +1,5 @@
 package use_case.settings;
 
-
 public class SettingsInteractor implements SettingsInputBoundary {
   // TODO: Add this after other code is merged
   // final SettingsUserDataAccessInterface settingsUserDataAccessInterface;
@@ -22,9 +21,9 @@ public class SettingsInteractor implements SettingsInputBoundary {
   public void executeChangeUsername(SettingsInputData settingsInputData) {
     try {
       userSettingsDataAccessObject.changeDisplayName(
-              settingsInputData.getUser(), settingsInputData.getUpdatedUsername());
+          settingsInputData.getUser(), settingsInputData.getUpdatedUsername());
       roomsSettingsDataAccessObject.propogateDisplayNameChange(
-              settingsInputData.getUser(), settingsInputData.getUpdatedUsername());
+          settingsInputData.getUser(), settingsInputData.getUpdatedUsername());
       SettingsOutputData settingsOutputData = new SettingsOutputData(null, false);
       settingsPresenter.prepareSuccessView(settingsOutputData);
     } catch (RuntimeException e) {
