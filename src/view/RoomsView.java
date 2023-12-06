@@ -35,7 +35,7 @@ public class RoomsView implements PropertyChangeListener {
   private JLabel roomNameLabel2;
   private JTextField emailTextField;
   private JButton searchButton;
-  private JButton settingsButton;
+  private JButton roomSettingsButton;
   private final RoomsViewModel viewModel;
 
   public RoomsView(
@@ -167,9 +167,9 @@ public class RoomsView implements PropertyChangeListener {
           }
         });
 
-    settingsButton.addActionListener(
+    roomSettingsButton.addActionListener(
         evt -> {
-          if (evt.getSource().equals(settingsButton)) {
+          if (evt.getSource().equals(roomSettingsButton)) {
             RoomsState currentState = viewModel.getState();
             Room room = currentState.getRoomByUid();
             openRoomSettingsController.open(room, currentState.getUser());

@@ -1,6 +1,5 @@
 package use_case.room_settings;
 
-
 public interface RoomSettingsOutputBoundary {
   void prepareDeleteRoomSuccessView(RoomSettingsOutputData outputData);
 
