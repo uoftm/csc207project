@@ -31,7 +31,7 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
   @Override
   public void prepareSuccessView(LoginOutputData response) {
     LoggedInState loggedInState = loggedInViewModel.getState();
-    loggedInState.setUsername(response.getUsername());
+    loggedInState.setUser(response.getUser());
     this.loggedInViewModel.setState(loggedInState);
     this.loggedInViewModel.firePropertyChanged();
 

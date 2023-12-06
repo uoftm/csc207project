@@ -15,15 +15,21 @@ public class SearchTest {
   @Test
   public void saveData() {
     SearchChatMessage searchMessage =
-        new SearchChatMessage(Instant.now(), "test-room-id", "test-message", "test-author-id");
+        new SearchChatMessage(Instant.now(), "baz", "ya", "test-author-id");
     searchDataAccessObject.saveData(searchMessage);
   }
 
   @Test
   public void testGetData() {
-    SearchRequest searchRequest = new SearchRequest("dog", "2");
+    SearchRequest searchRequest = new SearchRequest("asdf", "1234");
     assertEquals(
-        searchDataAccessObject.getData(searchRequest).getResponses().get(0).getFullText(),
-        "I love dogs");
+        searchDataAccessObject.getData(searchRequest).getResponses().get(0).getFullText(), "asdf");
+  }
+
+  @Test
+  public void testGetNoData() {
+    SearchRequest searchRequest = new SearchRequest("a", "Bro");
+    assertEquals(
+        searchDataAccessObject.getData(searchRequest).getError(), "No search results found.");
   }
 }

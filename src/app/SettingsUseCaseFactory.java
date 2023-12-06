@@ -1,15 +1,15 @@
 package app;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.io.IOException;
 import javax.swing.*;
-import use_case.settings.SettingsDataAccessInterface;
-import use_case.settings.SettingsInputBoundary;
-import use_case.settings.SettingsInteractor;
-import use_case.settings.SettingsOutputBoundary;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.settings.*;
 import view.SettingsView;
 
 public class SettingsUseCaseFactory {
@@ -18,12 +18,20 @@ public class SettingsUseCaseFactory {
 
   public static SettingsView create(
       SettingsViewModel settingsViewModel,
-      SettingsDataAccessInterface settingsDataAccessObject,
+      LoggedInViewModel loggedInViewModel,
+      UserSettingsDataAccessInterface userSettingsDataAccessObject,
+      RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject,
+      LoginUserDataAccessInterface userDao,
       SwitchViewController switchViewController) {
 
     try {
       SettingsController settingsController =
-          createSettingsController(settingsViewModel, settingsDataAccessObject);
+          createSettingsController(
+              settingsViewModel,
+              loggedInViewModel,
+              userSettingsDataAccessObject,
+              roomsSettingsDataAccessObject,
+              userDao);
 
       return new SettingsView(settingsViewModel, settingsController, switchViewController);
     } catch (IOException e) {
@@ -33,11 +41,20 @@ public class SettingsUseCaseFactory {
   }
 
   private static SettingsController createSettingsController(
-      SettingsViewModel settingsViewModel, SettingsDataAccessInterface settingsDataAccessObject)
+      SettingsViewModel settingsViewModel,
+      LoggedInViewModel loggedInViewModel,
+      UserSettingsDataAccessInterface userSettingsDataAccessObject,
+      RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface,
+      LoginUserDataAccessInterface userDao)
       throws IOException {
 
-    SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(settingsViewModel);
-    SettingsInputBoundary settingsInteractor = new SettingsInteractor(settingsOutputBoundary);
+    SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(settingsViewModel, loggedInViewModel);
+    SettingsInputBoundary settingsInteractor =
+        new SettingsInteractor(
+            userSettingsDataAccessObject,
+            roomsSettingsDataAccessInterface,
+            userDao,
+            settingsOutputBoundary);
 
     return new SettingsController(settingsInteractor);
   }

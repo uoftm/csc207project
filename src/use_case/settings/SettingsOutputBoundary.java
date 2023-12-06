@@ -1,7 +1,7 @@
 package use_case.settings;
 
 public interface SettingsOutputBoundary {
-  void prepareSuccessView(SettingsOutputData user);
+  void prepareSuccessView(SettingsOutputData outputData);
 
-  void prepareFailView(String error);
+  void prepareFailView(SettingsOutputData outputData);
 }

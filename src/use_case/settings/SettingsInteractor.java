@@ -1,25 +1,39 @@
 package use_case.settings;
 
-import entities.auth.AbstractUser;
+import use_case.login.LoginUserDataAccessInterface;
 
 public class SettingsInteractor implements SettingsInputBoundary {
   // TODO: Add this after other code is merged
   // final SettingsUserDataAccessInterface settingsUserDataAccessInterface;
   final SettingsOutputBoundary settingsPresenter;
 
+  final UserSettingsDataAccessInterface userSettingsDataAccessObject;
+  final RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject;
+  final LoginUserDataAccessInterface userDao;
+
   public SettingsInteractor(
-      // SettingsUserDataAccessInterface settingsDataAccessInterface,
+      UserSettingsDataAccessInterface userSettingsDataAccessInterface,
+      RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface,
+      LoginUserDataAccessInterface userDao,
       SettingsOutputBoundary settingsOutputBoundary) {
-    // this.settingsDataAccessObject = settingsDataAccessInterface;
+    this.userSettingsDataAccessObject = userSettingsDataAccessInterface;
+    this.roomsSettingsDataAccessObject = roomsSettingsDataAccessInterface;
+    this.userDao = userDao;
     this.settingsPresenter = settingsOutputBoundary;
   }
 
   @Override
-  public void execute(SettingsInputData userInputData) {
-    AbstractUser user = userInputData.getUser();
-
-    // TODO: Write interaction after other code is merged
-    SettingsOutputData settingsOutputData = new SettingsOutputData(user, true);
-    settingsPresenter.prepareSuccessView(settingsOutputData);
+  public void executeChangeUsername(SettingsInputData settingsInputData) {
+    try {
+      settingsInputData.getUser().setName(settingsInputData.getNewUsername());
+      userSettingsDataAccessObject.propogateDisplayNameChange(settingsInputData.getUser());
+      roomsSettingsDataAccessObject.propogateDisplayNameChange(
+          settingsInputData.getUser(), userDao);
+      SettingsOutputData settingsOutputData = new SettingsOutputData(null);
+      settingsPresenter.prepareSuccessView(settingsOutputData);
+    } catch (RuntimeException e) {
+      SettingsOutputData settingsOutputData = new SettingsOutputData(e.getMessage());
+      settingsPresenter.prepareFailView(settingsOutputData);
+    }
   }
 }

@@ -1,7 +1,9 @@
 package view;
 
+import entities.auth.User;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
+import interface_adapter.settings.StartSettingsController;
 import interface_adapter.switch_view.SwitchViewController;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -26,7 +28,8 @@ public class LoggedInView implements PropertyChangeListener {
   public LoggedInView(
       LoggedInViewModel loggedInViewModel,
       RoomsView roomsView,
-      SwitchViewController switchViewController) {
+      SwitchViewController switchViewController,
+      StartSettingsController startSettingsController) {
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);
 
@@ -49,6 +52,8 @@ public class LoggedInView implements PropertyChangeListener {
     settingsButton.addActionListener(
         evt -> {
           if (evt.getSource().equals(settingsButton)) {
+            User userToPass = loggedInViewModel.getState().getUser();
+            startSettingsController.passUser(userToPass);
             switchViewController.switchTo(SettingsView.viewName);
           }
         });
@@ -59,6 +64,6 @@ public class LoggedInView implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     LoggedInState state = (LoggedInState) evt.getNewValue();
-    username.setText(state.getUsername());
+    username.setText(state.getUser().getName());
   }
 }

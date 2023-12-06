@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class User implements AbstractUser {
   private final String uid;
   private final String email;
-  private final String name;
+  private String name;
   private final String password;
   private final LocalDateTime creationTime;
 
@@ -46,5 +46,9 @@ public class User implements AbstractUser {
 
   public DisplayUser toDisplayUser() {
     return new DisplayUser(this.getEmail(), this.getName());
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

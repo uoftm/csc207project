@@ -13,12 +13,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.settings.DeleteUserDataAccessInterface;
+import use_case.settings.UserSettingsDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class FirebaseUserDataAccessObject
     implements SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
-        DeleteUserDataAccessInterface {
+        DeleteUserDataAccessInterface,
+        UserSettingsDataAccessInterface {
 
   private final OkHttpClient client;
 
@@ -37,6 +39,12 @@ public class FirebaseUserDataAccessObject
       this.uid = uid;
       this.idToken = idToken;
     }
+  }
+
+  public void propogateDisplayNameChange(User user) {
+    String idToken = getAccessToken(user.getEmail(), user.getPassword());
+
+    saveUserToFirebase(user.getEmail(), user.getName(), idToken);
   }
 
   public String getAccessToken(String email, String password) {
