@@ -6,6 +6,7 @@ import app.SettingsUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
 import data_access.FirebaseRoomsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
+import data_access.InMemoryUserDataAccessObject;
 import entities.auth.User;
 import entities.auth.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -17,6 +18,7 @@ import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
+import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.settings.RoomsSettingsDataAccessInterface;
 
 public class SettingsTest {
@@ -35,6 +37,7 @@ public class SettingsTest {
     FirebaseUserDataAccessObject userDao = new FirebaseUserDataAccessObject(client);
     RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject =
         new FirebaseRoomsDataAccessObject(client);
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
     SettingsViewModel settingsViewModel = new SettingsViewModel();
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
 
@@ -45,6 +48,7 @@ public class SettingsTest {
             userDao,
             roomsSettingsDataAccessObject,
             userDao,
+            inMemoryDAO,
             switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
 

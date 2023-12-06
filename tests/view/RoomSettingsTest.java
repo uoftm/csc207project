@@ -4,6 +4,7 @@ import static java.lang.Thread.sleep;
 
 import app.SwitchViewUseCaseFactory;
 import data_access.DAOTest;
+import data_access.InMemoryUserDataAccessObject;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Room;
@@ -21,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.room_settings.RoomSettingsInteractor;
+import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 
 public class RoomSettingsTest {
@@ -30,6 +32,7 @@ public class RoomSettingsTest {
   ViewManagerModel viewManagerModel;
   SwitchViewController switchViewController;
   LoginUserDataAccessInterface userDataAccessObject;
+  LoggedInDataAccessInterface inMemoryDAO;
   JPanel views;
 
   @Before
@@ -59,6 +62,7 @@ public class RoomSettingsTest {
 
     roomSettingsViewModel = new RoomSettingsViewModel();
     roomsViewModel = new RoomsViewModel();
+    inMemoryDAO = new InMemoryUserDataAccessObject();
     roomSettingsPresenter =
         new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
   }
@@ -115,7 +119,7 @@ public class RoomSettingsTest {
         };
     RoomSettingsInteractor roomSettingsInteractor =
         new RoomSettingsInteractor(
-            roomsDataAccessObject, userDataAccessObject, roomSettingsPresenter);
+            roomsDataAccessObject, userDataAccessObject, inMemoryDAO, roomSettingsPresenter);
 
     RoomSettingsController roomSettingsController =
         new RoomSettingsController(roomSettingsInteractor);
@@ -129,7 +133,7 @@ public class RoomSettingsTest {
     jf.setVisible(true);
     Room activeRoom = DAOTest.createDummyRoom();
     roomSettingsViewModel.setActiveRoom(activeRoom);
-    roomSettingsViewModel.setUser(DAOTest.createDummyUser());
+    inMemoryDAO.setUser(DAOTest.createDummyUser());
 
     var roomsState = roomsViewModel.getState();
     var availableRooms = roomsState.getAvailableRooms();
@@ -211,7 +215,7 @@ public class RoomSettingsTest {
 
     RoomSettingsInteractor roomSettingsInteractor =
         new RoomSettingsInteractor(
-            roomsDataAccessObject, userDataAccessObject, roomSettingsPresenter);
+            roomsDataAccessObject, userDataAccessObject, inMemoryDAO, roomSettingsPresenter);
 
     RoomSettingsController roomSettingsController =
         new RoomSettingsController(roomSettingsInteractor);
@@ -226,7 +230,7 @@ public class RoomSettingsTest {
 
     Room activeRoom = DAOTest.createDummyRoom();
     roomSettingsViewModel.setActiveRoom(activeRoom);
-    roomSettingsViewModel.setUser(DAOTest.createDummyUser());
+    inMemoryDAO.setUser(DAOTest.createDummyUser());
 
     var roomsState = roomsViewModel.getState();
     var availableRooms = roomsState.getAvailableRooms();
