@@ -71,9 +71,11 @@ public class FirebaseRoomsDataAccessObject
             Instant timestamp = Instant.ofEpochMilli(Long.parseLong(key));
             String contents = messagesJSON.getJSONObject(key).getString("contents");
             String authorEmail = messagesJSON.getJSONObject(key).getString("author");
-            String displayName = messagesJSON.getJSONObject(key).getString("author");
             Message message =
-                new Message(timestamp, contents, new DisplayUser(authorEmail, displayName));
+                new Message(
+                    timestamp,
+                    contents,
+                    new DisplayUser(authorEmail, authorEmail)); // Decide on this after other PRs
             messages.add(message);
           }
         }
