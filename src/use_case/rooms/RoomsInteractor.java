@@ -3,7 +3,6 @@ package use_case.rooms;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Room;
-import java.util.ArrayList;
 import use_case.login.LoginUserDataAccessInterface;
 
 public class RoomsInteractor implements RoomsInputBoundary {
@@ -29,23 +28,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
       Room room = roomsInputData.getRoom();
       User user = roomsInputData.getUser();
 
-      try {
-        messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
-        RoomsOutputData roomsOutputData =
-            new RoomsOutputData(room, user, null, null, roomsInputData.getMessage());
-        roomsPresenter.prepareSendMessageSuccessView(roomsOutputData);
-      } catch (RuntimeException e) {
-        RoomsOutputData roomsOutputData =
-            new RoomsOutputData(null, null, null, e.getMessage(), null);
-        roomsPresenter.prepareFailView(roomsOutputData);
-      }
-
+      messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
       RoomsOutputData roomsOutputData =
-          new RoomsOutputData(room, user, new ArrayList<>(), null, "Success");
-      roomsPresenter.prepareSuccessView(roomsOutputData);
+          new RoomsOutputData(room, user, null, roomsInputData.getMessage());
+      roomsPresenter.prepareSendMessageSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
-      RoomsOutputData roomsOutputData =
-          new RoomsOutputData(null, null, new ArrayList<>(), e.getMessage(), null);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
@@ -61,12 +49,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
     try {
       roomsDataAccessObject.addUserToRoom(user, displayUserFromEmail, userDao, room);
       RoomsOutputData roomsOutputData =
-          new RoomsOutputData(null, null, null, null, "Successfully added " + email);
+          new RoomsOutputData(null, null, null, "Successfully added " + email);
       roomsPresenter.prepareSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
       RoomsOutputData roomsOutputData =
           new RoomsOutputData(
-              null, null, null, "Unable to add " + email + " to room:" + e.getMessage(), null);
+              null, null, "Unable to add " + email + " to room:" + e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
@@ -78,10 +66,10 @@ public class RoomsInteractor implements RoomsInputBoundary {
 
     try {
       Room newRoom = roomsDataAccessObject.addRoom(user, userDao, roomToCreateName);
-      RoomsOutputData roomsOutputData = new RoomsOutputData(newRoom, null, null, null, null);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(newRoom, null, null, null);
       roomsPresenter.prepareCreateRoomSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, e.getMessage(), null);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }

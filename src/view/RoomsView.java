@@ -112,6 +112,7 @@ public class RoomsView implements PropertyChangeListener {
               Room room = currentState.getRoomByUid();
               User user = currentState.getUser();
               roomsController.sendMessage(room, user, message);
+              messageTextField.setText("");
               searchController.executeRecordData(
                   Instant.now(), currentState.getRoomUid(), message, currentState.getUserUid());
             }
