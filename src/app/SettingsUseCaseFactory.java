@@ -20,7 +20,7 @@ public class SettingsUseCaseFactory {
       SettingsViewModel settingsViewModel,
       LoggedInViewModel loggedInViewModel,
       UserSettingsDataAccessInterface userSettingsDataAccessObject,
-      RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface,
+      RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject,
       LoginUserDataAccessInterface userDao,
       SwitchViewController switchViewController) {
 
@@ -30,7 +30,7 @@ public class SettingsUseCaseFactory {
               settingsViewModel,
               loggedInViewModel,
               userSettingsDataAccessObject,
-              roomsSettingsDataAccessInterface,
+              roomsSettingsDataAccessObject,
               userDao);
 
       return new SettingsView(settingsViewModel, settingsController, switchViewController);

@@ -25,14 +25,14 @@ public class SettingsInteractor implements SettingsInputBoundary {
   @Override
   public void executeChangeUsername(SettingsInputData settingsInputData) {
     try {
-      settingsInputData.getUser().setName(settingsInputData.updatedUsername);
+      settingsInputData.getUser().setName(settingsInputData.getNewUsername());
       userSettingsDataAccessObject.propogateDisplayNameChange(settingsInputData.getUser());
       roomsSettingsDataAccessObject.propogateDisplayNameChange(
           settingsInputData.getUser(), userDao);
-      SettingsOutputData settingsOutputData = new SettingsOutputData(null, false);
+      SettingsOutputData settingsOutputData = new SettingsOutputData(null);
       settingsPresenter.prepareSuccessView(settingsOutputData);
     } catch (RuntimeException e) {
-      SettingsOutputData settingsOutputData = new SettingsOutputData(e.getMessage(), true);
+      SettingsOutputData settingsOutputData = new SettingsOutputData(e.getMessage());
       settingsPresenter.prepareFailView(settingsOutputData);
     }
   }

@@ -4,17 +4,17 @@ import entities.auth.User;
 
 public class SettingsInputData {
 
-  User user;
+  private User user;
 
-  String updatedUsername;
+  private String newUsername;
 
-  public SettingsInputData(String updatedUsername, User user) {
-    this.updatedUsername = updatedUsername;
+  public SettingsInputData(String newUsername, User user) {
+    this.newUsername = newUsername;
     this.user = user;
   }
 
-  String getUpdatedUsername() {
-    return updatedUsername;
+  String getNewUsername() {
+    return newUsername;
   }
 
   User getUser() {
