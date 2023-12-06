@@ -3,7 +3,6 @@ package data_access;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.auth.UserFactory;
-import entities.settings.SettingsChangeResponse;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;

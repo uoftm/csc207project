@@ -18,7 +18,6 @@ import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import use_case.settings.RoomsSettingsDataAccessInterface;
-import use_case.settings.UserSettingsDataAccessInterface;
 
 public class SettingsTest {
   @Test
@@ -33,8 +32,7 @@ public class SettingsTest {
     ViewManagerModel viewManagerModel = new ViewManagerModel();
 
     OkHttpClient client = new OkHttpClient();
-    FirebaseUserDataAccessObject userDao =
-        new FirebaseUserDataAccessObject(client);
+    FirebaseUserDataAccessObject userDao = new FirebaseUserDataAccessObject(client);
     RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject =
         new FirebaseRoomsDataAccessObject(client);
     SettingsViewModel settingsViewModel = new SettingsViewModel();

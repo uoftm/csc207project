@@ -36,8 +36,14 @@ public class SettingsState {
   public Boolean getIsError() {
     return isError;
   }
-  public void setIsSuccess(Boolean isSuccess) { this.isSuccess = isSuccess; }
-  public Boolean getIsSuccess() { return isSuccess; }
+
+  public void setIsSuccess(Boolean isSuccess) {
+    this.isSuccess = isSuccess;
+  }
+
+  public Boolean getIsSuccess() {
+    return isSuccess;
+  }
 
   public String getUpdatedUsername() {
     return updatedUsername;

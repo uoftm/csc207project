@@ -1,6 +1,5 @@
 package use_case.settings;
 
-import entities.settings.SettingsChangeResponse;
 
 public class SettingsOutputData {
   private String error;
@@ -14,6 +13,7 @@ public class SettingsOutputData {
   public boolean getIsError() {
     return isError;
   }
+
   public String getError() {
     return error;
   }

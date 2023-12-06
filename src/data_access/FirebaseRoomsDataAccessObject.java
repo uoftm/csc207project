@@ -23,15 +23,13 @@ public class FirebaseRoomsDataAccessObject
     this.client = client;
   }
 
-  private void changeRoomDisplayName(User user, String roomId) {
-
-  }
+  private void changeRoomDisplayName(User user, String roomId) {}
 
   public void propogateDisplayNameChange(User user, LoginUserDataAccessInterface userDao) {
     String idToken = userDao.getAccessToken(user.getEmail(), user.getPassword());
 
     List<String> availableRoomIds = getAvailableRoomIds(user);
-    for (String roomId: availableRoomIds) {
+    for (String roomId : availableRoomIds) {
       addUserToRoomData(user.toDisplayUser(), idToken, roomId);
     }
   }
@@ -165,9 +163,8 @@ public class FirebaseRoomsDataAccessObject
   private void addUserToRoomData(DisplayUser newUser, String idToken, String roomId) {
     String jsonBody = JSONObject.quote(newUser.getName());
     String encodedEmail =
-            Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
-    String url =
-            String.format(Constants.ROOM_USERS_URL, roomId, encodedEmail) + "?auth=" + idToken;
+        Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
+    String url = String.format(Constants.ROOM_USERS_URL, roomId, encodedEmail) + "?auth=" + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
     Request request = new Request.Builder().url(url).put(body).build();
