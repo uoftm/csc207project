@@ -33,7 +33,7 @@ public class SettingsTest {
     ViewManagerModel viewManagerModel = new ViewManagerModel();
 
     OkHttpClient client = new OkHttpClient();
-    UserSettingsDataAccessInterface userSettingsDataAccessObject =
+    FirebaseUserDataAccessObject userDao =
         new FirebaseUserDataAccessObject(client);
     RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject =
         new FirebaseRoomsDataAccessObject(client);
@@ -43,8 +43,9 @@ public class SettingsTest {
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
             settingsViewModel,
-            userSettingsDataAccessObject,
+            userDao,
             roomsSettingsDataAccessObject,
+            userDao,
             switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
 

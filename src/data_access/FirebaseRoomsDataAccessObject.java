@@ -23,7 +23,18 @@ public class FirebaseRoomsDataAccessObject
     this.client = client;
   }
 
-  public void propogateDisplayNameChange(User user, String newDisplayName) {}
+  private void changeRoomDisplayName(User user, String roomId) {
+
+  }
+
+  public void propogateDisplayNameChange(User user, LoginUserDataAccessInterface userDao) {
+    String idToken = userDao.getAccessToken(user.getEmail(), user.getPassword());
+
+    List<String> availableRoomIds = getAvailableRoomIds(user);
+    for (String roomId: availableRoomIds) {
+      addUserToRoomData(user.toDisplayUser(), idToken, roomId);
+    }
+  }
 
   @Override
   public List<String> getAvailableRoomIds(User user) {
@@ -106,7 +117,7 @@ public class FirebaseRoomsDataAccessObject
   }
 
   private void addRoomToUserData(DisplayUser newUser, String idToken, Room room) {
-    String jsonBody = JSONObject.quote("true");
+    String jsonBody = "true";
     String encodedEmail =
         Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
     String url =
@@ -149,30 +160,33 @@ public class FirebaseRoomsDataAccessObject
     }
   }
 
-  @Override
-  public void addUserToRoom(
-      User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room) {
-    String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
-
+  private void addUserToRoomData(DisplayUser newUser, String idToken, String roomId) {
     String jsonBody = JSONObject.quote(newUser.getName());
     String encodedEmail =
-        Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
+            Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
     String url =
-        String.format(Constants.ROOM_USERS_URL, room.getUid(), encodedEmail) + "?auth=" + idToken;
+            String.format(Constants.ROOM_USERS_URL, roomId, encodedEmail) + "?auth=" + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
     Request request = new Request.Builder().url(url).put(body).build();
 
     try {
       Response response = client.newCall(request).execute();
-      if (response.isSuccessful()) {
-        addRoomToUserData(newUser, idToken, room);
-      } else {
+      if (!response.isSuccessful()) {
         throw new IOException();
       }
     } catch (IOException | JSONException e) {
       throw new RuntimeException("Unable to add user to room. Please try again.");
     }
+  }
+
+  @Override
+  public void addUserToRoom(
+      User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room) {
+    String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
+
+    addUserToRoomData(newUser, idToken, room.getUid());
+    addRoomToUserData(newUser, idToken, room);
   }
 
   @Override

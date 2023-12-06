@@ -42,8 +42,10 @@ public class FirebaseUserDataAccessObject
     }
   }
 
-  public void changeDisplayName(User user, String newDisplayName) {
+  public void propogateDisplayNameChange(User user) {
+    String idToken = getAccessToken(user.getEmail(), user.getPassword());
 
+    saveUserToFirebase(user.getEmail(), user.getName(), idToken);
   }
 
   public String getAccessToken(String email, String password) {
