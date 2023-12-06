@@ -1,21 +1,23 @@
 package data_access;
 
 import entities.auth.User;
-
 import use_case.rooms.LoggedInDataAccessInterface;
 
 public class InMemoryUserDataAccessObject implements LoggedInDataAccessInterface {
 
   private User user;
   private String idToken;
+
   @Override
   public void setIdToken(String idToken) {
     this.idToken = idToken;
   }
+
   @Override
   public void setUser(User user) {
     this.user = user;
   }
+
   @Override
   public String getIdToken() {
     if (idToken == null) {
@@ -23,6 +25,7 @@ public class InMemoryUserDataAccessObject implements LoggedInDataAccessInterface
     }
     return idToken;
   }
+
   @Override
   public User getUser() {
     if (user == null) {

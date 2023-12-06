@@ -37,8 +37,7 @@ public class RoomSettingsView implements PropertyChangeListener {
     saveButton.addActionListener(
         e -> {
           if (e.getSource().equals(saveButton)) {
-            roomSettingsController.saveRoomName(
-                viewModel.getActiveRoom(), roomName.getText());
+            roomSettingsController.saveRoomName(viewModel.getActiveRoom(), roomName.getText());
           }
         });
 

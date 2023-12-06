@@ -12,7 +12,9 @@ public class SearchInteractor implements SearchInputBoundary {
   private final LoggedInDataAccessInterface inMemoryDAO;
 
   public SearchInteractor(
-          SearchDataAccessInterface searchDataAccessObject, LoggedInDataAccessInterface inMemoryDAO, SearchOutputBoundary searchOutputBoundary) {
+      SearchDataAccessInterface searchDataAccessObject,
+      LoggedInDataAccessInterface inMemoryDAO,
+      SearchOutputBoundary searchOutputBoundary) {
     this.searchDataAccessObject = searchDataAccessObject;
     this.searchPresenter = searchOutputBoundary;
     this.inMemoryDAO = inMemoryDAO;
@@ -38,7 +40,7 @@ public class SearchInteractor implements SearchInputBoundary {
             searchInputData.getTime(),
             searchInputData.getRoomUid(),
             searchInputData.getMessage(),
-                authorUid);
+            authorUid);
     searchDataAccessObject.saveData(chatMessage);
   }
 }

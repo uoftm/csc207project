@@ -32,8 +32,7 @@ public class SettingsInteractor implements SettingsInputBoundary {
       user.setName(settingsInputData.getNewUsername());
       inMemoryDAO.setUser(user);
       userSettingsDataAccessObject.propogateDisplayNameChange(user);
-      roomsSettingsDataAccessObject.propogateDisplayNameChange(
-          user, userDao);
+      roomsSettingsDataAccessObject.propogateDisplayNameChange(user, userDao);
       SettingsOutputData settingsOutputData = new SettingsOutputData(null);
       settingsPresenter.prepareSuccessView(settingsOutputData);
     } catch (RuntimeException e) {

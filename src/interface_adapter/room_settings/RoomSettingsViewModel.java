@@ -1,6 +1,5 @@
 package interface_adapter.room_settings;
 
-import entities.auth.User;
 import entities.rooms.Room;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

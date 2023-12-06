@@ -1,6 +1,5 @@
 package interface_adapter.rooms;
 
-import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
 import java.util.ArrayList;

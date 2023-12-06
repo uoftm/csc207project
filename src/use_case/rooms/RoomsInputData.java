@@ -1,6 +1,5 @@
 package use_case.rooms;
 
-import entities.auth.User;
 import entities.rooms.Room;
 
 public class RoomsInputData {
@@ -9,8 +8,7 @@ public class RoomsInputData {
   String userToAddEmail;
   String roomToCreateName;
 
-  public RoomsInputData(
-      Room room, String message, String userToAddEmail, String roomToCreateName) {
+  public RoomsInputData(Room room, String message, String userToAddEmail, String roomToCreateName) {
     this.room = room;
     this.message = message;
     this.userToAddEmail = userToAddEmail;
@@ -20,6 +18,7 @@ public class RoomsInputData {
   Room getRoom() {
     return room;
   }
+
   String getMessage() {
     return message;
   }

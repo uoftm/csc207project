@@ -1,6 +1,5 @@
 package interface_adapter.rooms;
 
-import entities.auth.User;
 import entities.rooms.Room;
 import use_case.rooms.RoomsInputBoundary;
 import use_case.rooms.RoomsInputData;
@@ -18,12 +17,12 @@ public class RoomsController {
   }
 
   public void addUserToRoom(Room room, String userToAddEmail) {
-    RoomsInputData roomsInputData = new RoomsInputData(room,null, userToAddEmail, null);
+    RoomsInputData roomsInputData = new RoomsInputData(room, null, userToAddEmail, null);
     roomsUseCaseInteractor.addUserToRoom(roomsInputData);
   }
 
   public void createRoom(String roomToCreateName) {
-    RoomsInputData roomsInputData = new RoomsInputData(null,null, null, roomToCreateName);
+    RoomsInputData roomsInputData = new RoomsInputData(null, null, null, roomToCreateName);
     roomsUseCaseInteractor.createRoom(roomsInputData);
   }
 }

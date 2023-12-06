@@ -1,6 +1,5 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
@@ -34,7 +33,7 @@ public class SettingsUseCaseFactory {
               userSettingsDataAccessObject,
               roomsSettingsDataAccessObject,
               userDao,
-                  inMemoryDAO);
+              inMemoryDAO);
 
       return new SettingsView(settingsViewModel, settingsController, switchViewController);
     } catch (IOException e) {
@@ -52,7 +51,8 @@ public class SettingsUseCaseFactory {
       LoggedInDataAccessInterface inMemoryDAO)
       throws IOException {
 
-    SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(settingsViewModel, loggedInViewModel);
+    SettingsOutputBoundary settingsOutputBoundary =
+        new SettingsPresenter(settingsViewModel, loggedInViewModel);
     SettingsInputBoundary settingsInteractor =
         new SettingsInteractor(
             userSettingsDataAccessObject,

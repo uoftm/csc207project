@@ -93,7 +93,11 @@ public class Main {
     SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, inMemoryDAO, viewManagerModel, searchedViewModel);
+            searchViewModel,
+            searchDataAccessObject,
+            inMemoryDAO,
+            viewManagerModel,
+            searchedViewModel);
 
     var searchView = new SearchView(searchController, searchViewModel, switchViewController);
     viewManagerModel.add(searchView.contentPane, SearchView.viewName);
@@ -119,7 +123,9 @@ public class Main {
             startSearchController,
             openRoomSettingsController);
 
-    LoggedInView loggedInView = LoggedInUseCaseFactory.create(loggedInViewModel, inMemoryDAO, roomsView, switchViewController);
+    LoggedInView loggedInView =
+        LoggedInUseCaseFactory.create(
+            loggedInViewModel, inMemoryDAO, roomsView, switchViewController);
     viewManagerModel.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsView settingsView =
@@ -136,7 +142,8 @@ public class Main {
     RoomSettingsOutputBoundary outputBoundary =
         new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
     RoomSettingsInteractor roomSettingsInteractor =
-        new RoomSettingsInteractor(roomsDataAccessObject, userDataAccessObject, inMemoryDAO, outputBoundary);
+        new RoomSettingsInteractor(
+            roomsDataAccessObject, userDataAccessObject, inMemoryDAO, outputBoundary);
     RoomSettingsController roomSettingsController =
         new RoomSettingsController(roomSettingsInteractor);
 

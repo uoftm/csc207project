@@ -15,10 +15,10 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
   private final ViewManagerModel viewManagerModel;
 
   public LoginPresenter(
-          ViewManagerModel viewManagerModel,
-          LoggedInViewModel loggedInViewModel,
-          RoomsViewModel roomsViewModel,
-          LoginViewModel loginViewModel) {
+      ViewManagerModel viewManagerModel,
+      LoggedInViewModel loggedInViewModel,
+      RoomsViewModel roomsViewModel,
+      LoginViewModel loginViewModel) {
     this.viewManagerModel = viewManagerModel;
     this.loggedInViewModel = loggedInViewModel;
     this.roomsViewModel = roomsViewModel;

@@ -1,6 +1,5 @@
 package use_case.settings;
 
-import entities.auth.User;
 
 public class SettingsInputData {
   private String newUsername;

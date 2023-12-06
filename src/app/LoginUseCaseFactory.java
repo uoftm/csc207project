@@ -38,7 +38,7 @@ public class LoginUseCaseFactory {
               loggedInViewModel,
               roomsViewModel,
               userDataAccessObject,
-                  inMemoryDAO);
+              inMemoryDAO);
 
       return new LoginView(loginViewModel, loginController, switchViewController);
     } catch (IOException e) {

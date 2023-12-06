@@ -21,7 +21,11 @@ public class RoomsUseCaseFactory {
     RoomsPresenter roomsPresenter = new RoomsPresenter(roomsViewModel);
     RoomsInteractor roomsInteractor =
         new RoomsInteractor(
-            roomsDataAccessObject, messageDataAccessInterface, userDao, inMemoryDAO, roomsPresenter);
+            roomsDataAccessObject,
+            messageDataAccessInterface,
+            userDao,
+            inMemoryDAO,
+            roomsPresenter);
     RoomsController roomsController = new RoomsController(roomsInteractor);
     LoadRoomsPresenter loadRoomsPresenter = new LoadRoomsPresenter(roomsViewModel);
     LoadRoomsInteractor loadRoomsInteractor =

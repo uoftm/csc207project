@@ -1,6 +1,5 @@
 package interface_adapter.settings;
 
-import entities.auth.User;
 
 public class SettingsState {
   private String message = null;

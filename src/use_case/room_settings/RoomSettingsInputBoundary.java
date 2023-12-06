@@ -1,6 +1,5 @@
 package use_case.room_settings;
 
-import entities.auth.User;
 import entities.rooms.Room;
 
 public interface RoomSettingsInputBoundary {
