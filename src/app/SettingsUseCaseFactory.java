@@ -1,5 +1,7 @@
 package app;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
@@ -16,6 +18,7 @@ public class SettingsUseCaseFactory {
 
   public static SettingsView create(
       SettingsViewModel settingsViewModel,
+      LoggedInViewModel loggedInViewModel,
       UserSettingsDataAccessInterface userSettingsDataAccessObject,
       RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface,
       LoginUserDataAccessInterface userDao,
@@ -25,6 +28,7 @@ public class SettingsUseCaseFactory {
       SettingsController settingsController =
           createSettingsController(
               settingsViewModel,
+              loggedInViewModel,
               userSettingsDataAccessObject,
               roomsSettingsDataAccessInterface,
               userDao);
@@ -38,12 +42,13 @@ public class SettingsUseCaseFactory {
 
   private static SettingsController createSettingsController(
       SettingsViewModel settingsViewModel,
+      LoggedInViewModel loggedInViewModel,
       UserSettingsDataAccessInterface userSettingsDataAccessObject,
       RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface,
       LoginUserDataAccessInterface userDao)
       throws IOException {
 
-    SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(settingsViewModel);
+    SettingsOutputBoundary settingsOutputBoundary = new SettingsPresenter(settingsViewModel, loggedInViewModel);
     SettingsInputBoundary settingsInteractor =
         new SettingsInteractor(
             userSettingsDataAccessObject,

@@ -125,6 +125,7 @@ public class Main {
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
             settingsViewModel,
+            loggedInViewModel,
             userDataAccessObject,
             roomsDataAccessObject,
             userDataAccessObject,

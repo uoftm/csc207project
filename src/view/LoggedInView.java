@@ -64,6 +64,6 @@ public class LoggedInView implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     LoggedInState state = (LoggedInState) evt.getNewValue();
-    username.setText(state.getUsername());
+    username.setText(state.getUser().getName());
   }
 }

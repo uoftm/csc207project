@@ -41,6 +41,7 @@ public class SettingsTest {
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
             settingsViewModel,
+            null,
             userDao,
             roomsSettingsDataAccessObject,
             userDao,
