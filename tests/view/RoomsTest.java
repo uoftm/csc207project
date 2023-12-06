@@ -64,7 +64,7 @@ public class RoomsTest extends ButtonTest {
             new FirebaseRoomsDataAccessObject(client),
             new FirebaseMessageDataAccessObject(client),
             new FirebaseUserDataAccessObject(client),
-                inMemoryDAO,
+            inMemoryDAO,
             roomsViewModel,
             null,
             null,
@@ -95,7 +95,11 @@ public class RoomsTest extends ButtonTest {
     LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, inMemoryDAO, viewManagerModel, searchedViewModel);
+            searchViewModel,
+            searchDataAccessObject,
+            inMemoryDAO,
+            viewManagerModel,
+            searchedViewModel);
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
@@ -103,7 +107,7 @@ public class RoomsTest extends ButtonTest {
             new FirebaseRoomsDataAccessObject(client),
             new FirebaseMessageDataAccessObject(client),
             new FirebaseUserDataAccessObject(client),
-                inMemoryDAO,
+            inMemoryDAO,
             roomsViewModel,
             searchController,
             null,
