@@ -5,6 +5,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
 import use_case.room_settings.RoomSettingsOutputBoundary;
+import use_case.room_settings.RoomSettingsOutputData;
 import view.LoggedInView;
 
 public class RoomSettingsPresenter implements RoomSettingsOutputBoundary {
@@ -21,10 +22,10 @@ public class RoomSettingsPresenter implements RoomSettingsOutputBoundary {
     this.viewManagerModel = viewManagerModel;
   }
 
-  public void prepareDeleteRoomSuccessView(Room room) {
+  public void prepareDeleteRoomSuccessView(RoomSettingsOutputData outputData) {
     RoomsState state = roomsViewModel.getState();
     var availableRooms = state.getAvailableRooms();
-    availableRooms.remove(room);
+    availableRooms.remove(outputData.getRoom());
     state.setRoomUid(null); // Clear the displayed room (display blank)
     roomsViewModel.setState(state);
     roomsViewModel.firePropertyChanged();
@@ -32,11 +33,13 @@ public class RoomSettingsPresenter implements RoomSettingsOutputBoundary {
     viewManagerModel.setActiveView(LoggedInView.viewName);
   }
 
-  public void prepareChangeRoomFailView(String message) {
-    roomSettingsViewModel.setError(message);
+  public void prepareChangeRoomFailView(RoomSettingsOutputData outputData) {
+    roomSettingsViewModel.setError(outputData.getMessage());
   }
 
-  public void prepareChangeRoomNameSuccessView(Room activeRoom, String roomName) {
+  public void prepareChangeRoomNameSuccessView(RoomSettingsOutputData outputData) {
+    Room activeRoom = outputData.getRoom();
+    String roomName = activeRoom.getName();
     RoomsState state = roomsViewModel.getState();
     var availableRooms = state.getAvailableRooms();
     for (Room room : availableRooms) {
@@ -51,7 +54,7 @@ public class RoomSettingsPresenter implements RoomSettingsOutputBoundary {
     viewManagerModel.setActiveView(LoggedInView.viewName);
   }
 
-  public void prepareDeleteRoomFailView(String message) {
-    roomSettingsViewModel.setError(message);
+  public void prepareDeleteRoomFailView(RoomSettingsOutputData outputData) {
+    roomSettingsViewModel.setError(outputData.getMessage());
   }
 }

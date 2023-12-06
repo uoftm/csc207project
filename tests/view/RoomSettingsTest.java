@@ -17,22 +17,29 @@ import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.room_settings.RoomSettingsInteractor;
 import use_case.rooms.RoomsDataAccessInterface;
 
 public class RoomSettingsTest {
-  @Test
-  public void testRoomSettingsLoad() throws InterruptedException {
+  RoomSettingsViewModel roomSettingsViewModel;
+  RoomSettingsPresenter roomSettingsPresenter;
+  RoomsViewModel roomsViewModel;
+  ViewManagerModel viewManagerModel;
+  SwitchViewController switchViewController;
+  LoginUserDataAccessInterface userDataAccessObject;
+  JPanel views;
 
+  @Before
+  public void setUp() {
     CardLayout cardLayout = new CardLayout();
-    JPanel views = new JPanel(cardLayout);
-    ViewManagerModel viewManagerModel = new ViewManagerModel();
+    views = new JPanel(cardLayout);
+    viewManagerModel = new ViewManagerModel();
 
-    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
-
-    LoginUserDataAccessInterface userDataAccessObject =
+    switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+    userDataAccessObject =
         new LoginUserDataAccessInterface() {
           @Override
           public User getUser(String email, String password) {
@@ -49,6 +56,15 @@ public class RoomSettingsTest {
             return null;
           }
         };
+
+    roomSettingsViewModel = new RoomSettingsViewModel();
+    roomsViewModel = new RoomsViewModel();
+    roomSettingsPresenter =
+        new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
+  }
+
+  @Test
+  public void testRoomSettingsLoad() throws InterruptedException {
     var roomsDataAccessObject =
         new RoomsDataAccessInterface() {
 
@@ -97,11 +113,6 @@ public class RoomSettingsTest {
             Assert.assertEquals("Test Room 2", roomName);
           }
         };
-
-    RoomSettingsViewModel roomSettingsViewModel = new RoomSettingsViewModel();
-    RoomsViewModel roomsViewModel = new RoomsViewModel();
-    RoomSettingsPresenter roomSettingsPresenter =
-        new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
     RoomSettingsInteractor roomSettingsInteractor =
         new RoomSettingsInteractor(
             roomsDataAccessObject, userDataAccessObject, roomSettingsPresenter);
@@ -116,7 +127,6 @@ public class RoomSettingsTest {
     jf.setContentPane(roomSettingsView.contentPane);
     jf.pack();
     jf.setVisible(true);
-
     Room activeRoom = DAOTest.createDummyRoom();
     roomSettingsViewModel.setActiveRoom(activeRoom);
     roomSettingsViewModel.setUser(DAOTest.createDummyUser());
@@ -154,29 +164,6 @@ public class RoomSettingsTest {
 
   @Test
   public void testRoomSettingsFailures() throws InterruptedException {
-    CardLayout cardLayout = new CardLayout();
-    JPanel views = new JPanel(cardLayout);
-    ViewManagerModel viewManagerModel = new ViewManagerModel();
-
-    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
-
-    LoginUserDataAccessInterface userDataAccessObject =
-        new LoginUserDataAccessInterface() {
-          @Override
-          public User getUser(String email, String password) {
-            return null;
-          }
-
-          @Override
-          public String getAccessToken(String email, String password) {
-            return null;
-          }
-
-          @Override
-          public DisplayUser getDisplayUser(String email) {
-            return null;
-          }
-        };
     var roomsDataAccessObject =
         new RoomsDataAccessInterface() {
 
@@ -222,10 +209,6 @@ public class RoomSettingsTest {
           }
         };
 
-    RoomSettingsViewModel roomSettingsViewModel = new RoomSettingsViewModel();
-    RoomsViewModel roomsViewModel = new RoomsViewModel();
-    RoomSettingsPresenter roomSettingsPresenter =
-        new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
     RoomSettingsInteractor roomSettingsInteractor =
         new RoomSettingsInteractor(
             roomsDataAccessObject, userDataAccessObject, roomSettingsPresenter);

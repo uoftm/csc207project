@@ -24,9 +24,9 @@ public class RoomSettingsInteractor implements RoomSettingsInputBoundary {
   public void deleteRoom(User user, Room activeRoom) {
     try {
       roomsDataAccessObject.deleteRoom(user, userDataAccessObject, activeRoom);
-      outputBoundary.prepareDeleteRoomSuccessView(activeRoom);
+      outputBoundary.prepareDeleteRoomSuccessView(new RoomSettingsOutputData(activeRoom));
     } catch (RuntimeException e) {
-      outputBoundary.prepareDeleteRoomFailView(e.getMessage());
+      outputBoundary.prepareDeleteRoomFailView(new RoomSettingsOutputData(e.getMessage()));
     }
   }
 
@@ -34,9 +34,10 @@ public class RoomSettingsInteractor implements RoomSettingsInputBoundary {
   public void changeRoomName(User user, Room activeRoom, String newRoomName) {
     try {
       roomsDataAccessObject.changeRoomName(user, userDataAccessObject, activeRoom, newRoomName);
-      outputBoundary.prepareChangeRoomNameSuccessView(activeRoom, newRoomName);
+      activeRoom.setName(newRoomName);
+      outputBoundary.prepareChangeRoomNameSuccessView(new RoomSettingsOutputData(activeRoom));
     } catch (RuntimeException e) {
-      outputBoundary.prepareChangeRoomFailView(e.getMessage());
+      outputBoundary.prepareChangeRoomFailView(new RoomSettingsOutputData(e.getMessage()));
     }
   }
 }

@@ -1,13 +1,12 @@
 package use_case.room_settings;
 
-import entities.rooms.Room;
 
 public interface RoomSettingsOutputBoundary {
-  void prepareDeleteRoomSuccessView(Room room);
+  void prepareDeleteRoomSuccessView(RoomSettingsOutputData outputData);
 
-  void prepareChangeRoomFailView(String message);
+  void prepareChangeRoomFailView(RoomSettingsOutputData outputData);
 
-  void prepareChangeRoomNameSuccessView(Room activeRoom, String roomName);
+  void prepareChangeRoomNameSuccessView(RoomSettingsOutputData outputData);
 
-  void prepareDeleteRoomFailView(String message);
+  void prepareDeleteRoomFailView(RoomSettingsOutputData outputData);
 }

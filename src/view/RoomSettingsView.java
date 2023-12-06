@@ -69,6 +69,7 @@ public class RoomSettingsView implements PropertyChangeListener {
     }
   }
 
+  // Methods used for testing
   public JButton getBackButton() {
     return backButton;
   }
