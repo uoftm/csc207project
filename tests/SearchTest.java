@@ -104,7 +104,6 @@ public class SearchTest {
     state.setRoomUid("dummyRoomUid");
     searchViewModel.setState(state);
     searchViewModel.addPropertyChangeListener(searchview);
-    searchViewModel.firePropertyChanged();
     searchview.getSearchBoxText().setText("Test essage!");
     searchview.getSearchBoxText().setText("Test message!");
     searchview.getSearchButton().doClick();
@@ -128,19 +127,18 @@ public class SearchTest {
     assertEquals("search", viewManagerModel.getActiveView());
   }
 
-@Test
-
-public void testError(){
-  SearchController searchController =
-          SearchUseCaseFactory.createSearchController(
-                  searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
-  SearchView searchview = new SearchView(searchController, searchViewModel, switchViewController);
-  views.add(searchview.contentPane, "search");
-  JFrame jf = new JFrame();
-  jf.setContentPane(searchview.contentPane);
-  jf.pack();
-  jf.setVisible(true);
-  searchController.executeSearchRequest("---", "---", "---");
-  assertEquals(null, viewManagerModel.getActiveView());
+  @Test
+  public void testError() {
+    SearchController searchController =
+        SearchUseCaseFactory.createSearchController(
+            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+    SearchView searchview = new SearchView(searchController, searchViewModel, switchViewController);
+    views.add(searchview.contentPane, "search");
+    JFrame jf = new JFrame();
+    jf.setContentPane(searchview.contentPane);
+    jf.pack();
+    jf.setVisible(true);
+    searchController.executeSearchRequest("---", "---", "---");
+    assertEquals(null, viewManagerModel.getActiveView());
   }
 }

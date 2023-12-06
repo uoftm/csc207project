@@ -8,6 +8,7 @@ public class SearchedState {
   private ArrayList<SearchResponseDisplay> processedData;
 
   public SearchedState() {}
+
   public void setResponses(ArrayList<SearchResponseDisplay> processedData) {
     this.processedData = processedData;
   }
