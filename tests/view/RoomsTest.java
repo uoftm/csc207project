@@ -28,6 +28,7 @@ import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.MessageDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
 import use_case.settings.DeleteUserDataAccessInterface;
@@ -123,7 +124,7 @@ public class RoomsTest extends ButtonTest {
   }
 
   @Test
-  public void testSendMessage() {
+  public void testSendMessageFailed() {
     OkHttpClient client = new OkHttpClient();
     ViewManagerModel viewManagerModel = new ViewManagerModel();
 
@@ -147,13 +148,58 @@ public class RoomsTest extends ButtonTest {
 
     RoomsState testState = buildTestState();
     testState.setRoomUid(testState.getAvailableRooms().get(0).getUid());
-    testState.setSendMessage("Test message!");
+    testState.setSendMessage("Test Message!");
     roomsViewModel.setState(testState);
 
     JButton sendMessageButton = roomsView.getSendMessageButton();
     sendMessageButton.doClick();
 
     Assert.assertNotNull(roomsViewModel.getState().getError());
+  }
+
+  @Test
+  public void testSendMessageSuccess() {
+    OkHttpClient client = new OkHttpClient();
+    ViewManagerModel viewManagerModel = new ViewManagerModel();
+
+    MessageDataAccessInterface messageDao = new FirebaseMessageDataAccessObject(client);
+    RoomsDataAccessInterface roomDao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    User dummyUser = addFirebaseDummyUser();
+    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+
+    SearchViewModel searchViewModel = new SearchViewModel();
+    SearchedViewModel searchedViewModel = new SearchedViewModel();
+    SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
+    SearchController searchController =
+        SearchUseCaseFactory.createSearchController(
+            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+
+    RoomsViewModel roomsViewModel = new RoomsViewModel();
+    RoomsView roomsView =
+        RoomsUseCaseFactory.create(
+            roomDao, messageDao, userDao, roomsViewModel, searchController, null, null);
+
+    RoomsState testState = buildTestState();
+    String messageContent = "Test Message!";
+    testState.setSendMessage(messageContent);
+    testState.setUser(dummyUser);
+    testState.setRoomUid(dummyRoom.getUid());
+    List<Room> rooms = testState.getAvailableRooms();
+    rooms.add(dummyRoom);
+    testState.setAvailableRooms(rooms);
+    roomsViewModel.setState(testState);
+
+    JButton sendMessageButton = roomsView.getSendMessageButton();
+    sendMessageButton.doClick();
+
+    Assert.assertNull(roomsViewModel.getState().getError());
+    Assert.assertTrue(
+        roomsViewModel.getState().getDisplayMessages().get(0).content.equals("Test Message!"));
+
+    // Remove from Firebase
+    cleanUpRoom(dummyRoom, dummyUser);
+    cleanUpUser(dummyUser);
   }
 
   @Test
@@ -241,5 +287,21 @@ public class RoomsTest extends ButtonTest {
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface loginDao = new FirebaseUserDataAccessObject(client);
     roomsDao.deleteRoom(user, loginDao, room);
+  }
+
+  Room addFirebaseDummyRoom(User user) {
+    /**
+     * This adds a dummy room to Firebase and returns that room The caller *must* clean up the room
+     * after use
+     */
+    OkHttpClient client = new OkHttpClient();
+    RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    Room room = roomsDao.addRoom(user, userDao, "Dummy Room");
+    return room;
+  }
+
+  Message createDummyMessage(DisplayUser dummyDisplayUser) {
+    return new Message(Instant.now(), "Dummy message", dummyDisplayUser);
   }
 }
