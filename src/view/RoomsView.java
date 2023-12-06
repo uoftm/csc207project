@@ -258,4 +258,8 @@ public class RoomsView implements PropertyChangeListener {
   public JButton getSendMessageButton() {
     return send;
   }
+
+  public JButton getSearchButton() {
+    return searchButton;
+  }
 }
