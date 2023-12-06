@@ -15,6 +15,7 @@ import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.search.StartSearchController;
 import interface_adapter.searched.SearchedViewModel;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -171,5 +172,29 @@ public class RoomsTest extends ButtonTest {
     Room room = new Room("dummyRoomUid", "Dummy Room", users, null);
     room.setMessages(messages);
     return room;
+  }
+
+  @Test
+  public void testClickSearchButton() {
+    RoomsViewModel roomsViewModel = new RoomsViewModel();
+    OkHttpClient client = new OkHttpClient();
+    ViewManagerModel viewManagerModel = new ViewManagerModel();
+    SearchViewModel searchViewModel = new SearchViewModel();
+    StartSearchController startSearchController =
+        new StartSearchController(viewManagerModel, searchViewModel);
+    RoomsView roomsView =
+        RoomsUseCaseFactory.create(
+            new FirebaseRoomsDataAccessObject(client),
+            new FirebaseMessageDataAccessObject(client),
+            new FirebaseUserDataAccessObject(client),
+            roomsViewModel,
+            null,
+            startSearchController);
+    RoomsState currentstate = roomsViewModel.getState();
+    currentstate.setUser(createDummyUser());
+    currentstate.setRoomUid(createDummyRoom().getUid());
+    roomsViewModel.setState(currentstate);
+    JButton searchButton = roomsView.getSearchButton();
+    searchButton.doClick();
   }
 }
