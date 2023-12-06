@@ -33,7 +33,10 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
                 "match_phrase",
                 new JSONObject()
                     .put(
-                        "message", new JSONObject().put("query", searchRequest.getQueryRequest())));
+                        "message",
+                        new JSONObject()
+                            .put("query", searchRequest.getQueryRequest())
+                            .put("slop", 2)));
 
     JSONObject boolQuery =
         new JSONObject().put("must", new JSONArray().put(roomIDQuery).put(messageQuery));
@@ -155,7 +158,6 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
             .post(requestBody)
             .build();
 
-    System.out.println(jsonPayload);
     try (Response response = client.newCall(request).execute()) {
       if (!response.isSuccessful()) {
         return new SearchReponseArray(new ArrayList<>(), "Failed to save current message", true);

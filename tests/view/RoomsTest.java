@@ -193,7 +193,7 @@ public class RoomsTest extends ButtonTest {
             new FirebaseUserDataAccessObject(client),
             roomsViewModel,
             null,
-            startSearchController);
+            startSearchController, null);
     RoomsState currentstate = roomsViewModel.getState();
     currentstate.setUser(createDummyUser());
     currentstate.setRoomUid(createDummyRoom().getUid());
