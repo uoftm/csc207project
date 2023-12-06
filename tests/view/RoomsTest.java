@@ -43,7 +43,7 @@ public class RoomsTest extends ButtonTest {
             new FirebaseUserDataAccessObject(client),
             roomsViewModel,
             null,
-            null);
+            null, null);
 
     roomsViewModel.setState(this.buildTestState());
 
@@ -65,7 +65,7 @@ public class RoomsTest extends ButtonTest {
             new FirebaseUserDataAccessObject(client),
             roomsViewModel,
             null,
-            null);
+            null, null);
 
     RoomsState testState = buildTestState();
     testState.setRoomToCreateName("Test Room!");
@@ -101,7 +101,7 @@ public class RoomsTest extends ButtonTest {
             new FirebaseUserDataAccessObject(client),
             roomsViewModel,
             searchController,
-            null);
+            null, null);
 
     RoomsState testState = buildTestState();
     testState.setRoomUid(testState.getAvailableRooms().get(0).getUid());
@@ -125,7 +125,7 @@ public class RoomsTest extends ButtonTest {
             new FirebaseUserDataAccessObject(client),
             roomsViewModel,
             null,
-            null);
+            null, null);
 
     RoomsState testState = buildTestState();
     testState.setUserToAddEmail(createDummyDisplayUser().getEmail());
@@ -189,7 +189,7 @@ public class RoomsTest extends ButtonTest {
             new FirebaseUserDataAccessObject(client),
             roomsViewModel,
             null,
-            startSearchController);
+            startSearchController, null);
     RoomsState currentstate = roomsViewModel.getState();
     currentstate.setUser(createDummyUser());
     currentstate.setRoomUid(createDummyRoom().getUid());
