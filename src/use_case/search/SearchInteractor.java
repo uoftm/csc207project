@@ -37,13 +37,13 @@ public class SearchInteractor implements SearchInputBoundary {
   @Override
   public void executeRecordData(SearchInputData searchInputData) {
     try {
-      String authorUid = inMemoryDAO.getUser().getUid();
+      String email = inMemoryDAO.getUser().getEmail();
       SearchChatMessage chatMessage =
           new SearchChatMessage(
               searchInputData.getTime(),
               searchInputData.getRoomUid(),
               searchInputData.getMessage(),
-              authorUid);
+              email);
       SearchOutputData outputData =
           new SearchOutputData(searchDataAccessObject.saveData(chatMessage));
       if (outputData.getResponse().getIsError()) {

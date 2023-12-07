@@ -40,7 +40,6 @@ public class SearchPresenter implements SearchOutputBoundary {
               DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")
                   .format(
                       LocalDateTime.ofInstant(response.getTime(), ZoneId.of("America/New_York"))),
-              // TODO// needs to be modified to have names instead of IDs.
               response.getAuthUid(),
               response.getRoomUid(),
               response.getHighlightIndices(),

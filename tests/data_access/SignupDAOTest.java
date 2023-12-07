@@ -10,8 +10,6 @@ import use_case.signup.SignupUserDataAccessInterface;
 public class SignupDAOTest extends DAOTest {
   // Currently, the tests in this class cover the signup portion of the Firebase User DAO code
   // However, they don't clean up after themselves.
-  // TODO: Write a delete user function that scrubs all user data
-  //  (e.g. display name, membership list of room, deletes account)
   @Test
   public void testSaveUser() {
     OkHttpClient client = new OkHttpClient();
