@@ -50,7 +50,7 @@ public abstract class DAOTest {
     return dummyUser;
   }
 
-  void cleanUpUser(User user) {
+  public static void cleanUpUser(User user) {
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject userDao = new FirebaseUserDataAccessObject(client);
     String idToken = userDao.getAccessToken(user.getEmail(), user.getPassword());
