@@ -38,7 +38,7 @@ public abstract class DAOTest {
     return new Room("dummyRoomUid", "Dummy Room", users, messages);
   }
 
-  User addFirebaseDummyUser() {
+  public static User addFirebaseDummyUser() {
     /**
      * This adds a dummy user to Firebase and returns that user The caller *must* clean up the user
      * after use
@@ -65,7 +65,7 @@ public abstract class DAOTest {
     roomsDao.deleteRoom(idToken, user, room);
   }
 
-  Room addFirebaseDummyRoom(User user) {
+  public static Room addFirebaseDummyRoom(User user) {
     /**
      * This adds a dummy room to Firebase and returns that room The caller *must* clean up the room
      * after use

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import app.SettingsUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
+import data_access.DAOTest;
 import data_access.FirebaseRoomsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
@@ -51,7 +52,6 @@ public class SettingsTest {
     inMemoryDAO = new InMemoryUserDataAccessObject();
   }
 
-
   @Test
   public void testSettingsLoad() {
     SettingsView settingsView =
@@ -80,7 +80,9 @@ public class SettingsTest {
 
   @Test
   public void testSettingsChangeUsername() {
-    User user = userDao.getUser(inMemoryDAO.getIdToken(), "abc@gmail.com", "1234567");
+    User user = DAOTest.addFirebaseDummyUser();
+    inMemoryDAO.setUser(user);
+    inMemoryDAO.setIdToken(userDao.getAccessToken(user.getEmail(), user.getPassword()));
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
@@ -93,7 +95,6 @@ public class SettingsTest {
     views.add(settingsView.contentPane, settingsView.viewName);
     settingsView.getChangeUsernameField().setText("TestName");
     SettingsState currentstate = settingsViewModel.getState();
-    currentstate.setUpdatedUsername(user.getName());
     settingsView.getChangeUsernameButton().doClick();
     SettingsState settingsState = settingsViewModel.getState();
     assertEquals("Successfully updated username", settingsState.getMessage());
@@ -107,8 +108,9 @@ public class SettingsTest {
             throw new RuntimeException("Failed to update username");
           }
         };
-
-    User user = userDao.getUser(inMemoryDAO.getIdToken(), "abc@gmail.com", "1234567");
+    User user = DAOTest.addFirebaseDummyUser();
+    inMemoryDAO.setUser(user);
+    inMemoryDAO.setIdToken(userDao.getAccessToken(user.getEmail(), user.getPassword()));
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SettingsView settingsView =
         SettingsUseCaseFactory.create(

@@ -24,7 +24,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.*;
@@ -78,7 +80,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(inMemoryDao);
+    RoomsState testState = buildTestState(Optional.of(dummyRoom));
     testState.setRoomUid(dummyRoom.getUid());
     List<Room> rooms = testState.getAvailableRooms();
     rooms.add(dummyRoom);
@@ -147,7 +149,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(inMemoryDAO);
+    RoomsState testState = buildTestState(Optional.empty());
     inMemoryDAO.setUser(
         new User(
             "",
@@ -187,7 +189,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(inMemoryDao);
+    RoomsState testState = buildTestState(Optional.empty());
     testState.setRoomToCreateName("New Room");
     inMemoryDao.setUser(dummyUser);
     roomsViewModel.setState(testState);
@@ -221,7 +223,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(inMemoryDAO);
+    RoomsState testState = buildTestState(Optional.empty());
     testState.setRoomToCreateName("Test Room!");
     roomsViewModel.setState(testState);
 
@@ -273,18 +275,20 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(inMemoryDao);
+    RoomsState testState = buildTestState(Optional.of(dummyRoom));
     String messageContent = "Test Message!";
     testState.setSendMessage(messageContent);
-    inMemoryDao.setUser(dummyUser);
-    testState.setRoomUid(dummyRoom.getUid());
-    List<Room> rooms = testState.getAvailableRooms();
-    rooms.add(dummyRoom);
-    testState.setAvailableRooms(rooms);
     roomsViewModel.setState(testState);
 
     JButton sendMessageButton = roomsView.getSendMessageButton();
     sendMessageButton.doClick();
+
+    // Wait for messages to refresh using LoadRoomsController
+    try {
+      TimeUnit.SECONDS.sleep(1);
+    } catch (InterruptedException e) {
+      System.out.println("Interrupted test, please try again");
+    }
 
     Assert.assertNull(roomsViewModel.getState().getError());
     Assert.assertTrue(
@@ -324,8 +328,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(inMemoryDao);
-    testState.setRoomUid(testState.getAvailableRooms().get(0).getUid());
+    RoomsState testState = buildTestState(Optional.of(createDummyRoom()));
     testState.setSendMessage("Test Message!");
     roomsViewModel.setState(testState);
 
@@ -363,7 +366,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(inMemoryDao);
+    RoomsState testState = buildTestState(Optional.of(dummyRoom));
     testState.setUserToAddEmail(dummyDisplayUser2.getEmail());
     inMemoryDao.setUser(dummyUser);
     testState.setRoomUid(dummyRoom.getUid());
@@ -399,7 +402,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(inMemoryDAO);
+    RoomsState testState = buildTestState(Optional.of(createDummyRoom()));
     testState.setUserToAddEmail(createDummyDisplayUser().getEmail());
     roomsViewModel.setState(testState);
 
@@ -413,13 +416,14 @@ public class RoomsTest extends ButtonTest {
     Assert.assertTrue(matcher.find());
   }
 
-  private RoomsState buildTestState(LoggedInDataAccessInterface inMemoryDAO) {
+  private RoomsState buildTestState(Optional<Room> dummyRoom) {
     RoomsState state = new RoomsState();
     List<Room> rooms = new ArrayList<>();
-    Room room = createDummyRoom();
-    rooms.add(room);
+    if (dummyRoom.isPresent()) {
+      rooms.add(dummyRoom.get());
+      state.setRoomUid(dummyRoom.get().getUid());
+    }
     state.setAvailableRooms(rooms);
-    state.setRoomUid(room.getUid());
     return state;
   }
 
@@ -491,12 +495,23 @@ public class RoomsTest extends ButtonTest {
     SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, inMemoryDAO, viewManagerModel, searchedViewModel);
+            searchViewModel,
+            searchDataAccessObject,
+            inMemoryDAO,
+            viewManagerModel,
+            searchedViewModel);
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
-            roomDao, messageDao, userDao, inMemoryDAO, roomsViewModel, searchController, null, null);
+            roomDao,
+            messageDao,
+            userDao,
+            inMemoryDAO,
+            roomsViewModel,
+            searchController,
+            null,
+            null);
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
     SettingsViewModel settingsViewModel = new SettingsViewModel();

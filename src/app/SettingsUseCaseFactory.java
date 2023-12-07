@@ -22,13 +22,13 @@ public class SettingsUseCaseFactory {
       LoggedInDataAccessInterface inMemoryDAO,
       SwitchViewController switchViewController) {
 
-      SettingsController settingsController =
-          createSettingsController(
-              settingsViewModel,
-              loggedInViewModel,
-              userSettingsDataAccessObject,
-              roomsSettingsDataAccessObject,
-              inMemoryDAO);
+    SettingsController settingsController =
+        createSettingsController(
+            settingsViewModel,
+            loggedInViewModel,
+            userSettingsDataAccessObject,
+            roomsSettingsDataAccessObject,
+            inMemoryDAO);
 
     return new SettingsView(settingsViewModel, settingsController, switchViewController);
   }
