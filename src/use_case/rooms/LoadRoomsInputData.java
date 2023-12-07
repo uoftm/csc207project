@@ -8,8 +8,4 @@ public class LoadRoomsInputData {
   public LoadRoomsInputData(User user) {
     this.user = user;
   }
-
-  User getUser() {
-    return user;
-  }
 }

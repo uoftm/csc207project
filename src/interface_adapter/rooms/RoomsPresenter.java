@@ -35,6 +35,7 @@ public class RoomsPresenter implements RoomsOutputBoundary {
 
     roomsState.setDisplayMessages(messages);
     response.getRoom().setMessages(messages);
+    // No need to display a success popup after sending a message
     roomsState.setSuccess(null);
 
     roomsViewModel.firePropertyChanged();
