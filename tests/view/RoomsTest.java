@@ -22,8 +22,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
@@ -88,6 +86,8 @@ public class RoomsTest extends ButtonTest {
 
     User dummyUser = addFirebaseDummyUser();
     LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
+    inMemoryDAO.setUser(dummyUser);
+    inMemoryDAO.setIdToken("fake token");
 
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
@@ -164,6 +164,8 @@ public class RoomsTest extends ButtonTest {
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     User dummyUser = addFirebaseDummyUser();
     String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
+    inMemoryDao.setUser(dummyUser);
+    inMemoryDao.setIdToken(idToken);
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
@@ -214,13 +216,7 @@ public class RoomsTest extends ButtonTest {
     roomsViewModel.setState(testState);
 
     JButton createRoomButton = roomsView.getCreateRoomButton();
-    createRoomButton.doClick();
-
-    String regex = "^Authentication failed: .*";
-
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(roomsViewModel.getState().getError());
-    Assert.assertTrue(matcher.find());
+    Assert.assertThrows(RuntimeException.class, () -> createRoomButton.doClick());
   }
 
   @Test
@@ -233,6 +229,8 @@ public class RoomsTest extends ButtonTest {
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     User dummyUser = addFirebaseDummyUser();
     String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
+    inMemoryDao.setUser(dummyUser);
+    inMemoryDao.setIdToken(idToken);
     Room dummyRoom = addFirebaseDummyRoom(idToken, dummyUser);
 
     SearchViewModel searchViewModel = new SearchViewModel();
@@ -298,9 +296,7 @@ public class RoomsTest extends ButtonTest {
     roomsViewModel.setState(testState);
 
     JButton sendMessageButton = roomsView.getSendMessageButton();
-    sendMessageButton.doClick();
-
-    Assert.assertNotNull(roomsViewModel.getState().getError());
+    Assert.assertThrows(RuntimeException.class, () -> sendMessageButton.doClick());
   }
 
   @Test
@@ -312,9 +308,12 @@ public class RoomsTest extends ButtonTest {
     User dummyUser = addFirebaseDummyUser();
     String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
     Room dummyRoom = addFirebaseDummyRoom(idToken, dummyUser);
+    inMemoryDao.setUser(dummyUser);
+    inMemoryDao.setIdToken(idToken);
 
     User dummyUser2 = addFirebaseDummyUser();
     DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.getEmail(), dummyUser2.getName());
+    String idToken2 = userDao.getAccessToken(dummyUser2.getEmail(), dummyUser2.getPassword());
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
@@ -344,7 +343,7 @@ public class RoomsTest extends ButtonTest {
     // Remove from Firebase
     cleanUpRoom(idToken, dummyRoom, dummyUser);
     cleanUpUser(idToken, dummyUser);
-    cleanUpUser(idToken, dummyUser2);
+    cleanUpUser(idToken2, dummyUser2);
   }
 
   @Test
@@ -367,19 +366,11 @@ public class RoomsTest extends ButtonTest {
     roomsViewModel.setState(testState);
 
     JButton addUserButton = roomsView.getAddUserButton();
-    addUserButton.doClick();
-
-    String regex =
-        "Unable to add \\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\\s*to room:";
-
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(roomsViewModel.getState().getError());
-    Assert.assertTrue(matcher.find());
+    Assert.assertThrows(RuntimeException.class, () -> addUserButton.doClick());
   }
 
   private RoomsState buildTestState(LoggedInDataAccessInterface inMemoryDAO) {
     RoomsState state = new RoomsState();
-    inMemoryDAO.setUser(this.createDummyUser());
     List<Room> rooms = new ArrayList<>();
     Room room = createDummyRoom();
     rooms.add(room);
