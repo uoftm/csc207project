@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
@@ -216,7 +218,13 @@ public class RoomsTest extends ButtonTest {
     roomsViewModel.setState(testState);
 
     JButton createRoomButton = roomsView.getCreateRoomButton();
-    Assert.assertThrows(RuntimeException.class, () -> createRoomButton.doClick());
+    createRoomButton.doClick();
+
+    String regex = "^User not logged in.*";
+
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(roomsViewModel.getState().getError());
+    Assert.assertTrue(matcher.find());
   }
 
   @Test
@@ -296,7 +304,9 @@ public class RoomsTest extends ButtonTest {
     roomsViewModel.setState(testState);
 
     JButton sendMessageButton = roomsView.getSendMessageButton();
-    Assert.assertThrows(RuntimeException.class, () -> sendMessageButton.doClick());
+    sendMessageButton.doClick();
+
+    Assert.assertNotNull(roomsViewModel.getState().getError());
   }
 
   @Test
@@ -366,7 +376,14 @@ public class RoomsTest extends ButtonTest {
     roomsViewModel.setState(testState);
 
     JButton addUserButton = roomsView.getAddUserButton();
-    Assert.assertThrows(RuntimeException.class, () -> addUserButton.doClick());
+    addUserButton.doClick();
+
+    String regex =
+            "Unable to add user to room:.*";
+
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(roomsViewModel.getState().getError());
+    Assert.assertTrue(matcher.find());
   }
 
   private RoomsState buildTestState(LoggedInDataAccessInterface inMemoryDAO) {
