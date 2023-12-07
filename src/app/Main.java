@@ -14,7 +14,6 @@ import interface_adapter.search.SearchViewModel;
 import interface_adapter.search.StartSearchController;
 import interface_adapter.searched.SearchedViewModel;
 import interface_adapter.settings.SettingsViewModel;
-import interface_adapter.settings.StartSettingsController;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
@@ -22,6 +21,7 @@ import javax.swing.*;
 import okhttp3.OkHttpClient;
 import use_case.room_settings.RoomSettingsInteractor;
 import use_case.room_settings.RoomSettingsOutputBoundary;
+import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.rooms.MessageDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
 import view.*;
@@ -59,6 +59,8 @@ public class Main {
     FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject(client);
     FirebaseRoomsDataAccessObject roomsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
 
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
+
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
 
     SignupView signupView =
@@ -77,6 +79,7 @@ public class Main {
             loggedInViewModel,
             roomsViewModel,
             userDataAccessObject,
+            inMemoryDAO,
             switchViewController);
     viewManagerModel.add(loginView.contentPane, loginView.viewName);
 
@@ -90,7 +93,11 @@ public class Main {
     SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+            searchViewModel,
+            searchDataAccessObject,
+            inMemoryDAO,
+            viewManagerModel,
+            searchedViewModel);
 
     var searchView = new SearchView(searchController, searchViewModel, switchViewController);
     viewManagerModel.add(searchView.contentPane, SearchView.viewName);
@@ -110,16 +117,14 @@ public class Main {
             roomsDataAccessObject,
             messageDataAccessObject,
             userDataAccessObject,
+            inMemoryDAO,
             roomsViewModel,
             searchController,
             startSearchController,
             openRoomSettingsController);
 
-    StartSettingsController startSettingsController =
-        new StartSettingsController(settingsViewModel);
     LoggedInView loggedInView =
-        new LoggedInView(
-            loggedInViewModel, roomsView, switchViewController, startSettingsController);
+        new LoggedInView(loggedInViewModel, roomsView, switchViewController);
     viewManagerModel.add(loggedInView.contentPane, loggedInView.viewName);
 
     SettingsView settingsView =
@@ -128,14 +133,14 @@ public class Main {
             loggedInViewModel,
             userDataAccessObject,
             roomsDataAccessObject,
-            userDataAccessObject,
+            inMemoryDAO,
             switchViewController);
     viewManagerModel.add(settingsView.contentPane, settingsView.viewName);
 
     RoomSettingsOutputBoundary outputBoundary =
         new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
     RoomSettingsInteractor roomSettingsInteractor =
-        new RoomSettingsInteractor(roomsDataAccessObject, userDataAccessObject, outputBoundary);
+        new RoomSettingsInteractor(roomsDataAccessObject, inMemoryDAO, outputBoundary);
     RoomSettingsController roomSettingsController =
         new RoomSettingsController(roomSettingsInteractor);
 

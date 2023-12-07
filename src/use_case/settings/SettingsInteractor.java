@@ -1,38 +1,39 @@
 package use_case.settings;
 
-import use_case.login.LoginUserDataAccessInterface;
+import entities.auth.User;
+import use_case.rooms.LoggedInDataAccessInterface;
 
 public class SettingsInteractor implements SettingsInputBoundary {
-  // TODO: Add this after other code is merged
-  // final SettingsUserDataAccessInterface settingsUserDataAccessInterface;
   final SettingsOutputBoundary settingsPresenter;
 
   final UserSettingsDataAccessInterface userSettingsDataAccessObject;
   final RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject;
-  final LoginUserDataAccessInterface userDao;
+  final LoggedInDataAccessInterface inMemoryDAO;
 
   public SettingsInteractor(
       UserSettingsDataAccessInterface userSettingsDataAccessInterface,
       RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface,
-      LoginUserDataAccessInterface userDao,
+      LoggedInDataAccessInterface inMemoryDAO,
       SettingsOutputBoundary settingsOutputBoundary) {
     this.userSettingsDataAccessObject = userSettingsDataAccessInterface;
     this.roomsSettingsDataAccessObject = roomsSettingsDataAccessInterface;
-    this.userDao = userDao;
     this.settingsPresenter = settingsOutputBoundary;
+    this.inMemoryDAO = inMemoryDAO;
   }
 
   @Override
   public void executeChangeUsername(SettingsInputData settingsInputData) {
     try {
-      settingsInputData.getUser().setName(settingsInputData.getNewUsername());
-      userSettingsDataAccessObject.propogateDisplayNameChange(settingsInputData.getUser());
-      roomsSettingsDataAccessObject.propogateDisplayNameChange(
-          settingsInputData.getUser(), userDao);
-      SettingsOutputData settingsOutputData = new SettingsOutputData(null);
+      User user = inMemoryDAO.getUser();
+      user.setName(settingsInputData.getNewUsername());
+      inMemoryDAO.setUser(user);
+      String idToken = inMemoryDAO.getIdToken();
+      userSettingsDataAccessObject.propogateDisplayNameChange(idToken, user);
+      roomsSettingsDataAccessObject.propogateDisplayNameChange(idToken, user);
+      SettingsOutputData settingsOutputData = new SettingsOutputData(null, user.getName());
       settingsPresenter.prepareSuccessView(settingsOutputData);
     } catch (RuntimeException e) {
-      SettingsOutputData settingsOutputData = new SettingsOutputData(e.getMessage());
+      SettingsOutputData settingsOutputData = new SettingsOutputData(e.getMessage(), null);
       settingsPresenter.prepareFailView(settingsOutputData);
     }
   }

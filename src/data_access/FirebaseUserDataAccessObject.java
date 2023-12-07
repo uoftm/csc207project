@@ -41,9 +41,7 @@ public class FirebaseUserDataAccessObject
     }
   }
 
-  public void propogateDisplayNameChange(User user) {
-    String idToken = getAccessToken(user.getEmail(), user.getPassword());
-
+  public void propogateDisplayNameChange(String idToken, User user) {
     saveUserToFirebase(user.getEmail(), user.getName(), idToken);
   }
 
@@ -83,9 +81,7 @@ public class FirebaseUserDataAccessObject
   }
 
   @Override
-  public User getUser(String email, String password) {
-    String idToken = getAccessToken(email, password);
-    // Initialize user from our idToken and password by making a second call to Firebase
+  public User getUser(String idToken, String email, String password) {
     return getPrivateUserData(idToken, password);
   }
 
@@ -216,8 +212,7 @@ public class FirebaseUserDataAccessObject
     }
   }
 
-  private void deleteUserFromAuth(User user) {
-    String idToken = getAccessToken(user.getEmail(), user.getPassword());
+  private void deleteUserFromAuth(String idToken, User user) {
     JSONObject jsonBody = new JSONObject().put("idToken", idToken);
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     RequestBody body = RequestBody.create(jsonBody.toString(), JSON);
@@ -236,11 +231,9 @@ public class FirebaseUserDataAccessObject
   }
 
   @Override
-  public void deleteUser(User user) {
-    // TODO: Remove the user from any rooms for which they may be a member
+  public void deleteUser(String idToken, User user) {
     // Before calling this method, please remove the user from their rooms using the Rooms DAO
-    String idToken = getAccessToken(user.getEmail(), user.getPassword());
     deleteFirebaseUserData(user, idToken);
-    deleteUserFromAuth(user);
+    deleteUserFromAuth(idToken, user);
   }
 }

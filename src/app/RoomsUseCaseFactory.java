@@ -5,10 +5,7 @@ import interface_adapter.rooms.*;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.StartSearchController;
 import use_case.login.LoginUserDataAccessInterface;
-import use_case.rooms.LoadRoomsInteractor;
-import use_case.rooms.MessageDataAccessInterface;
-import use_case.rooms.RoomsDataAccessInterface;
-import use_case.rooms.RoomsInteractor;
+import use_case.rooms.*;
 import view.RoomsView;
 
 public class RoomsUseCaseFactory {
@@ -16,6 +13,7 @@ public class RoomsUseCaseFactory {
       RoomsDataAccessInterface roomsDataAccessObject,
       MessageDataAccessInterface messageDataAccessInterface,
       LoginUserDataAccessInterface userDao,
+      LoggedInDataAccessInterface inMemoryDAO,
       RoomsViewModel roomsViewModel,
       SearchController searchController,
       StartSearchController startSearchController,
@@ -23,11 +21,15 @@ public class RoomsUseCaseFactory {
     RoomsPresenter roomsPresenter = new RoomsPresenter(roomsViewModel);
     RoomsInteractor roomsInteractor =
         new RoomsInteractor(
-            roomsDataAccessObject, messageDataAccessInterface, userDao, roomsPresenter);
+            roomsDataAccessObject,
+            messageDataAccessInterface,
+            userDao,
+            inMemoryDAO,
+            roomsPresenter);
     RoomsController roomsController = new RoomsController(roomsInteractor);
     LoadRoomsPresenter loadRoomsPresenter = new LoadRoomsPresenter(roomsViewModel);
     LoadRoomsInteractor loadRoomsInteractor =
-        new LoadRoomsInteractor(roomsDataAccessObject, userDao, loadRoomsPresenter);
+        new LoadRoomsInteractor(roomsDataAccessObject, inMemoryDAO, loadRoomsPresenter);
     LoadRoomsController loadRoomsController = new LoadRoomsController(loadRoomsInteractor);
     return new RoomsView(
         roomsViewModel,

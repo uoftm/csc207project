@@ -12,9 +12,8 @@ public class StartSearchController {
     this.searchViewModel = searchViewModel;
   }
 
-  public void search(String roomId, String userId) {
+  public void search(String roomId) {
     searchViewModel.getState().setRoomUid(roomId);
-    searchViewModel.getState().setUserUid(userId);
 
     viewManagerModel.setActiveView(SearchView.viewName);
   }

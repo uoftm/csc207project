@@ -1,32 +1,39 @@
 package use_case.rooms;
 
+import entities.auth.User;
 import entities.rooms.Room;
 import java.util.ArrayList;
 import java.util.List;
-import use_case.login.LoginUserDataAccessInterface;
 
 public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
   final LoadRoomsOutputBoundary roomsPresenter;
   final RoomsDataAccessInterface roomsDataAccessObject;
-  final LoginUserDataAccessInterface userDao;
+  final LoggedInDataAccessInterface inMemoryDAO;
 
   public LoadRoomsInteractor(
       RoomsDataAccessInterface roomsDataAccessObject,
-      LoginUserDataAccessInterface userDao,
+      LoggedInDataAccessInterface inMemoryDAO,
       LoadRoomsOutputBoundary roomsOutputBoundary) {
     this.roomsPresenter = roomsOutputBoundary;
     this.roomsDataAccessObject = roomsDataAccessObject;
-    this.userDao = userDao;
+    this.inMemoryDAO = inMemoryDAO;
   }
 
   @Override
-  public void loadRooms(LoadRoomsInputData roomsInputData) {
+  public void loadRooms() {
     try {
-      List<String> availableRoomIds =
-          roomsDataAccessObject.getAvailableRoomIds(roomsInputData.user);
+      inMemoryDAO.getUser();
+      inMemoryDAO.getIdToken();
+    } catch (RuntimeException e) {
+      return;
+    }
+    try {
+      User user = inMemoryDAO.getUser();
+      List<String> availableRoomIds = roomsDataAccessObject.getAvailableRoomIds(user);
       List<Room> rooms = new ArrayList<>();
       for (String roomId : availableRoomIds) {
-        Room room = roomsDataAccessObject.getRoomFromId(roomsInputData.user, userDao, roomId);
+        String idToken = inMemoryDAO.getIdToken();
+        Room room = roomsDataAccessObject.getRoomFromId(idToken, user, roomId);
         rooms.add(room);
       }
       LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(rooms, null);

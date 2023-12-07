@@ -13,6 +13,7 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoggedInDataAccessInterface;
 import view.LoginView;
 
 public class LoginUseCaseFactory {
@@ -26,6 +27,7 @@ public class LoginUseCaseFactory {
       LoggedInViewModel loggedInViewModel,
       RoomsViewModel roomsViewModel,
       LoginUserDataAccessInterface userDataAccessObject,
+      LoggedInDataAccessInterface inMemoryDAO,
       SwitchViewController switchViewController) {
 
     try {
@@ -35,7 +37,8 @@ public class LoginUseCaseFactory {
               loginViewModel,
               loggedInViewModel,
               roomsViewModel,
-              userDataAccessObject);
+              userDataAccessObject,
+              inMemoryDAO);
 
       return new LoginView(loginViewModel, loginController, switchViewController);
     } catch (IOException e) {
@@ -49,13 +52,14 @@ public class LoginUseCaseFactory {
       LoginViewModel loginViewModel,
       LoggedInViewModel loggedInViewModel,
       RoomsViewModel roomsViewModel,
-      LoginUserDataAccessInterface userDataAccessObject)
+      LoginUserDataAccessInterface userDataAccessObject,
+      LoggedInDataAccessInterface inMemoryDAO)
       throws IOException {
 
     LoginOutputBoundary loginOutputBoundary =
         new LoginPresenter(viewManagerModel, loggedInViewModel, roomsViewModel, loginViewModel);
     LoginInputBoundary loginInteractor =
-        new LoginInteractor(userDataAccessObject, loginOutputBoundary);
+        new LoginInteractor(userDataAccessObject, inMemoryDAO, loginOutputBoundary);
 
     return new LoginController(loginInteractor);
   }

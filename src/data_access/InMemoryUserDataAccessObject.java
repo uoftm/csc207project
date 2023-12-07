@@ -1,24 +1,36 @@
 package data_access;
 
 import entities.auth.User;
-import java.util.HashMap;
-import java.util.Map;
-import use_case.signup.SignupUserDataAccessInterface;
+import use_case.rooms.LoggedInDataAccessInterface;
 
-public class InMemoryUserDataAccessObject implements SignupUserDataAccessInterface {
+public class InMemoryUserDataAccessObject implements LoggedInDataAccessInterface {
 
-  private final Map<String, User> users = new HashMap<>();
+  private User user;
+  private String idToken;
 
-  /**
-   * @param identifier the user's username
-   * @return whether the user exists
-   */
-
-  /**
-   * @param user the data to save
-   */
   @Override
-  public void save(User user) {
-    users.put(user.getName(), user);
+  public void setIdToken(String idToken) {
+    this.idToken = idToken;
+  }
+
+  @Override
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  @Override
+  public String getIdToken() {
+    if (idToken == null) {
+      throw new RuntimeException("Authentication failed; please log out and log back in.");
+    }
+    return idToken;
+  }
+
+  @Override
+  public User getUser() {
+    if (user == null) {
+      throw new RuntimeException("User not logged in; please log in again.");
+    }
+    return user;
   }
 }

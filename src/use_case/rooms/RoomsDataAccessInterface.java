@@ -4,23 +4,19 @@ import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Room;
 import java.util.List;
-import use_case.login.LoginUserDataAccessInterface;
 
 public interface RoomsDataAccessInterface {
-  Room getRoomFromId(User user, LoginUserDataAccessInterface userDAO, String roomId);
+  Room getRoomFromId(String idToken, User user, String roomId);
 
-  Room addRoom(User user, LoginUserDataAccessInterface userDAO, String roomName);
+  Room addRoom(String idToken, User user, String roomName);
 
-  void deleteRoom(User user, LoginUserDataAccessInterface userDAO, Room room);
+  void deleteRoom(String idToken, User user, Room room);
 
-  void addUserToRoom(
-      User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room);
+  void addUserToRoom(String idToken, User currentUser, DisplayUser newUser, Room room);
 
   List<String> getAvailableRoomIds(User user);
 
-  void removeUserFromRoom(
-      User currentUser, DisplayUser userToRemove, LoginUserDataAccessInterface userDAO, Room room);
+  void removeUserFromRoom(String idToken, User currentUser, DisplayUser userToRemove, Room room);
 
-  void changeRoomName(
-      User user, LoginUserDataAccessInterface userDAO, Room activeRoom, String roomName);
+  void changeRoomName(String idToken, User user, Room activeRoom, String roomName);
 }
