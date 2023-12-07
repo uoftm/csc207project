@@ -17,28 +17,14 @@ public class RoomsPresenter implements RoomsOutputBoundary {
 
   @Override
   public void prepareSuccessView(RoomsOutputData response) {
-    RoomsState roomsState = roomsViewModel.getState();
-    roomsState.setSuccess(response.getSuccess());
+    // RoomsState roomsState = roomsViewModel.getState();
+    // roomsState.setSuccess(response.getSuccess());
     roomsViewModel.firePropertyChanged();
   }
 
   @Override
   public void prepareSendMessageSuccessView(RoomsOutputData response) {
-    RoomsState roomsState = roomsViewModel.getState();
 
-    String messageBody = response.getSuccess();
-    List<Message> messages = roomsState.getDisplayMessages();
-    DisplayUser displayUser = response.getUser().toDisplayUser();
-
-    Message message = new Message(Instant.now(), messageBody, displayUser);
-    messages.add(message);
-
-    roomsState.setDisplayMessages(messages);
-    response.getRoom().setMessages(messages);
-    // No need to display a success popup after sending a message
-    roomsState.setSuccess(null);
-
-    roomsViewModel.firePropertyChanged();
   }
 
   @Override

@@ -10,6 +10,8 @@ import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.StartSearchController;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.Instant;
@@ -17,6 +19,7 @@ import java.util.List;
 import javax.swing.*;
 
 public class RoomsView implements PropertyChangeListener {
+  public final static int INTERVAL = 500;
   public JPanel contentPane;
   private JPanel messagesPaneInternals;
   private JPanel roomsPaneInternals;
@@ -129,11 +132,17 @@ public class RoomsView implements PropertyChangeListener {
             RoomsState currentState = viewModel.getState();
             if (currentState.roomIsSelected()) {
               Room room = currentState.getRoomByUid();
-              // TODO: Fix open room
               openRoomSettingsController.open(room);
             }
           }
         });
+
+    Timer timer = new Timer(INTERVAL, new ActionListener() {
+      public void actionPerformed(ActionEvent evt) {
+        loadRoomsController.loadRooms();
+      }
+    });
+    timer.start();
 
     addUserButton.addActionListener(
         evt -> {
@@ -142,7 +151,6 @@ public class RoomsView implements PropertyChangeListener {
             String email = currentState.getUserToAddEmail();
             String roomUid = currentState.getRoomUid();
             if (email != null) {
-              User user = currentState.getUser();
               for (var room : currentState.getAvailableRooms()) {
                 if (room.getUid().equals(roomUid)) {
                   roomsController.addUserToRoom(room, email);
@@ -169,7 +177,6 @@ public class RoomsView implements PropertyChangeListener {
           if (evt.getSource().equals(searchButton)) {
             RoomsState currentState = viewModel.getState();
             String roomUid = currentState.getRoomUid();
-            // TODO: Fix search
             startSearchController.search(roomUid);
           }
         });

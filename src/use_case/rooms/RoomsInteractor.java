@@ -35,20 +35,20 @@ public class RoomsInteractor implements RoomsInputBoundary {
       try {
         messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
         RoomsOutputData roomsOutputData =
-            new RoomsOutputData(room, user, null, null, roomsInputData.getMessage());
+            new RoomsOutputData(room,null, roomsInputData.getMessage());
         roomsPresenter.prepareSendMessageSuccessView(roomsOutputData);
       } catch (RuntimeException e) {
         RoomsOutputData roomsOutputData =
-            new RoomsOutputData(null, null, null, e.getMessage(), null);
+            new RoomsOutputData(null, e.getMessage(), null);
         roomsPresenter.prepareFailView(roomsOutputData);
       }
 
       RoomsOutputData roomsOutputData =
-          new RoomsOutputData(room, user, new ArrayList<>(), null, "Success");
+          new RoomsOutputData(room,null, "Success");
       roomsPresenter.prepareSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
       RoomsOutputData roomsOutputData =
-          new RoomsOutputData(null, null, new ArrayList<>(), e.getMessage(), null);
+          new RoomsOutputData(null, e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
@@ -65,12 +65,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
       String idToken = inMemoryDAO.getIdToken();
       roomsDataAccessObject.addUserToRoom(idToken, user, displayUserFromEmail, room);
       RoomsOutputData roomsOutputData =
-          new RoomsOutputData(null, null, null, null, "Successfully added " + email);
+          new RoomsOutputData(null, null, "Successfully added " + email);
       roomsPresenter.prepareSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
       RoomsOutputData roomsOutputData =
           new RoomsOutputData(
-              null, null, null, "Unable to add " + email + " to room:" + e.getMessage(), null);
+              null, "Unable to add " + email + " to room:" + e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
@@ -83,10 +83,10 @@ public class RoomsInteractor implements RoomsInputBoundary {
     try {
       String idToken = inMemoryDAO.getIdToken();
       Room newRoom = roomsDataAccessObject.addRoom(idToken, user, roomToCreateName);
-      RoomsOutputData roomsOutputData = new RoomsOutputData(newRoom, null, null, null, null);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(newRoom, null, null);
       roomsPresenter.prepareCreateRoomSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
-      RoomsOutputData roomsOutputData = new RoomsOutputData(null, null, null, e.getMessage(), null);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }

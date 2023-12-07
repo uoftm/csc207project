@@ -22,6 +22,12 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
   @Override
   public void loadRooms() {
     try {
+      inMemoryDAO.getUser();
+      inMemoryDAO.getIdToken();
+    } catch (RuntimeException e) {
+      return;
+    }
+    try {
       User user = inMemoryDAO.getUser();
       List<String> availableRoomIds = roomsDataAccessObject.getAvailableRoomIds(user);
       List<Room> rooms = new ArrayList<>();
