@@ -1,46 +1,59 @@
 package view;
 
 import static java.lang.Thread.sleep;
+import static org.junit.Assert.assertEquals;
 
 import app.SettingsUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
+import data_access.DAOTest;
 import data_access.FirebaseRoomsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import entities.auth.User;
-import entities.auth.UserFactory;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInViewModel;
+import interface_adapter.settings.SettingsState;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
-import java.time.LocalDateTime;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.settings.RoomsSettingsDataAccessInterface;
 
 public class SettingsTest {
+  private final OkHttpClient client = new OkHttpClient();
+
+  JPanel views;
+  ViewManagerModel viewManagerModel;
+
+  FirebaseUserDataAccessObject userDao;
+
+  RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject;
+
+  SettingsViewModel settingsViewModel;
+
+  SwitchViewController switchViewController;
+
+  LoggedInDataAccessInterface inMemoryDAO;
+
+  @Before
+  public void setUp() {
+    CardLayout cardLayout = new CardLayout();
+    views = new JPanel(cardLayout);
+    viewManagerModel = new ViewManagerModel();
+    userDao = new FirebaseUserDataAccessObject(client);
+    roomsSettingsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
+    settingsViewModel = new SettingsViewModel();
+    switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+    inMemoryDAO = new InMemoryUserDataAccessObject();
+  }
+
   @Test
   public void testSettingsLoad() {
-    // Dummy test user
-    LocalDateTime date = LocalDateTime.now();
-    UserFactory userFactory = new UserFactory();
-    User test_user = userFactory.create("123", "test@gmail.com", "Test", "1234", date);
-
-    CardLayout cardLayout = new CardLayout();
-    JPanel views = new JPanel(cardLayout);
-    ViewManagerModel viewManagerModel = new ViewManagerModel();
-
-    OkHttpClient client = new OkHttpClient();
-    FirebaseUserDataAccessObject userDao = new FirebaseUserDataAccessObject(client);
-    RoomsSettingsDataAccessInterface roomsSettingsDataAccessObject =
-        new FirebaseRoomsDataAccessObject(client);
-    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
-    SettingsViewModel settingsViewModel = new SettingsViewModel();
-    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
-
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
             settingsViewModel,
@@ -62,6 +75,72 @@ public class SettingsTest {
       throw new RuntimeException(e);
     }
 
-    Assert.assertTrue(jf != null);
+    Assert.assertNotNull(jf);
+  }
+
+  @Test
+  public void testSettingsChangeUsername() {
+    User user = DAOTest.addFirebaseDummyUser();
+    inMemoryDAO.setUser(user);
+    inMemoryDAO.setIdToken(userDao.getAccessToken(user.getEmail(), user.getPassword()));
+    LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
+    SettingsView settingsView =
+        SettingsUseCaseFactory.create(
+            settingsViewModel,
+            loggedInViewModel,
+            userDao,
+            roomsSettingsDataAccessObject,
+            inMemoryDAO,
+            switchViewController);
+    views.add(settingsView.contentPane, settingsView.viewName);
+    settingsView.getChangeUsernameField().setText("TestName");
+    SettingsState currentstate = settingsViewModel.getState();
+    settingsView.getChangeUsernameButton().doClick();
+    SettingsState settingsState = settingsViewModel.getState();
+    assertEquals("Successfully updated username", settingsState.getMessage());
+  }
+
+  @Test
+  public void testSettingsChangeUsernameFail() {
+    var roomsDataAccessObject =
+        new RoomsSettingsDataAccessInterface() {
+          public void propogateDisplayNameChange(String tokenId, User user) {
+            throw new RuntimeException("Failed to update username");
+          }
+        };
+    User user = DAOTest.addFirebaseDummyUser();
+    inMemoryDAO.setUser(user);
+    inMemoryDAO.setIdToken(userDao.getAccessToken(user.getEmail(), user.getPassword()));
+    LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
+    SettingsView settingsView =
+        SettingsUseCaseFactory.create(
+            settingsViewModel,
+            loggedInViewModel,
+            userDao,
+            roomsDataAccessObject,
+            inMemoryDAO,
+            switchViewController);
+    views.add(settingsView.contentPane, settingsView.viewName);
+    settingsView.getChangeUsernameField().setText("TestName");
+    SettingsState currentstate = settingsViewModel.getState();
+    currentstate.setUpdatedUsername(user.getName());
+    settingsView.getChangeUsernameButton().doClick();
+    SettingsState settingsState = settingsViewModel.getState();
+    assertEquals("Failed to update username", settingsState.getMessage());
+  }
+
+  @Test
+  public void testClickBackButton() {
+    SettingsView settingsView =
+        SettingsUseCaseFactory.create(
+            settingsViewModel,
+            null,
+            userDao,
+            roomsSettingsDataAccessObject,
+            inMemoryDAO,
+            switchViewController);
+    views.add(settingsView.contentPane, settingsView.viewName);
+    settingsView.getBackButton().doClick();
+    assertEquals("logged in", viewManagerModel.getActiveView());
   }
 }

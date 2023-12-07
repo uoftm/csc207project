@@ -32,9 +32,8 @@ public class LoadRoomsPresenter implements LoadRoomsOutputBoundary {
     roomsState.setAvailableRooms(output.getRooms());
 
     // Update display messages for currently selected room
-    if (roomsState.roomIsSelected()) {
-      Room room = roomsState.getRoomByUid();
-
+    Room room = roomsState.getRoomByUid();
+    if (roomsState.roomIsSelected() && room != null) {
       Set<Long> oldMessages =
           roomsState.getDisplayMessages().stream()
               .map(message -> message.timestamp.toEpochMilli())
