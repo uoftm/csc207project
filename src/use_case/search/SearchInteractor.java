@@ -1,7 +1,9 @@
 package use_case.search;
 
 import entities.search.SearchChatMessage;
+import entities.search.SearchReponseArray;
 import entities.search.SearchRequest;
+import java.util.ArrayList;
 import use_case.rooms.LoggedInDataAccessInterface;
 
 public class SearchInteractor implements SearchInputBoundary {
@@ -34,17 +36,22 @@ public class SearchInteractor implements SearchInputBoundary {
 
   @Override
   public void executeRecordData(SearchInputData searchInputData) {
-    String authorUid = inMemoryDAO.getUser().getUid();
-    SearchChatMessage chatMessage =
-        new SearchChatMessage(
-            searchInputData.getTime(),
-            searchInputData.getRoomUid(),
-            searchInputData.getMessage(),
-            authorUid);
-    SearchOutputData outputData =
-        new SearchOutputData(searchDataAccessObject.saveData(chatMessage));
-    if (outputData.getResponse().getIsError()) {
-      searchPresenter.prepareFailedResponse(outputData);
+    try {
+      String authorUid = inMemoryDAO.getUser().getUid();
+      SearchChatMessage chatMessage =
+          new SearchChatMessage(
+              searchInputData.getTime(),
+              searchInputData.getRoomUid(),
+              searchInputData.getMessage(),
+              authorUid);
+      SearchOutputData outputData =
+          new SearchOutputData(searchDataAccessObject.saveData(chatMessage));
+      if (outputData.getResponse().getIsError()) {
+        searchPresenter.prepareFailedResponse(outputData);
+      }
+    } catch (RuntimeException e) {
+      var searchResponseArray = new SearchReponseArray(new ArrayList<>(), e.getMessage(), true);
+      searchPresenter.prepareFailedResponse(new SearchOutputData(searchResponseArray));
     }
   }
 }

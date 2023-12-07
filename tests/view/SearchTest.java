@@ -4,8 +4,10 @@ import static org.junit.Assert.*;
 
 import app.SearchUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
+import data_access.DAOTest;
 import data_access.ElasticsearchDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import entities.auth.User;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.search.*;
 import interface_adapter.searched.SearchedViewModel;
@@ -66,6 +68,8 @@ public class SearchTest {
   @Test
   public void testSavaDataFromController() {
     LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
+    User dummyUser = DAOTest.createDummyUser();
+    inMemoryDAO.setUser(dummyUser);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
             searchViewModel,

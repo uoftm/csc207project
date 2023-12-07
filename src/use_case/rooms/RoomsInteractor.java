@@ -51,13 +51,12 @@ public class RoomsInteractor implements RoomsInputBoundary {
 
   @Override
   public void addUserToRoom(RoomsInputData roomsInputData) {
-    Room room = roomsInputData.getRoom();
-    User user = inMemoryDAO.getUser();
-    String email = roomsInputData.getEmail();
-
-    DisplayUser displayUserFromEmail = userDao.getDisplayUser(email);
-
     try {
+      Room room = roomsInputData.getRoom();
+      User user = inMemoryDAO.getUser();
+      String email = roomsInputData.getEmail();
+
+      DisplayUser displayUserFromEmail = userDao.getDisplayUser(email);
       String idToken = inMemoryDAO.getIdToken();
       roomsDataAccessObject.addUserToRoom(idToken, user, displayUserFromEmail, room);
       RoomsOutputData roomsOutputData =
@@ -65,17 +64,16 @@ public class RoomsInteractor implements RoomsInputBoundary {
       roomsPresenter.prepareSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
       RoomsOutputData roomsOutputData =
-          new RoomsOutputData(null, "Unable to add " + email + " to room:" + e.getMessage(), null);
+          new RoomsOutputData(null, "Unable to add user to room:" + e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
 
   @Override
   public void createRoom(RoomsInputData roomsInputData) {
-    User user = inMemoryDAO.getUser();
-    String roomToCreateName = roomsInputData.getRoomToCreateName();
-
     try {
+      User user = inMemoryDAO.getUser();
+      String roomToCreateName = roomsInputData.getRoomToCreateName();
       String idToken = inMemoryDAO.getIdToken();
       Room newRoom = roomsDataAccessObject.addRoom(idToken, user, roomToCreateName);
       RoomsOutputData roomsOutputData = new RoomsOutputData(newRoom, null, null);
