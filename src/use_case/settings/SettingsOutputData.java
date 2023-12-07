@@ -7,9 +7,6 @@ public class SettingsOutputData {
     this.error = error;
   }
 
-  public boolean getIsError() {
-    return isError;
-  }
 
   public String getError() {
     return error;
