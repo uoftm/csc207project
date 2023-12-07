@@ -88,6 +88,7 @@ public class FirebaseRoomsDataAccessObject
             messages.add(message);
           }
         }
+        messages.sort(Comparator.comparing(a -> a.timestamp));
 
         // Get DisplayUsers
         List<DisplayUser> displayUsers = new ArrayList<>();
