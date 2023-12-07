@@ -400,8 +400,7 @@ public class RoomsTest extends ButtonTest {
     JButton addUserButton = roomsView.getAddUserButton();
     addUserButton.doClick();
 
-    String regex =
-            "Unable to add user to room:.*";
+    String regex = "Unable to add user to room:.*";
 
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(roomsViewModel.getState().getError());
