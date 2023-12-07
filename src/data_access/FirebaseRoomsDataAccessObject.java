@@ -17,6 +17,8 @@ import use_case.settings.RoomsSettingsDataAccessInterface;
 
 public class FirebaseRoomsDataAccessObject
     implements RoomsDataAccessInterface, RoomsSettingsDataAccessInterface {
+
+
   final class MessageContentsJSON {
     String author;
     String contents;
@@ -53,14 +55,11 @@ public class FirebaseRoomsDataAccessObject
     }
   }
 
-  class RoomJSON implements Iterable<Message> {
+  class MessageJSON implements Iterable<Message> {
     String name;
     Map<String, MessageContentsJSON> messages;
     Map<String, String> users;
 
-
-    @NotNull
-    @Override
     public Iterator<Message> iterator() {
       return new CustomIterator(messages);
     }
@@ -113,14 +112,23 @@ public class FirebaseRoomsDataAccessObject
     try {
       Response response = client.newCall(request).execute();
       if (response.isSuccessful()) {
+        // Fetch JSON from response
         String jsonText = response.body().string();
-        RoomJSON roomMessages = new Gson().fromJson(jsonText, RoomJSON.class);
+
+
+
+        // Use GSON library to cast JSON into our RoomJSON object
+        MessageJSON roomMessages = new Gson().fromJson(jsonText, MessageJSON.class);
+        // Get iterator from our MessageJSON iterable
         Iterator<Message> roomMessageIterator = roomMessages.iterator();
 
         List<Message> messages = new ArrayList<>();
+        // Load all messages into a new list
         while(roomMessageIterator.hasNext()) {
           messages.add(roomMessageIterator.next());
         }
+
+
         messages.sort(Comparator.comparing(a -> a.timestamp));
 
         // Get DisplayUsers
