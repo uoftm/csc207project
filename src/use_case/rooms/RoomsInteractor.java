@@ -3,7 +3,6 @@ package use_case.rooms;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Room;
-import java.util.ArrayList;
 import use_case.login.LoginUserDataAccessInterface;
 
 public class RoomsInteractor implements RoomsInputBoundary {
@@ -35,20 +34,17 @@ public class RoomsInteractor implements RoomsInputBoundary {
       try {
         messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
         RoomsOutputData roomsOutputData =
-            new RoomsOutputData(room,null, roomsInputData.getMessage());
+            new RoomsOutputData(room, null, roomsInputData.getMessage());
         roomsPresenter.prepareSendMessageSuccessView(roomsOutputData);
       } catch (RuntimeException e) {
-        RoomsOutputData roomsOutputData =
-            new RoomsOutputData(null, e.getMessage(), null);
+        RoomsOutputData roomsOutputData = new RoomsOutputData(null, e.getMessage(), null);
         roomsPresenter.prepareFailView(roomsOutputData);
       }
 
-      RoomsOutputData roomsOutputData =
-          new RoomsOutputData(room,null, "Success");
+      RoomsOutputData roomsOutputData = new RoomsOutputData(room, null, "Success");
       roomsPresenter.prepareSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
-      RoomsOutputData roomsOutputData =
-          new RoomsOutputData(null, e.getMessage(), null);
+      RoomsOutputData roomsOutputData = new RoomsOutputData(null, e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }
@@ -69,8 +65,7 @@ public class RoomsInteractor implements RoomsInputBoundary {
       roomsPresenter.prepareSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
       RoomsOutputData roomsOutputData =
-          new RoomsOutputData(
-              null, "Unable to add " + email + " to room:" + e.getMessage(), null);
+          new RoomsOutputData(null, "Unable to add " + email + " to room:" + e.getMessage(), null);
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }

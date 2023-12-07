@@ -1,9 +1,6 @@
 package interface_adapter.rooms;
 
-import entities.auth.DisplayUser;
-import entities.rooms.Message;
 import entities.rooms.Room;
-import java.time.Instant;
 import java.util.List;
 import use_case.rooms.RoomsOutputBoundary;
 import use_case.rooms.RoomsOutputData;
@@ -23,9 +20,7 @@ public class RoomsPresenter implements RoomsOutputBoundary {
   }
 
   @Override
-  public void prepareSendMessageSuccessView(RoomsOutputData response) {
-
-  }
+  public void prepareSendMessageSuccessView(RoomsOutputData response) {}
 
   @Override
   public void prepareCreateRoomSuccessView(RoomsOutputData response) {

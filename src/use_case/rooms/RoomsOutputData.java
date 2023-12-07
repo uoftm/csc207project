@@ -1,6 +1,5 @@
 package use_case.rooms;
 
-import entities.auth.User;
 import entities.rooms.Room;
 
 public class RoomsOutputData {

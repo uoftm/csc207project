@@ -19,7 +19,7 @@ import java.util.List;
 import javax.swing.*;
 
 public class RoomsView implements PropertyChangeListener {
-  public final static int INTERVAL = 500;
+  public static final int INTERVAL = 500;
   public JPanel contentPane;
   private JPanel messagesPaneInternals;
   private JPanel roomsPaneInternals;
@@ -137,11 +137,14 @@ public class RoomsView implements PropertyChangeListener {
           }
         });
 
-    Timer timer = new Timer(INTERVAL, new ActionListener() {
-      public void actionPerformed(ActionEvent evt) {
-        loadRoomsController.loadRooms();
-      }
-    });
+    Timer timer =
+        new Timer(
+            INTERVAL,
+            new ActionListener() {
+              public void actionPerformed(ActionEvent evt) {
+                loadRoomsController.loadRooms();
+              }
+            });
     timer.start();
 
     addUserButton.addActionListener(
