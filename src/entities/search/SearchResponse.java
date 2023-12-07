@@ -12,14 +12,17 @@ public class SearchResponse {
 
   private final String roomUid;
 
-  private final List<SearchIndicies> highlightIndices;
+  private final List<SearchIndices> highlightIndices;
 
+  /**
+   * The SearchResponse class represents a single response of search chat messages from Elasticsearch.
+   */
   public SearchResponse(
       String fullText,
       String authUid,
       Instant time,
       String roomUid,
-      List<SearchIndicies> highlightIndices) {
+      List<SearchIndices> highlightIndices) {
     this.fullText = fullText;
     this.authUid = authUid;
     this.time = time;
@@ -43,7 +46,7 @@ public class SearchResponse {
     return roomUid;
   }
 
-  public List<SearchIndicies> getHighlightIndices() {
+  public List<SearchIndices> getHighlightIndices() {
     return highlightIndices;
   }
 }

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.*;
 import okhttp3.*;
 import org.json.JSONObject;
-import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.rooms.MessageDataAccessInterface;
 
 public class FirebaseMessageDataAccessObject implements MessageDataAccessInterface {
@@ -16,10 +16,11 @@ public class FirebaseMessageDataAccessObject implements MessageDataAccessInterfa
     this.client = client;
   }
 
+  /** Saves a message to the Firebase database. */
   @Override
-  public void sendMessage(
-      Room room, LoginUserDataAccessInterface userDAO, User user, String messageBody) {
-    String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
+  public void sendMessage(Room room, LoggedInDataAccessInterface userDAO, String messageBody) {
+    String idToken = userDAO.getIdToken();
+    User user = userDAO.getUser();
     String messageJSON =
         new JSONObject().put("contents", messageBody).put("author", user.getEmail()).toString();
 

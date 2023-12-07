@@ -2,7 +2,6 @@ package data_access;
 
 import entities.auth.DisplayUser;
 import entities.auth.User;
-import entities.auth.UserFactory;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -24,13 +23,18 @@ public class FirebaseUserDataAccessObject
 
   private final OkHttpClient client;
 
-  private final String token = null;
-  private final User user = null;
-
+  /**
+   * The FirebaseUserDataAccessObject class is responsible for signing up and logging in with
+   * Firebase/identitytoolkit.
+   */
   public FirebaseUserDataAccessObject(OkHttpClient client) {
     this.client = client;
   }
 
+  /**
+   * The internal SignupResults class represents the result of a user signup process. It contains
+   * the generated user id and the authentication token.
+   */
   private static class SignupResults {
     final String uid;
     final String idToken;
@@ -41,10 +45,27 @@ public class FirebaseUserDataAccessObject
     }
   }
 
+  /**
+   * When a user changes their display name, propagates that change to the Firebase server (not
+   * identitytoolkit).
+   *
+   * @param idToken the authentication token of the user
+   * @param user the user object containing the updated display name
+   */
   public void propogateDisplayNameChange(String idToken, User user) {
     saveUserToFirebase(user.getEmail(), user.getName(), idToken);
   }
 
+  /**
+   * Retrieves the access token for the given email and password by making an authentication request
+   * to identitytoolkit.
+   *
+   * @param email The email address of the user.
+   * @param password The password of the user.
+   * @return The access token if authentication is successful.
+   * @throws RuntimeException If authentication fails or an internal error occurs during
+   *     authentication.
+   */
   public String getAccessToken(String email, String password) {
     // Authentication Request
     JSONObject jsonBody =
@@ -80,6 +101,16 @@ public class FirebaseUserDataAccessObject
     }
   }
 
+  /**
+   * Retrieves the user data for the given email and password by making a request to
+   * identitytoolkit.
+   *
+   * @param email The email address of the user.
+   * @param password The password of the user.
+   * @return The user if authentication is successful.
+   * @throws RuntimeException If authentication fails or an internal error occurs during
+   *     authentication.
+   */
   @Override
   public User getUser(String idToken, String email, String password) {
     return getPrivateUserData(idToken, password);
@@ -106,7 +137,12 @@ public class FirebaseUserDataAccessObject
     }
   }
 
-  // Return time user was created and uid
+  /**
+   * Retrieves the user data for the given email and password by making a request to
+   * identitytoolkit.
+   *
+   * @return time user was created and uid
+   */
   private User getPrivateUserData(String idToken, String password) {
     JSONObject jsonBody = new JSONObject().put("idToken", idToken);
 
@@ -136,14 +172,23 @@ public class FirebaseUserDataAccessObject
       LocalDateTime dateTime =
           LocalDateTime.ofInstant(Instant.ofEpochMilli(createdAt), ZoneId.systemDefault());
 
-      UserFactory userFactory = new UserFactory();
-      return userFactory.create(uid, email, displayName, password, dateTime);
+      return new User(uid, email, displayName, password, dateTime);
     } catch (IOException e) {
       e.printStackTrace();
       throw new RuntimeException("User lookup failed, please try again.");
     }
   }
 
+  /**
+   * The signup method is responsible for signing up a user by sending a signup request to the
+   * Firebase authentication API. It takes a User object as a parameter, which contains the user's
+   * email and password.
+   *
+   * @param user The User object containing the email and password of the user.
+   * @return The SignupResults object, which contains the generated user id (uid) and authentication
+   *     token (idToken).
+   * @throws RuntimeException If an error occurs during the signup process.
+   */
   private SignupResults signup(User user) {
     JSONObject jsonBody =
         new JSONObject().put("email", user.getEmail()).put("password", user.getPassword());
@@ -174,6 +219,14 @@ public class FirebaseUserDataAccessObject
     }
   }
 
+  /**
+   * Saves the user's display name to Firebase server.
+   *
+   * @param email The email address of the user.
+   * @param displayName The display name to be saved.
+   * @param idToken The authentication token of the user.
+   * @throws RuntimeException If there is an error saving the display name.
+   */
   private void saveUserToFirebase(String email, String displayName, String idToken) {
     String jsonBody = JSONObject.quote(displayName);
     String encodedEmail = Base64.getEncoder().encodeToString(email.toLowerCase().getBytes());
@@ -191,12 +244,30 @@ public class FirebaseUserDataAccessObject
     }
   }
 
+  /**
+   * Saves the user's data by signing up the user and saving the display name to the Firebase
+   * server. This method takes a User object as a parameter and performs the following steps: 1.
+   * Calls the private method signup() to sign up the user and obtain the generated user id (uid)
+   * and authentication token (idToken). 2. Calls the private method saveUserToFirebase() to save
+   * the user's display name to the Firebase server.
+   *
+   * @param user The User object containing the email, password, and display name of the user.
+   * @throws RuntimeException If an error occurs during the signup process or saving the display
+   *     name.
+   */
   @Override
   public void save(User user) {
     SignupResults signupResults = signup(user);
     saveUserToFirebase(user.getEmail(), user.getName(), signupResults.idToken);
   }
 
+  /**
+   * Deletes the user data from Firebase.
+   *
+   * @param user The User object containing the user's information.
+   * @param idToken The authentication token of the user.
+   * @throws RuntimeException If unable to delete the user data.
+   */
   private void deleteFirebaseUserData(User user, String idToken) {
     String encodedEmail =
         Base64.getEncoder().encodeToString(user.getEmail().toLowerCase().getBytes());
@@ -212,6 +283,13 @@ public class FirebaseUserDataAccessObject
     }
   }
 
+  /**
+   * Deletes the user data from the Firebase authentication API.
+   *
+   * @param idToken the authentication token of the user
+   * @param user the user object containing the user's information
+   * @throws RuntimeException if unable to delete the user data
+   */
   private void deleteUserFromAuth(String idToken, User user) {
     JSONObject jsonBody = new JSONObject().put("idToken", idToken);
     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -230,6 +308,16 @@ public class FirebaseUserDataAccessObject
     }
   }
 
+  /**
+   * Deletes the user data from the Firebase authentication API and Firebase database. This method
+   * is responsible for deleting a user's data completely from the system.
+   *
+   * <p>Before calling this method, make sure to remove the user from the rooms UI.
+   *
+   * @param idToken The authentication token of the user.
+   * @param user The User object containing the user's information.
+   * @throws RuntimeException If unable to delete the user data.
+   */
   @Override
   public void deleteUser(String idToken, User user) {
     // Before calling this method, please remove the user from their rooms using the Rooms DAO

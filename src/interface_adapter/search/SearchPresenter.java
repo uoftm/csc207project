@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
+import view.SearchedView;
 
 public class SearchPresenter implements SearchOutputBoundary {
 
@@ -49,7 +50,7 @@ public class SearchPresenter implements SearchOutputBoundary {
     this.searchedViewModel.setState(searchedState);
     this.searchedViewModel.firePropertyChanged();
 
-    this.viewManagerModel.setActiveView(searchedViewModel.getViewName());
+    this.viewManagerModel.setActiveView(SearchedView.viewName);
   }
 
   @Override

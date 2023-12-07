@@ -8,10 +8,6 @@ public class LoggedInViewModel extends ViewModel {
 
   private String loggedInUser;
 
-  public LoggedInViewModel() {
-    super("logged in");
-  }
-
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
   // This is what the Login Presenter will call to let the ViewModel know
@@ -22,10 +18,6 @@ public class LoggedInViewModel extends ViewModel {
 
   public void addPropertyChangeListener(PropertyChangeListener listener) {
     support.addPropertyChangeListener(listener);
-  }
-
-  public String getLoggedInUser() {
-    return loggedInUser;
   }
 
   public void setLoggedInUser(String loggedInUser) {

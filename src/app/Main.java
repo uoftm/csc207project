@@ -27,6 +27,7 @@ import use_case.search.SearchDataAccessInterface;
 import view.*;
 
 public class Main {
+  /** The entry point of the application. */
   public static void main(String[] args) {
     // Build the main program window, the main panel containing the
     // various cards, and the layout, and stitch them together.
@@ -55,10 +56,14 @@ public class Main {
     SettingsViewModel settingsViewModel = new SettingsViewModel();
     RoomsViewModel roomsViewModel = new RoomsViewModel();
 
+    // Initialize the data access objects.
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject userDataAccessObject = new FirebaseUserDataAccessObject(client);
     FirebaseRoomsDataAccessObject roomsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
+    MessageDataAccessInterface messageDataAccessObject =
+            new FirebaseMessageDataAccessObject(client);
 
+    // Initialize the global user and token storage
     LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
 
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
@@ -85,8 +90,6 @@ public class Main {
 
     WelcomeView welcomeView = new WelcomeView(switchViewController);
     viewManagerModel.add(welcomeView.contentPane, WelcomeView.viewName);
-    MessageDataAccessInterface messageDataAccessObject =
-        new FirebaseMessageDataAccessObject(client);
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();
@@ -101,14 +104,33 @@ public class Main {
 
     var searchView = new SearchView(searchController, searchViewModel, switchViewController);
     viewManagerModel.add(searchView.contentPane, SearchView.viewName);
-
     var searchedView = new SearchedView(searchedViewModel, switchViewController);
     viewManagerModel.add(searchedView.contentPane, SearchedView.viewName);
+
+    SettingsView settingsView =
+            SettingsUseCaseFactory.create(
+                    settingsViewModel,
+                    loggedInViewModel,
+                    userDataAccessObject,
+                    roomsDataAccessObject,
+                    inMemoryDAO,
+                    switchViewController);
+    viewManagerModel.add(settingsView.contentPane, SettingsView.viewName);
+
+    RoomSettingsViewModel roomSettingsViewModel = new RoomSettingsViewModel();
+    RoomSettingsOutputBoundary outputBoundary =
+            new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
+    RoomSettingsInteractor roomSettingsInteractor =
+            new RoomSettingsInteractor(roomsDataAccessObject, inMemoryDAO, outputBoundary);
+    RoomSettingsController roomSettingsController =
+            new RoomSettingsController(roomSettingsInteractor);
+    RoomSettingsView roomSettingsView =
+            new RoomSettingsView(roomSettingsViewModel, roomSettingsController, switchViewController);
+    viewManagerModel.add(roomSettingsView.contentPane, RoomSettingsView.viewName);
 
     StartSearchController startSearchController =
         new StartSearchController(viewManagerModel, searchViewModel);
 
-    RoomSettingsViewModel roomSettingsViewModel = new RoomSettingsViewModel();
     OpenRoomSettingsController openRoomSettingsController =
         new OpenRoomSettingsController(roomSettingsViewModel, viewManagerModel);
 
@@ -126,27 +148,6 @@ public class Main {
     LoggedInView loggedInView =
         new LoggedInView(loggedInViewModel, roomsView, switchViewController);
     viewManagerModel.add(loggedInView.contentPane, LoggedInView.viewName);
-
-    SettingsView settingsView =
-        SettingsUseCaseFactory.create(
-            settingsViewModel,
-            loggedInViewModel,
-            userDataAccessObject,
-            roomsDataAccessObject,
-            inMemoryDAO,
-            switchViewController);
-    viewManagerModel.add(settingsView.contentPane, SettingsView.viewName);
-
-    RoomSettingsOutputBoundary outputBoundary =
-        new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);
-    RoomSettingsInteractor roomSettingsInteractor =
-        new RoomSettingsInteractor(roomsDataAccessObject, inMemoryDAO, outputBoundary);
-    RoomSettingsController roomSettingsController =
-        new RoomSettingsController(roomSettingsInteractor);
-
-    RoomSettingsView roomSettingsView =
-        new RoomSettingsView(roomSettingsViewModel, roomSettingsController, switchViewController);
-    viewManagerModel.add(roomSettingsView.contentPane, RoomSettingsView.viewName);
 
     viewManagerModel.setActiveView(WelcomeView.viewName);
 

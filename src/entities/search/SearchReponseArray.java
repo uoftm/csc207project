@@ -2,6 +2,10 @@ package entities.search;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a response of messages from a search operation. Can also contain an error message if
+ * the search failed.
+ */
 public class SearchReponseArray {
 
   private final ArrayList<SearchResponse> responses;

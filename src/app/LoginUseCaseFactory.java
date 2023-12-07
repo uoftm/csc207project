@@ -20,6 +20,7 @@ public class LoginUseCaseFactory {
   /** Prevent instantiation. */
   private LoginUseCaseFactory() {}
 
+  /** Creates a LoginView along with all the clean architecture components required to run it. */
   public static LoginView create(
       ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,

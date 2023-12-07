@@ -23,7 +23,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -79,7 +78,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(Optional.of(dummyRoom));
+    RoomsState testState = buildTestState(dummyRoom);
     testState.setRoomUid(dummyRoom.getUid());
     List<Room> rooms = testState.getAvailableRooms();
     rooms.add(dummyRoom);
@@ -93,7 +92,7 @@ public class RoomsTest extends ButtonTest {
     assertEquals(1, roomsViewModel.getState().getAvailableRooms().size());
 
     // Remove from Firebase
-    cleanUpRoom(idToken, dummyRoom, dummyUser);
+    cleanUpRoom(idToken, dummyRoom);
     cleanUpUser(idToken, dummyUser);
   }
 
@@ -111,7 +110,7 @@ public class RoomsTest extends ButtonTest {
         RoomsUseCaseFactory.create(
             new RoomsDataAccessInterface() {
               @Override
-              public Room getRoomFromId(String idToken, User user, String roomId) {
+              public Room getRoomFromId(String idToken, String roomId) {
                 return null;
               }
 
@@ -121,11 +120,10 @@ public class RoomsTest extends ButtonTest {
               }
 
               @Override
-              public void deleteRoom(String idToken, User user, Room room) {}
+              public void deleteRoom(String idToken, Room room) {}
 
               @Override
-              public void addUserToRoom(
-                  String idToken, User currentUser, DisplayUser newUser, Room room) {}
+              public void addUserToRoom(String idToken, DisplayUser newUser, Room room) {}
 
               @Override
               public List<String> getAvailableRoomIds(User user) {
@@ -133,12 +131,10 @@ public class RoomsTest extends ButtonTest {
               }
 
               @Override
-              public void removeUserFromRoom(
-                  String idToken, User currentUser, DisplayUser userToRemove, Room room) {}
+              public void removeUserFromRoom(String idToken, DisplayUser userToRemove, Room room) {}
 
               @Override
-              public void changeRoomName(
-                  String idToken, User user, Room activeRoom, String roomName) {}
+              public void changeRoomName(String idToken, Room activeRoom, String roomName) {}
             },
             new FirebaseMessageDataAccessObject(client),
             new FirebaseUserDataAccessObject(client),
@@ -148,7 +144,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(Optional.empty());
+    RoomsState testState = buildTestState(null);
     inMemoryDAO.setUser(
         new User(
             "",
@@ -188,7 +184,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(Optional.empty());
+    RoomsState testState = buildTestState(null);
     testState.setRoomToCreateName("New Room");
     inMemoryDao.setUser(dummyUser);
     roomsViewModel.setState(testState);
@@ -202,7 +198,7 @@ public class RoomsTest extends ButtonTest {
     String roomUid = testState.getRoomUid();
     Assert.assertNotNull(roomUid);
     Room room = testState.getRoomByUid();
-    cleanUpRoom(idToken, room, dummyUser);
+    cleanUpRoom(idToken, room);
     cleanUpUser(idToken, dummyUser);
   }
 
@@ -222,7 +218,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(Optional.empty());
+    RoomsState testState = buildTestState(null);
     testState.setRoomToCreateName("Test Room!");
     roomsViewModel.setState(testState);
 
@@ -274,7 +270,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(Optional.of(dummyRoom));
+    RoomsState testState = buildTestState(dummyRoom);
     String messageContent = "Test Message!";
     testState.setSendMessage(messageContent);
     roomsViewModel.setState(testState);
@@ -290,10 +286,11 @@ public class RoomsTest extends ButtonTest {
     }
 
     Assert.assertNull(roomsViewModel.getState().getError());
-    assertEquals("Test Message!", roomsViewModel.getState().getDisplayMessages().get(0).content);
+    assertEquals(
+        "Test Message!", roomsViewModel.getState().getDisplayMessages().get(0).getContent());
 
     // Remove from Firebase
-    cleanUpRoom(idToken, dummyRoom, dummyUser);
+    cleanUpRoom(idToken, dummyRoom);
     cleanUpUser(idToken, dummyUser);
   }
 
@@ -326,7 +323,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(Optional.of(createDummyRoom()));
+    RoomsState testState = buildTestState((createDummyRoom()));
     testState.setSendMessage("Test Message!");
     roomsViewModel.setState(testState);
 
@@ -364,7 +361,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(Optional.of(dummyRoom));
+    RoomsState testState = buildTestState((dummyRoom));
     testState.setUserToAddEmail(dummyDisplayUser2.getEmail());
     inMemoryDao.setUser(dummyUser);
     testState.setRoomUid(dummyRoom.getUid());
@@ -379,7 +376,7 @@ public class RoomsTest extends ButtonTest {
     Assert.assertNull(roomsViewModel.getState().getError());
 
     // Remove from Firebase
-    cleanUpRoom(idToken, dummyRoom, dummyUser);
+    cleanUpRoom(idToken, dummyRoom);
     cleanUpUser(idToken, dummyUser);
     cleanUpUser(idToken2, dummyUser2);
   }
@@ -400,7 +397,7 @@ public class RoomsTest extends ButtonTest {
             null,
             null);
 
-    RoomsState testState = buildTestState(Optional.of(createDummyRoom()));
+    RoomsState testState = buildTestState((createDummyRoom()));
     testState.setUserToAddEmail(createDummyDisplayUser().getEmail());
     roomsViewModel.setState(testState);
 
@@ -414,12 +411,12 @@ public class RoomsTest extends ButtonTest {
     Assert.assertTrue(matcher.find());
   }
 
-  private RoomsState buildTestState(Optional<Room> dummyRoom) {
+  private RoomsState buildTestState(Room dummyRoom) {
     RoomsState state = new RoomsState();
     List<Room> rooms = new ArrayList<>();
-    if (dummyRoom.isPresent()) {
-      rooms.add(dummyRoom.get());
-      state.setRoomUid(dummyRoom.get().getUid());
+    if (dummyRoom != null) {
+      rooms.add(dummyRoom);
+      state.setRoomUid(dummyRoom.getUid());
     }
     state.setAvailableRooms(rooms);
     return state;
@@ -486,7 +483,6 @@ public class RoomsTest extends ButtonTest {
     inMemoryDAO.setUser(dummyUser);
     String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
     inMemoryDAO.setIdToken(idToken);
-    Room dummyRoom = addFirebaseDummyRoom(idToken, dummyUser);
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();
@@ -538,10 +534,10 @@ public class RoomsTest extends ButtonTest {
     userDao.deleteUser(idToken, user);
   }
 
-  void cleanUpRoom(String idToken, Room room, User user) {
+  void cleanUpRoom(String idToken, Room room) {
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
-    roomsDao.deleteRoom(idToken, user, room);
+    roomsDao.deleteRoom(idToken, room);
   }
 
   /**

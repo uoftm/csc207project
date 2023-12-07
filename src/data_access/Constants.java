@@ -1,5 +1,10 @@
 package data_access;
 
+/**
+ * This class contains all the constants used in the data access layer.
+ *
+ * <p>In particular, it contains our API endpoints and API keys.
+ */
 public class Constants {
   public static final String FIREBASE_URL = "https://csc207-830a5-default-rtdb.firebaseio.com/";
   public static final String ELASTICSEARCH_URL =

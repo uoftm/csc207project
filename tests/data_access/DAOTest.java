@@ -62,7 +62,7 @@ public abstract class DAOTest {
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface loginDao = new FirebaseUserDataAccessObject(client);
     String idToken = loginDao.getAccessToken(user.getEmail(), user.getPassword());
-    roomsDao.deleteRoom(idToken, user, room);
+    roomsDao.deleteRoom(idToken, room);
   }
 
   /**

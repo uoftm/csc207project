@@ -13,15 +13,24 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
 
   private final OkHttpClient client;
 
+  /**
+   * Constructs a new ElasticsearchDataAccessObject with the specified OkHttpClient as the HTTP
+   * client. We use a single okhttp client to enable http connection reusing
+   *
+   * @param okHttpClient The OkHttpClient used for making HTTP requests to Elasticsearch.
+   */
   public ElasticsearchDataAccessObject(OkHttpClient okHttpClient) {
     this.client = okHttpClient;
   }
 
+  /**
+   * Retrieves search chat data from Elasticsearch based on the given search request.
+   *
+   * @param searchRequest The search request containing the query and room UID.
+   * @return A SearchReponseArray object representing the search results from Elasticsearch or an
+   *     error message if the search failed.
+   */
   public SearchReponseArray getData(SearchRequest searchRequest) {
-
-    String esUrl = Constants.ELASTICSEARCH_URL;
-    String apiKey = Constants.ELASTICSEARCH_API_KEY;
-
     String index = "search-chats";
 
     JSONObject roomIDQuery =
@@ -57,8 +66,8 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
 
     Request request =
         new Request.Builder()
-            .url(esUrl + "/" + index + "/_search")
-            .addHeader("Authorization", "ApiKey " + apiKey)
+            .url(Constants.ELASTICSEARCH_URL + "/" + index + "/_search")
+            .addHeader("Authorization", "ApiKey " + Constants.ELASTICSEARCH_API_KEY)
             .addHeader("Content-Type", "application/json")
             .post(RequestBody.create(query.toString(), MediaType.get("application/json")))
             .build();
@@ -83,7 +92,7 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
 
           String openTag = "<em>";
           String closeTag = "</em>";
-          List<SearchIndicies> item = new ArrayList<>();
+          List<SearchIndices> item = new ArrayList<>();
           String text = finalHighlight;
           int currentIndex = 0;
           while (text.indexOf(openTag, currentIndex) != -1) {
@@ -91,12 +100,11 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
             int end = text.indexOf(closeTag, start);
 
             if (end != -1) {
-              item.add(
-                  new SearchIndicies(
-                      start - (openTag.length() * item.size() + closeTag.length() * item.size()),
-                      end
-                          - (openTag.length() * (item.size() + 1)
-                              + closeTag.length() * item.size())));
+              int strippedStart =
+                  start - (openTag.length() * item.size() + closeTag.length() * item.size());
+              int strippedEnd =
+                  end - (openTag.length() * (item.size() + 1) + closeTag.length() * item.size());
+              item.add(new SearchIndices(strippedStart, strippedEnd));
               currentIndex = end + closeTag.length();
             } else {
               break;
@@ -105,13 +113,9 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
           String fulltext = finalHighlight.replaceAll("<em>|</em>", "");
 
           // The above while loops involving the open and close Tags gets the indices for the
-          // strings
-          // to be
-          // highlighted; As in the strings surrounded by "<em>|</em>". It gets the indices for them
-          // after
-          // the correspondent tags are removed. We need to indices to highlight the part of the
-          // text
-          // that is matched by elastic search in SearchedView.
+          // strings to be highlighted; As in the strings surrounded by "<em>|</em>". It gets the
+          // indices for them after the correspondent tags are removed. We need to indices to
+          // highlight the part of the text that is matched by elastic search in SearchedView.
           source.getString("roomID");
           SearchResponse oneResponse =
               new SearchResponse(
@@ -132,10 +136,13 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
     }
   }
 
+  /**
+   * Add the given search chat message to the Elasticsearch index.
+   *
+   * @param message The search chat message to be saved.
+   * @return A SearchReponseArray object representing the response from Elasticsearch.
+   */
   public SearchReponseArray saveData(SearchChatMessage message) {
-    String esUrl = Constants.ELASTICSEARCH_URL;
-    String apiKey = Constants.ELASTICSEARCH_API_KEY;
-
     JSONObject json =
         new JSONObject()
             .put("time", message.getTime())
@@ -151,8 +158,9 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
 
     Request request =
         new Request.Builder()
-            .url(esUrl + "/_bulk?pretty&pipeline=ent-search-generic-ingestion")
-            .addHeader("Authorization", "ApiKey " + apiKey)
+            .url(
+                Constants.ELASTICSEARCH_URL + "/_bulk?pretty&pipeline=ent-search-generic-ingestion")
+            .addHeader("Authorization", "ApiKey " + Constants.ELASTICSEARCH_API_KEY)
             .post(requestBody)
             .build();
 

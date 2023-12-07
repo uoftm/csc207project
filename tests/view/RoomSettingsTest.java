@@ -58,7 +58,7 @@ public class RoomSettingsTest {
           public int changeRoomNameCalls = 0;
 
           @Override
-          public Room getRoomFromId(String idToken, User user, String roomId) {
+          public Room getRoomFromId(String idToken, String roomId) {
             return null;
           }
 
@@ -68,13 +68,12 @@ public class RoomSettingsTest {
           }
 
           @Override
-          public void deleteRoom(String idToken, User user, Room room) {
+          public void deleteRoom(String idToken, Room room) {
             deleteRoomCalls++;
           }
 
           @Override
-          public void addUserToRoom(
-              String idToken, User currentUser, DisplayUser newUser, Room room) {}
+          public void addUserToRoom(String idToken, DisplayUser newUser, Room room) {}
 
           @Override
           public List<String> getAvailableRoomIds(User user) {
@@ -82,11 +81,10 @@ public class RoomSettingsTest {
           }
 
           @Override
-          public void removeUserFromRoom(
-              String idToken, User currentUser, DisplayUser userToRemove, Room room) {}
+          public void removeUserFromRoom(String idToken, DisplayUser userToRemove, Room room) {}
 
           @Override
-          public void changeRoomName(String idToken, User user, Room activeRoom, String roomName) {
+          public void changeRoomName(String idToken, Room activeRoom, String roomName) {
             changeRoomNameCalls++;
             Assert.assertEquals("Test Room 2", roomName);
           }
@@ -145,7 +143,7 @@ public class RoomSettingsTest {
         new RoomsDataAccessInterface() {
 
           @Override
-          public Room getRoomFromId(String idToken, User user, String roomId) {
+          public Room getRoomFromId(String idToken, String roomId) {
             return null;
           }
 
@@ -155,13 +153,12 @@ public class RoomSettingsTest {
           }
 
           @Override
-          public void deleteRoom(String idToken, User user, Room room) {
+          public void deleteRoom(String idToken, Room room) {
             throw new RuntimeException("Failed to delete room.");
           }
 
           @Override
-          public void addUserToRoom(
-              String idToken, User currentUser, DisplayUser newUser, Room room) {}
+          public void addUserToRoom(String idToken, DisplayUser newUser, Room room) {}
 
           @Override
           public List<String> getAvailableRoomIds(User user) {
@@ -169,11 +166,10 @@ public class RoomSettingsTest {
           }
 
           @Override
-          public void removeUserFromRoom(
-              String idToken, User currentUser, DisplayUser userToRemove, Room room) {}
+          public void removeUserFromRoom(String idToken, DisplayUser userToRemove, Room room) {}
 
           @Override
-          public void changeRoomName(String idToken, User user, Room activeRoom, String roomName) {
+          public void changeRoomName(String idToken, Room activeRoom, String roomName) {
             throw new RuntimeException("Failed to change room name.");
           }
         };

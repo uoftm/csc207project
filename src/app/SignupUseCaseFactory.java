@@ -1,13 +1,11 @@
 package app;
 
-import entities.auth.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-import javax.swing.*;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -19,6 +17,11 @@ public class SignupUseCaseFactory {
   /** Prevent instantiation. */
   private SignupUseCaseFactory() {}
 
+  /**
+   * Creates the Signup page and the use case for it
+   *
+   * @return The instance of the Signup page
+   */
   public static SignupView create(
       ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,
@@ -32,6 +35,11 @@ public class SignupUseCaseFactory {
     return new SignupView(signupController, signupViewModel, switchViewController);
   }
 
+  /**
+   * Create the signup use case
+   *
+   * @return The instance of the SignupController
+   */
   private static SignupController createUserSignupUseCase(
       ViewManagerModel viewManagerModel,
       SignupViewModel signupViewModel,
@@ -42,10 +50,8 @@ public class SignupUseCaseFactory {
     SignupOutputBoundary signupOutputBoundary =
         new SignupPresenter(viewManagerModel, signupViewModel, loginViewModel);
 
-    UserFactory userFactory = new UserFactory();
-
     SignupInputBoundary userSignupInteractor =
-        new SignupInteractor(userDataAccessObject, signupOutputBoundary, userFactory);
+        new SignupInteractor(userDataAccessObject, signupOutputBoundary);
 
     return new SignupController(userSignupInteractor);
   }

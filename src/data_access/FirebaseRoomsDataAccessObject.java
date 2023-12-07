@@ -22,6 +22,11 @@ public class FirebaseRoomsDataAccessObject
     this.client = client;
   }
 
+  /**
+   * Once a user changes their display name, this method will update the display name in all of the
+   * rooms that the user is a part of, so that the user's display name can be correctly displayed in
+   * each room.
+   */
   public void propogateDisplayNameChange(String idToken, User user) {
     List<String> availableRoomIds = getAvailableRoomIds(user);
     for (String roomId : availableRoomIds) {
@@ -29,6 +34,7 @@ public class FirebaseRoomsDataAccessObject
     }
   }
 
+  /** Gets the list of room ids that a user is a part of. */
   @Override
   public List<String> getAvailableRoomIds(User user) {
     String encodedEmail =
@@ -53,8 +59,16 @@ public class FirebaseRoomsDataAccessObject
     }
   }
 
+  /**
+   * Retrieves the room object with the given ID.
+   *
+   * @param idToken The authentication token of the user.
+   * @param roomId The ID of the room to retrieve.
+   * @return The room object with the given ID.
+   * @throws RuntimeException If there is an error retrieving the room data.
+   */
   @Override
-  public Room getRoomFromId(String idToken, User user, String roomId) {
+  public Room getRoomFromId(String idToken, String roomId) {
     String url = String.format(Constants.ROOM_URL, roomId) + "?auth=" + idToken;
     Request request = new Request.Builder().url(url).get().build();
 
@@ -81,7 +95,7 @@ public class FirebaseRoomsDataAccessObject
             messages.add(message);
           }
         }
-        messages.sort(Comparator.comparing(a -> a.timestamp));
+        messages.sort(Comparator.comparing(a -> a.getTimestamp()));
 
         // Get DisplayUsers
         List<DisplayUser> displayUsers = new ArrayList<>();
@@ -131,8 +145,7 @@ public class FirebaseRoomsDataAccessObject
   }
 
   @Override
-  public void removeUserFromRoom(
-      String idToken, User currentUser, DisplayUser userToRemove, Room room) {
+  public void removeUserFromRoom(String idToken, DisplayUser userToRemove, Room room) {
     String encodedEmail =
         Base64.getEncoder().encodeToString(userToRemove.getEmail().toLowerCase().getBytes());
     String url =
@@ -171,7 +184,7 @@ public class FirebaseRoomsDataAccessObject
   }
 
   @Override
-  public void addUserToRoom(String idToken, User currentUser, DisplayUser newUser, Room room) {
+  public void addUserToRoom(String idToken, DisplayUser newUser, Room room) {
     addUserToRoomData(newUser, idToken, room.getUid());
     addRoomToUserData(newUser, idToken, room);
   }
@@ -233,7 +246,7 @@ public class FirebaseRoomsDataAccessObject
   }
 
   @Override
-  public void deleteRoom(String idToken, User user, Room room) {
+  public void deleteRoom(String idToken, Room room) {
     for (DisplayUser roomUser : room.getUsers()) {
       deleteRoomFromUserData(roomUser, room, idToken);
     }
@@ -251,7 +264,7 @@ public class FirebaseRoomsDataAccessObject
   }
 
   @Override
-  public void changeRoomName(String idToken, User user, Room activeRoom, String roomName) {
+  public void changeRoomName(String idToken, Room activeRoom, String roomName) {
     String jsonBody = JSONObject.quote(roomName);
     String url = String.format(Constants.ROOM_NAME_URL, activeRoom.getUid()) + "?auth=" + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));

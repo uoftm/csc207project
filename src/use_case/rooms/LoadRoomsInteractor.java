@@ -33,7 +33,7 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
       List<Room> rooms = new ArrayList<>();
       for (String roomId : availableRoomIds) {
         String idToken = inMemoryDAO.getIdToken();
-        Room room = roomsDataAccessObject.getRoomFromId(idToken, user, roomId);
+        Room room = roomsDataAccessObject.getRoomFromId(idToken, roomId);
         rooms.add(room);
       }
       LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(rooms, null);

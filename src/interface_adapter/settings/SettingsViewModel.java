@@ -7,10 +7,6 @@ import java.beans.PropertyChangeSupport;
 public class SettingsViewModel extends ViewModel {
   private SettingsState state = new SettingsState();
 
-  public SettingsViewModel() {
-    super("settings");
-  }
-
   public void setState(SettingsState state) {
     this.state = state;
   }

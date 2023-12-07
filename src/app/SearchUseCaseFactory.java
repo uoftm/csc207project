@@ -12,9 +12,14 @@ import use_case.search.SearchInteractor;
 import use_case.search.SearchOutputBoundary;
 
 public class SearchUseCaseFactory {
-
+  /** Prevent instantiation. */
   private SearchUseCaseFactory() {}
 
+  /**
+   * Creates the Search page and the use case for it
+   *
+   * @return The instance of the SearchController
+   */
   public static SearchController createSearchController(
       SearchViewModel searchViewModel,
       SearchDataAccessInterface searchDataAccessObject,

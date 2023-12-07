@@ -12,6 +12,11 @@ public class SwitchViewUseCaseFactory {
   /** Prevent instantiation. */
   private SwitchViewUseCaseFactory() {}
 
+  /**
+   * Creates the SwitchViewController and helper classes and return
+   *
+   * @return The instance of the SwitchViewController
+   */
   public static SwitchViewController create(ViewManagerModel viewManagerModel) {
     SwitchViewOutputBoundary switchViewOutputBoundary = new SwitchViewPresenter(viewManagerModel);
     SwitchViewInputBoundary switchViewInteractor =
