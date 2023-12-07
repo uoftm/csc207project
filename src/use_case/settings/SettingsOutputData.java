@@ -3,8 +3,11 @@ package use_case.settings;
 public class SettingsOutputData {
   private final String error;
 
-  public SettingsOutputData(String error) {
+  private String username;
+
+  public SettingsOutputData(String error, String username) {
     this.error = error;
+    this.username = username;
   }
 
   public boolean getIsError() {
@@ -13,5 +16,9 @@ public class SettingsOutputData {
 
   public String getError() {
     return error;
+  }
+
+  public String getUsername() {
+    return username;
   }
 }

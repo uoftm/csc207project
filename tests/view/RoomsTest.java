@@ -5,10 +5,7 @@ import static org.junit.Assert.assertEquals;
 import app.RoomsUseCaseFactory;
 import app.SearchUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
-import data_access.ElasticsearchDataAccessObject;
-import data_access.FirebaseMessageDataAccessObject;
-import data_access.FirebaseRoomsDataAccessObject;
-import data_access.FirebaseUserDataAccessObject;
+import data_access.*;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Message;
@@ -22,7 +19,6 @@ import interface_adapter.search.SearchViewModel;
 import interface_adapter.search.StartSearchController;
 import interface_adapter.searched.SearchedViewModel;
 import interface_adapter.settings.SettingsViewModel;
-import interface_adapter.settings.StartSettingsController;
 import interface_adapter.switch_view.SwitchViewController;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -36,6 +32,7 @@ import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.rooms.MessageDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
@@ -43,7 +40,6 @@ import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
 public class RoomsTest extends ButtonTest {
-
   @Test
   public void testClickingRefreshSuccess() {
     OkHttpClient client = new OkHttpClient();
@@ -52,23 +48,37 @@ public class RoomsTest extends ButtonTest {
     MessageDataAccessInterface messageDao = new FirebaseMessageDataAccessObject(client);
     RoomsDataAccessInterface roomDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    LoggedInDataAccessInterface inMemoryDao = new InMemoryUserDataAccessObject();
     User dummyUser = addFirebaseDummyUser();
-    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+    String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
+    inMemoryDao.setIdToken(idToken);
+    inMemoryDao.setUser(dummyUser);
+    Room dummyRoom = addFirebaseDummyRoom(idToken, dummyUser);
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();
     SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+            searchViewModel,
+            searchDataAccessObject,
+            inMemoryDao,
+            viewManagerModel,
+            searchedViewModel);
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
-            roomDao, messageDao, userDao, roomsViewModel, searchController, null, null);
+            roomDao,
+            messageDao,
+            userDao,
+            inMemoryDao,
+            roomsViewModel,
+            searchController,
+            null,
+            null);
 
-    RoomsState testState = buildTestState();
-    testState.setUser(dummyUser);
+    RoomsState testState = buildTestState(inMemoryDao);
     testState.setRoomUid(dummyRoom.getUid());
     List<Room> rooms = testState.getAvailableRooms();
     rooms.add(dummyRoom);
@@ -82,8 +92,8 @@ public class RoomsTest extends ButtonTest {
     Assert.assertTrue(roomsViewModel.getState().getAvailableRooms().size() == 1);
 
     // Remove from Firebase
-    cleanUpRoom(dummyRoom, dummyUser);
-    cleanUpUser(dummyUser);
+    cleanUpRoom(idToken, dummyRoom, dummyUser);
+    cleanUpUser(idToken, dummyUser);
   }
 
   @Test
@@ -92,31 +102,29 @@ public class RoomsTest extends ButtonTest {
     OkHttpClient client = new OkHttpClient();
 
     User dummyUser = addFirebaseDummyUser();
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
+    inMemoryDAO.setUser(dummyUser);
+    inMemoryDAO.setIdToken("fake token");
 
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
             new RoomsDataAccessInterface() {
               @Override
-              public Room getRoomFromId(
-                  User user, LoginUserDataAccessInterface userDAO, String roomId) {
+              public Room getRoomFromId(String idToken, User user, String roomId) {
                 return null;
               }
 
               @Override
-              public Room addRoom(
-                  User user, LoginUserDataAccessInterface userDAO, String roomName) {
+              public Room addRoom(String idToken, User user, String roomName) {
                 return null;
               }
 
               @Override
-              public void deleteRoom(User user, LoginUserDataAccessInterface userDAO, Room room) {}
+              public void deleteRoom(String idToken, User user, Room room) {}
 
               @Override
               public void addUserToRoom(
-                  User currentUser,
-                  DisplayUser newUser,
-                  LoginUserDataAccessInterface userDAO,
-                  Room room) {}
+                  String idToken, User currentUser, DisplayUser newUser, Room room) {}
 
               @Override
               public List<String> getAvailableRoomIds(User user) {
@@ -125,27 +133,22 @@ public class RoomsTest extends ButtonTest {
 
               @Override
               public void removeUserFromRoom(
-                  User currentUser,
-                  DisplayUser userToRemove,
-                  LoginUserDataAccessInterface userDAO,
-                  Room room) {}
+                  String idToken, User currentUser, DisplayUser userToRemove, Room room) {}
 
               @Override
               public void changeRoomName(
-                  User user,
-                  LoginUserDataAccessInterface userDAO,
-                  Room activeRoom,
-                  String roomName) {}
+                  String idToken, User user, Room activeRoom, String roomName) {}
             },
             new FirebaseMessageDataAccessObject(client),
             new FirebaseUserDataAccessObject(client),
+            inMemoryDAO,
             roomsViewModel,
             null,
             null,
             null);
 
-    RoomsState testState = buildTestState();
-    testState.setUser(
+    RoomsState testState = buildTestState(inMemoryDAO);
+    inMemoryDAO.setUser(
         new User(
             "",
             dummyUser.getEmail(),
@@ -166,7 +169,11 @@ public class RoomsTest extends ButtonTest {
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface dao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    LoggedInDataAccessInterface inMemoryDao = new InMemoryUserDataAccessObject();
     User dummyUser = addFirebaseDummyUser();
+    String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
+    inMemoryDao.setUser(dummyUser);
+    inMemoryDao.setIdToken(idToken);
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
@@ -174,14 +181,15 @@ public class RoomsTest extends ButtonTest {
             dao,
             new FirebaseMessageDataAccessObject(client),
             userDao,
+            inMemoryDao,
             roomsViewModel,
             null,
             null,
             null);
 
-    RoomsState testState = buildTestState();
+    RoomsState testState = buildTestState(inMemoryDao);
     testState.setRoomToCreateName("New Room");
-    testState.setUser(dummyUser);
+    inMemoryDao.setUser(dummyUser);
     roomsViewModel.setState(testState);
 
     JButton createRoomButton = roomsView.getCreateRoomButton();
@@ -193,32 +201,34 @@ public class RoomsTest extends ButtonTest {
     String roomUid = testState.getRoomUid();
     Assert.assertNotNull(roomUid);
     Room room = testState.getRoomByUid();
-    cleanUpRoom(room, dummyUser);
-    cleanUpUser(dummyUser);
+    cleanUpRoom(idToken, room, dummyUser);
+    cleanUpUser(idToken, dummyUser);
   }
 
   @Test
   public void testRoomCreationFailed() {
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     OkHttpClient client = new OkHttpClient();
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
             new FirebaseRoomsDataAccessObject(client),
             new FirebaseMessageDataAccessObject(client),
             new FirebaseUserDataAccessObject(client),
+            inMemoryDAO,
             roomsViewModel,
             null,
             null,
             null);
 
-    RoomsState testState = buildTestState();
+    RoomsState testState = buildTestState(inMemoryDAO);
     testState.setRoomToCreateName("Test Room!");
     roomsViewModel.setState(testState);
 
     JButton createRoomButton = roomsView.getCreateRoomButton();
     createRoomButton.doClick();
 
-    String regex = "^Authentication failed: .*";
+    String regex = "^User not logged in.*";
 
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(roomsViewModel.getState().getError());
@@ -233,25 +243,40 @@ public class RoomsTest extends ButtonTest {
     MessageDataAccessInterface messageDao = new FirebaseMessageDataAccessObject(client);
     RoomsDataAccessInterface roomDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    LoggedInDataAccessInterface inMemoryDao = new InMemoryUserDataAccessObject();
     User dummyUser = addFirebaseDummyUser();
-    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+    String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
+    inMemoryDao.setUser(dummyUser);
+    inMemoryDao.setIdToken(idToken);
+    Room dummyRoom = addFirebaseDummyRoom(idToken, dummyUser);
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();
     SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+            searchViewModel,
+            searchDataAccessObject,
+            inMemoryDao,
+            viewManagerModel,
+            searchedViewModel);
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
-            roomDao, messageDao, userDao, roomsViewModel, searchController, null, null);
+            roomDao,
+            messageDao,
+            userDao,
+            inMemoryDao,
+            roomsViewModel,
+            searchController,
+            null,
+            null);
 
-    RoomsState testState = buildTestState();
+    RoomsState testState = buildTestState(inMemoryDao);
     String messageContent = "Test Message!";
     testState.setSendMessage(messageContent);
-    testState.setUser(dummyUser);
+    inMemoryDao.setUser(dummyUser);
     testState.setRoomUid(dummyRoom.getUid());
     List<Room> rooms = testState.getAvailableRooms();
     rooms.add(dummyRoom);
@@ -266,8 +291,8 @@ public class RoomsTest extends ButtonTest {
         roomsViewModel.getState().getDisplayMessages().get(0).content.equals("Test Message!"));
 
     // Remove from Firebase
-    cleanUpRoom(dummyRoom, dummyUser);
-    cleanUpUser(dummyUser);
+    cleanUpRoom(idToken, dummyRoom, dummyUser);
+    cleanUpUser(idToken, dummyUser);
   }
 
   @Test
@@ -277,10 +302,15 @@ public class RoomsTest extends ButtonTest {
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();
+    LoggedInDataAccessInterface inMemoryDao = new InMemoryUserDataAccessObject();
     SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+            searchViewModel,
+            searchDataAccessObject,
+            inMemoryDao,
+            viewManagerModel,
+            searchedViewModel);
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
@@ -288,12 +318,13 @@ public class RoomsTest extends ButtonTest {
             new FirebaseRoomsDataAccessObject(client),
             new FirebaseMessageDataAccessObject(client),
             new FirebaseUserDataAccessObject(client),
+            inMemoryDao,
             roomsViewModel,
             searchController,
             null,
             null);
 
-    RoomsState testState = buildTestState();
+    RoomsState testState = buildTestState(inMemoryDao);
     testState.setRoomUid(testState.getAvailableRooms().get(0).getUid());
     testState.setSendMessage("Test Message!");
     roomsViewModel.setState(testState);
@@ -309,12 +340,16 @@ public class RoomsTest extends ButtonTest {
     OkHttpClient client = new OkHttpClient();
     FirebaseRoomsDataAccessObject dao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
-
+    LoggedInDataAccessInterface inMemoryDao = new InMemoryUserDataAccessObject();
     User dummyUser = addFirebaseDummyUser();
-    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+    String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
+    Room dummyRoom = addFirebaseDummyRoom(idToken, dummyUser);
+    inMemoryDao.setUser(dummyUser);
+    inMemoryDao.setIdToken(idToken);
 
     User dummyUser2 = addFirebaseDummyUser();
     DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.getEmail(), dummyUser2.getName());
+    String idToken2 = userDao.getAccessToken(dummyUser2.getEmail(), dummyUser2.getPassword());
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
@@ -322,14 +357,15 @@ public class RoomsTest extends ButtonTest {
             dao,
             new FirebaseMessageDataAccessObject(client),
             userDao,
+            inMemoryDao,
             roomsViewModel,
             null,
             null,
             null);
 
-    RoomsState testState = buildTestState();
+    RoomsState testState = buildTestState(inMemoryDao);
     testState.setUserToAddEmail(dummyDisplayUser2.getEmail());
-    testState.setUser(dummyUser);
+    inMemoryDao.setUser(dummyUser);
     testState.setRoomUid(dummyRoom.getUid());
     List<Room> rooms = testState.getAvailableRooms();
     rooms.add(dummyRoom);
@@ -342,43 +378,43 @@ public class RoomsTest extends ButtonTest {
     Assert.assertNull(roomsViewModel.getState().getError());
 
     // Remove from Firebase
-    cleanUpRoom(dummyRoom, dummyUser);
-    cleanUpUser(dummyUser);
-    cleanUpUser(dummyUser2);
+    cleanUpRoom(idToken, dummyRoom, dummyUser);
+    cleanUpUser(idToken, dummyUser);
+    cleanUpUser(idToken2, dummyUser2);
   }
 
   @Test
   public void testAddUserToRoomFailed() {
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     OkHttpClient client = new OkHttpClient();
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
             new FirebaseRoomsDataAccessObject(client),
             new FirebaseMessageDataAccessObject(client),
             new FirebaseUserDataAccessObject(client),
+            inMemoryDAO,
             roomsViewModel,
             null,
             null,
             null);
 
-    RoomsState testState = buildTestState();
+    RoomsState testState = buildTestState(inMemoryDAO);
     testState.setUserToAddEmail(createDummyDisplayUser().getEmail());
     roomsViewModel.setState(testState);
 
     JButton addUserButton = roomsView.getAddUserButton();
     addUserButton.doClick();
 
-    String regex =
-        "Unable to add \\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\\s*to room:";
+    String regex = "Unable to add user to room:.*";
 
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(roomsViewModel.getState().getError());
     Assert.assertTrue(matcher.find());
   }
 
-  private RoomsState buildTestState() {
+  private RoomsState buildTestState(LoggedInDataAccessInterface inMemoryDAO) {
     RoomsState state = new RoomsState();
-    state.setUser(this.createDummyUser());
     List<Room> rooms = new ArrayList<>();
     Room room = createDummyRoom();
     rooms.add(room);
@@ -416,17 +452,19 @@ public class RoomsTest extends ButtonTest {
     SearchViewModel searchViewModel = new SearchViewModel();
     StartSearchController startSearchController =
         new StartSearchController(viewManagerModel, searchViewModel);
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
             new FirebaseRoomsDataAccessObject(client),
             new FirebaseMessageDataAccessObject(client),
             new FirebaseUserDataAccessObject(client),
+            new InMemoryUserDataAccessObject(),
             roomsViewModel,
             null,
             startSearchController,
             null);
     RoomsState currentstate = roomsViewModel.getState();
-    currentstate.setUser(createDummyUser());
+    inMemoryDAO.setUser(createDummyUser());
     currentstate.setRoomUid(createDummyRoom().getUid());
     roomsViewModel.setState(currentstate);
     JButton searchButton = roomsView.getSearchButton();
@@ -442,26 +480,29 @@ public class RoomsTest extends ButtonTest {
     RoomsDataAccessInterface roomDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     User dummyUser = addFirebaseDummyUser();
-    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
+    inMemoryDAO.setUser(dummyUser);
+    String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
+    inMemoryDAO.setIdToken(idToken);
+    Room dummyRoom = addFirebaseDummyRoom(idToken, dummyUser);
 
     SearchViewModel searchViewModel = new SearchViewModel();
     SearchedViewModel searchedViewModel = new SearchedViewModel();
     SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+            searchViewModel, searchDataAccessObject, inMemoryDAO, viewManagerModel, searchedViewModel);
 
     RoomsViewModel roomsViewModel = new RoomsViewModel();
     RoomsView roomsView =
         RoomsUseCaseFactory.create(
-            roomDao, messageDao, userDao, roomsViewModel, searchController, null, null);
+            roomDao, messageDao, userDao, inMemoryDAO, roomsViewModel, searchController, null, null);
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
     SettingsViewModel settingsViewModel = new SettingsViewModel();
-    StartSettingsController settingsController = new StartSettingsController(settingsViewModel);
 
     LoggedInView loggedInView =
-        new LoggedInView(loggedInViewModel, roomsView, switchViewController, settingsController);
+        new LoggedInView(loggedInViewModel, roomsView, switchViewController);
     loggedInView.getSettingsButton().doClick();
     assertEquals("settings", viewManagerModel.getActiveView());
   }
@@ -479,28 +520,26 @@ public class RoomsTest extends ButtonTest {
     return dummyUser;
   }
 
-  void cleanUpUser(User user) {
+  void cleanUpUser(String idToken, User user) {
     OkHttpClient client = new OkHttpClient();
     DeleteUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
-    userDao.deleteUser(user);
+    userDao.deleteUser(idToken, user);
   }
 
-  void cleanUpRoom(Room room, User user) {
+  void cleanUpRoom(String idToken, Room room, User user) {
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
-    LoginUserDataAccessInterface loginDao = new FirebaseUserDataAccessObject(client);
-    roomsDao.deleteRoom(user, loginDao, room);
+    roomsDao.deleteRoom(idToken, user, room);
   }
 
-  Room addFirebaseDummyRoom(User user) {
+  Room addFirebaseDummyRoom(String idToken, User user) {
     /**
      * This adds a dummy room to Firebase and returns that room The caller *must* clean up the room
      * after use
      */
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
-    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
-    Room room = roomsDao.addRoom(user, userDao, "Dummy Room");
+    Room room = roomsDao.addRoom(idToken, user, "Dummy Room");
     return room;
   }
 

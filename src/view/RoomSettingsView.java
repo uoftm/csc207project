@@ -24,6 +24,7 @@ public class RoomSettingsView implements PropertyChangeListener {
       SwitchViewController switchViewController) {
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);
+    deleteRoomButton.setBackground(ViewConstants.softRed);
 
     viewModel.addPropertyChangeListener(this);
 
@@ -37,8 +38,7 @@ public class RoomSettingsView implements PropertyChangeListener {
     saveButton.addActionListener(
         e -> {
           if (e.getSource().equals(saveButton)) {
-            roomSettingsController.saveRoomName(
-                viewModel.getUser(), viewModel.getActiveRoom(), roomName.getText());
+            roomSettingsController.saveRoomName(viewModel.getActiveRoom(), roomName.getText());
           }
         });
 
@@ -52,7 +52,7 @@ public class RoomSettingsView implements PropertyChangeListener {
                     "Delete Room",
                     JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-              roomSettingsController.deleteRoom(viewModel.getUser(), viewModel.getActiveRoom());
+              roomSettingsController.deleteRoom(viewModel.getActiveRoom());
             }
           }
         });

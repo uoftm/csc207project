@@ -26,8 +26,9 @@ public class MessagesDAOTest extends DAOTest {
     Message message = createDummyMessage(dummyUser.toDisplayUser());
     messageDao.sendMessage(dummyRoom, userDao, dummyUser, message.content);
 
+    String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
     List<Message> response =
-        roomDao.getRoomFromId(dummyUser, userDao, dummyRoom.getUid()).getMessages();
+        roomDao.getRoomFromId(idToken, dummyUser, dummyRoom.getUid()).getMessages();
     Message retrievedMessage = response.get(0);
 
     Assert.assertTrue(

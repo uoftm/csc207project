@@ -7,26 +7,23 @@ import app.SettingsUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
 import data_access.FirebaseRoomsDataAccessObject;
 import data_access.FirebaseUserDataAccessObject;
+import data_access.InMemoryUserDataAccessObject;
 import entities.auth.User;
-import entities.auth.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.settings.SettingsState;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.awt.*;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.settings.RoomsSettingsDataAccessInterface;
 
 public class SettingsTest {
-
   private final OkHttpClient client = new OkHttpClient();
 
   JPanel views;
@@ -40,11 +37,10 @@ public class SettingsTest {
 
   SwitchViewController switchViewController;
 
+  LoggedInDataAccessInterface inMemoryDAO;
+
   @Before
   public void setUp() {
-    LocalDateTime date = LocalDateTime.now();
-    UserFactory userFactory = new UserFactory();
-    User test_user = userFactory.create("123", "test@gmail.com", "Test", "1234", date);
     CardLayout cardLayout = new CardLayout();
     views = new JPanel(cardLayout);
     viewManagerModel = new ViewManagerModel();
@@ -52,13 +48,9 @@ public class SettingsTest {
     roomsSettingsDataAccessObject = new FirebaseRoomsDataAccessObject(client);
     settingsViewModel = new SettingsViewModel();
     switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+    inMemoryDAO = new InMemoryUserDataAccessObject();
   }
 
-  User createDummyUser() {
-    String fakeEmail =
-        String.format("testSaveUser%s@example.com", UUID.randomUUID().toString().substring(0, 10));
-    return new User(null, fakeEmail, "Dummy User", "password", LocalDateTime.now());
-  }
 
   @Test
   public void testSettingsLoad() {
@@ -68,7 +60,7 @@ public class SettingsTest {
             null,
             userDao,
             roomsSettingsDataAccessObject,
-            userDao,
+            inMemoryDAO,
             switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
 
@@ -83,12 +75,12 @@ public class SettingsTest {
       throw new RuntimeException(e);
     }
 
-    Assert.assertTrue(jf != null);
+    Assert.assertNotNull(jf);
   }
 
   @Test
   public void testSettingsChangeUsername() {
-    User user = userDao.getUser("abc@gmail.com", "1234567");
+    User user = userDao.getUser(inMemoryDAO.getIdToken(), "abc@gmail.com", "1234567");
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
@@ -96,12 +88,11 @@ public class SettingsTest {
             loggedInViewModel,
             userDao,
             roomsSettingsDataAccessObject,
-            userDao,
+            inMemoryDAO,
             switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
     settingsView.getChangeUsernameField().setText("TestName");
     SettingsState currentstate = settingsViewModel.getState();
-    currentstate.setUser(user);
     currentstate.setUpdatedUsername(user.getName());
     settingsView.getChangeUsernameButton().doClick();
     SettingsState settingsState = settingsViewModel.getState();
@@ -112,11 +103,12 @@ public class SettingsTest {
   public void testSettingsChangeUsernameFail() {
     var roomsDataAccessObject =
         new RoomsSettingsDataAccessInterface() {
-          public void propogateDisplayNameChange(User user, LoginUserDataAccessInterface userDao) {
+          public void propogateDisplayNameChange(String tokenId, User user) {
             throw new RuntimeException("Failed to update username");
           }
         };
-    User user = userDao.getUser("abc@gmail.com", "1234567");
+
+    User user = userDao.getUser(inMemoryDAO.getIdToken(), "abc@gmail.com", "1234567");
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
@@ -124,12 +116,11 @@ public class SettingsTest {
             loggedInViewModel,
             userDao,
             roomsDataAccessObject,
-            userDao,
+            inMemoryDAO,
             switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
     settingsView.getChangeUsernameField().setText("TestName");
     SettingsState currentstate = settingsViewModel.getState();
-    currentstate.setUser(user);
     currentstate.setUpdatedUsername(user.getName());
     settingsView.getChangeUsernameButton().doClick();
     SettingsState settingsState = settingsViewModel.getState();
@@ -144,7 +135,7 @@ public class SettingsTest {
             null,
             userDao,
             roomsSettingsDataAccessObject,
-            userDao,
+            inMemoryDAO,
             switchViewController);
     views.add(settingsView.contentPane, settingsView.viewName);
     settingsView.getBackButton().doClick();

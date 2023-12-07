@@ -3,7 +3,6 @@ package interface_adapter.search;
 public class SearchState {
 
   private String roomUid;
-  private String userUid;
 
   private String error;
 
@@ -43,13 +42,5 @@ public class SearchState {
 
   public void setIsError(Boolean error) {
     isError = error;
-  }
-
-  public String getUserUid() {
-    return userUid;
-  }
-
-  public void setUserUid(String userUid) {
-    this.userUid = userUid;
   }
 }

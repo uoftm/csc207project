@@ -10,7 +10,6 @@ import java.util.*;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-import use_case.login.LoginUserDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.settings.RoomsSettingsDataAccessInterface;
 
@@ -25,9 +24,7 @@ public class FirebaseRoomsDataAccessObject
 
   private void changeRoomDisplayName(User user, String roomId) {}
 
-  public void propogateDisplayNameChange(User user, LoginUserDataAccessInterface userDao) {
-    String idToken = userDao.getAccessToken(user.getEmail(), user.getPassword());
-
+  public void propogateDisplayNameChange(String idToken, User user) {
     List<String> availableRoomIds = getAvailableRoomIds(user);
     for (String roomId : availableRoomIds) {
       addUserToRoomData(user.toDisplayUser(), idToken, roomId);
@@ -59,9 +56,7 @@ public class FirebaseRoomsDataAccessObject
   }
 
   @Override
-  public Room getRoomFromId(User user, LoginUserDataAccessInterface userDAO, String roomId) {
-    String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
-
+  public Room getRoomFromId(String idToken, User user, String roomId) {
     String url = String.format(Constants.ROOM_URL, roomId) + "?auth=" + idToken;
     Request request = new Request.Builder().url(url).get().build();
 
@@ -88,6 +83,7 @@ public class FirebaseRoomsDataAccessObject
             messages.add(message);
           }
         }
+        messages.sort(Comparator.comparing(a -> a.timestamp));
 
         // Get DisplayUsers
         List<DisplayUser> displayUsers = new ArrayList<>();
@@ -139,9 +135,7 @@ public class FirebaseRoomsDataAccessObject
 
   @Override
   public void removeUserFromRoom(
-      User currentUser, DisplayUser userToRemove, LoginUserDataAccessInterface userDAO, Room room) {
-    String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
-
+      String idToken, User currentUser, DisplayUser userToRemove, Room room) {
     String encodedEmail =
         Base64.getEncoder().encodeToString(userToRemove.getEmail().toLowerCase().getBytes());
     String url =
@@ -180,18 +174,13 @@ public class FirebaseRoomsDataAccessObject
   }
 
   @Override
-  public void addUserToRoom(
-      User currentUser, DisplayUser newUser, LoginUserDataAccessInterface userDAO, Room room) {
-    String idToken = userDAO.getAccessToken(currentUser.getEmail(), currentUser.getPassword());
-
+  public void addUserToRoom(String idToken, User currentUser, DisplayUser newUser, Room room) {
     addUserToRoomData(newUser, idToken, room.getUid());
     addRoomToUserData(newUser, idToken, room);
   }
 
   @Override
-  public Room addRoom(User user, LoginUserDataAccessInterface userDAO, String roomName) {
-    String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
-
+  public Room addRoom(String idToken, User user, String roomName) {
     JSONObject roomJSON = new JSONObject();
     // Add room name
     roomJSON.put("name", roomName);
@@ -247,9 +236,7 @@ public class FirebaseRoomsDataAccessObject
   }
 
   @Override
-  public void deleteRoom(User user, LoginUserDataAccessInterface userDAO, Room room) {
-    String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
-
+  public void deleteRoom(String idToken, User user, Room room) {
     for (DisplayUser roomUser : room.getUsers()) {
       deleteRoomFromUserData(roomUser, room, idToken);
     }
@@ -267,9 +254,7 @@ public class FirebaseRoomsDataAccessObject
   }
 
   @Override
-  public void changeRoomName(
-      User user, LoginUserDataAccessInterface userDAO, Room activeRoom, String roomName) {
-    String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
+  public void changeRoomName(String idToken, User user, Room activeRoom, String roomName) {
     String jsonBody = JSONObject.quote(roomName);
     String url = String.format(Constants.ROOM_NAME_URL, activeRoom.getUid()) + "?auth=" + idToken;
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));

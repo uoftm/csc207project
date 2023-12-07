@@ -1,9 +1,6 @@
 package interface_adapter.rooms;
 
-import entities.auth.DisplayUser;
-import entities.rooms.Message;
 import entities.rooms.Room;
-import java.time.Instant;
 import java.util.List;
 import use_case.rooms.RoomsOutputBoundary;
 import use_case.rooms.RoomsOutputData;
@@ -17,29 +14,13 @@ public class RoomsPresenter implements RoomsOutputBoundary {
 
   @Override
   public void prepareSuccessView(RoomsOutputData response) {
-    RoomsState roomsState = roomsViewModel.getState();
-    roomsState.setSuccess(response.getSuccess());
+    // RoomsState roomsState = roomsViewModel.getState();
+    // roomsState.setSuccess(response.getSuccess());
     roomsViewModel.firePropertyChanged();
   }
 
   @Override
-  public void prepareSendMessageSuccessView(RoomsOutputData response) {
-    RoomsState roomsState = roomsViewModel.getState();
-
-    String messageBody = response.getSuccess();
-    List<Message> messages = roomsState.getDisplayMessages();
-    DisplayUser displayUser = response.getUser().toDisplayUser();
-
-    Message message = new Message(Instant.now(), messageBody, displayUser);
-    messages.add(message);
-
-    roomsState.setDisplayMessages(messages);
-    response.getRoom().setMessages(messages);
-    // No need to display a success popup after sending a message
-    roomsState.setSuccess(null);
-
-    roomsViewModel.firePropertyChanged();
-  }
+  public void prepareSendMessageSuccessView(RoomsOutputData response) {}
 
   @Override
   public void prepareCreateRoomSuccessView(RoomsOutputData response) {
