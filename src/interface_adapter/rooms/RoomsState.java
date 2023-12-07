@@ -45,15 +45,11 @@ public class RoomsState {
 
   public Room getRoomByUid() {
     Room selectedRoom = null;
-    try {
-      for (var room : this.getAvailableRooms())
-        if (room.getUid().equals(this.getRoomUid())) {
-          selectedRoom = room;
-          break;
-        }
-    } catch (RuntimeException e) {
-      System.out.println("No room selected");
-    }
+    for (var room : this.getAvailableRooms())
+      if (room.getUid().equals(this.getRoomUid())) {
+        selectedRoom = room;
+        break;
+      }
     return selectedRoom;
   }
 
