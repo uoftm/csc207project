@@ -1,5 +1,6 @@
 package data_access;
 
+import com.google.gson.Gson;
 import entities.auth.DisplayUser;
 import entities.auth.User;
 import entities.rooms.Message;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.rooms.RoomsDataAccessInterface;
@@ -15,6 +17,54 @@ import use_case.settings.RoomsSettingsDataAccessInterface;
 
 public class FirebaseRoomsDataAccessObject
     implements RoomsDataAccessInterface, RoomsSettingsDataAccessInterface {
+  final class MessageContentsJSON {
+    String author;
+    String contents;
+  }
+
+  class CustomIterator implements Iterator<Message> {
+    private final List<String> timestamps;
+    private final Map<String, MessageContentsJSON> messages;
+    private int index = 0;
+
+    CustomIterator(Map<String, MessageContentsJSON> messages) {
+      if (messages == null) {
+        timestamps = new ArrayList<>();
+        this.messages = new HashMap<>();
+      } else {
+        timestamps = new ArrayList<>(messages.keySet());
+        this.messages = messages;
+      }
+    }
+
+    // Checks if the next element exists
+    public boolean hasNext() {
+      return index < timestamps.size();
+    }
+
+    // moves the cursor/iterator to next element
+    public Message next() {
+      String timestamp = timestamps.get(index);
+      index += 1;
+      Instant timestampInstant = Instant.ofEpochMilli(Long.parseLong(timestamp));
+      String author = messages.get(timestamp).author;
+      String contents = messages.get(timestamp).contents;
+      return new Message(timestampInstant, contents, new DisplayUser(author, author));
+    }
+  }
+
+  class RoomJSON implements Iterable<Message> {
+    String name;
+    Map<String, MessageContentsJSON> messages;
+    Map<String, String> users;
+
+
+    @NotNull
+    @Override
+    public Iterator<Message> iterator() {
+      return new CustomIterator(messages);
+    }
+  }
 
   private final OkHttpClient client;
 
@@ -63,29 +113,18 @@ public class FirebaseRoomsDataAccessObject
     try {
       Response response = client.newCall(request).execute();
       if (response.isSuccessful()) {
-        JSONObject rooms = new JSONObject(response.body().string());
+        String jsonText = response.body().string();
+        RoomJSON roomMessages = new Gson().fromJson(jsonText, RoomJSON.class);
+        Iterator<Message> roomMessageIterator = roomMessages.iterator();
 
-        // Get messages
         List<Message> messages = new ArrayList<>();
-        if (rooms.has("messages")) {
-          JSONObject messagesJSON = rooms.getJSONObject("messages");
-          Iterator<String> timestampIterator = messagesJSON.keys();
-          while (timestampIterator.hasNext()) {
-            String key = timestampIterator.next();
-            Instant timestamp = Instant.ofEpochMilli(Long.parseLong(key));
-            String contents = messagesJSON.getJSONObject(key).getString("contents");
-            String authorEmail = messagesJSON.getJSONObject(key).getString("author");
-            Message message =
-                new Message(
-                    timestamp,
-                    contents,
-                    new DisplayUser(authorEmail, authorEmail)); // Decide on this after other PRs
-            messages.add(message);
-          }
+        while(roomMessageIterator.hasNext()) {
+          messages.add(roomMessageIterator.next());
         }
         messages.sort(Comparator.comparing(a -> a.timestamp));
 
         // Get DisplayUsers
+        JSONObject rooms = new JSONObject(jsonText);
         List<DisplayUser> displayUsers = new ArrayList<>();
         if (rooms.has("users")) {
           JSONObject usersJSON = rooms.getJSONObject("users");
@@ -102,8 +141,7 @@ public class FirebaseRoomsDataAccessObject
         // Get name
         String roomName = rooms.getString("name");
 
-        Room room = new Room(roomId, roomName, displayUsers, messages);
-        return room;
+        return new Room(roomId, roomName, displayUsers, messages);
       } else {
         throw new IOException();
       }
