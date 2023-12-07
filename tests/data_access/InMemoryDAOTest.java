@@ -9,8 +9,8 @@ public class InMemoryDAOTest extends DAOTest {
   @Test
   public void checkNotFoundErrors() {
     LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
-    Assert.assertThrows(RuntimeException.class, () -> inMemoryDAO.getUser());
-    Assert.assertThrows(RuntimeException.class, () -> inMemoryDAO.getIdToken());
+    Assert.assertThrows(RuntimeException.class, inMemoryDAO::getUser);
+    Assert.assertThrows(RuntimeException.class, inMemoryDAO::getIdToken);
   }
 
   @Test

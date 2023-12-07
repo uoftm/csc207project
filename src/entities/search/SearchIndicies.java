@@ -2,8 +2,8 @@ package entities.search;
 
 public class SearchIndicies {
 
-  private Integer start;
-  private Integer end;
+  private final Integer start;
+  private final Integer end;
 
   public SearchIndicies(Integer start, Integer end) {
     this.start = start;

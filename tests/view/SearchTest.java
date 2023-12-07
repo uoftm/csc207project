@@ -147,6 +147,6 @@ public class SearchTest {
     jf.pack();
     jf.setVisible(true);
     searchController.executeSearchRequest("---", "---");
-    assertEquals(null, viewManagerModel.getActiveView());
+    assertNull(viewManagerModel.getActiveView());
   }
 }

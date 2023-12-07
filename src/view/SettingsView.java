@@ -13,7 +13,6 @@ import javax.swing.event.DocumentListener;
 public class SettingsView implements PropertyChangeListener {
 
   public static final String viewName = "settings";
-  private final SettingsViewModel settingsViewModel;
   private final SettingsController settingsController;
   public JPanel contentPane;
   private JPanel body;
@@ -27,8 +26,7 @@ public class SettingsView implements PropertyChangeListener {
       SettingsController controller,
       SwitchViewController switchViewController) {
     this.settingsController = controller;
-    this.settingsViewModel = settingsViewModel;
-    this.settingsViewModel.addPropertyChangeListener(this);
+    settingsViewModel.addPropertyChangeListener(this);
 
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);
@@ -69,7 +67,7 @@ public class SettingsView implements PropertyChangeListener {
                 update();
               }
 
-              protected void update() {
+              private void update() {
                 String text = changeUsernameField.getText();
                 SettingsState currentstate = settingsViewModel.getState();
                 currentstate.setUpdatedUsername(text);

@@ -3,10 +3,10 @@ package use_case.rooms;
 import entities.rooms.Room;
 
 public class RoomsInputData {
-  Room room;
-  String message;
-  String userToAddEmail;
-  String roomToCreateName;
+  final Room room;
+  final String message;
+  final String userToAddEmail;
+  final String roomToCreateName;
 
   public RoomsInputData(Room room, String message, String userToAddEmail, String roomToCreateName) {
     this.room = room;

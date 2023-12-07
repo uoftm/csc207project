@@ -81,7 +81,7 @@ public class Main {
             userDataAccessObject,
             inMemoryDAO,
             switchViewController);
-    viewManagerModel.add(loginView.contentPane, loginView.viewName);
+    viewManagerModel.add(loginView.contentPane, LoginView.viewName);
 
     WelcomeView welcomeView = new WelcomeView(switchViewController);
     viewManagerModel.add(welcomeView.contentPane, WelcomeView.viewName);
@@ -125,7 +125,7 @@ public class Main {
 
     LoggedInView loggedInView =
         new LoggedInView(loggedInViewModel, roomsView, switchViewController);
-    viewManagerModel.add(loggedInView.contentPane, loggedInView.viewName);
+    viewManagerModel.add(loggedInView.contentPane, LoggedInView.viewName);
 
     SettingsView settingsView =
         SettingsUseCaseFactory.create(
@@ -135,7 +135,7 @@ public class Main {
             roomsDataAccessObject,
             inMemoryDAO,
             switchViewController);
-    viewManagerModel.add(settingsView.contentPane, settingsView.viewName);
+    viewManagerModel.add(settingsView.contentPane, SettingsView.viewName);
 
     RoomSettingsOutputBoundary outputBoundary =
         new RoomSettingsPresenter(roomsViewModel, roomSettingsViewModel, viewManagerModel);

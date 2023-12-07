@@ -11,7 +11,7 @@ import use_case.search.SearchDataAccessInterface;
 
 public class ElasticsearchDataAccessObject implements SearchDataAccessInterface {
 
-  private OkHttpClient client;
+  private final OkHttpClient client;
 
   public ElasticsearchDataAccessObject(OkHttpClient okHttpClient) {
     this.client = okHttpClient;

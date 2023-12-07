@@ -10,8 +10,6 @@ import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.StartSearchController;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.Instant;
@@ -21,8 +19,8 @@ import javax.swing.*;
 public class RoomsView implements PropertyChangeListener {
   public static final int INTERVAL = 500;
   public JPanel contentPane;
-  private JPanel messagesPaneInternals;
-  private JPanel roomsPaneInternals;
+  private final JPanel messagesPaneInternals;
+  private final JPanel roomsPaneInternals;
   private JTextField messageTextField;
   private JButton send;
   private JPanel messagesPane;
@@ -121,7 +119,6 @@ public class RoomsView implements PropertyChangeListener {
     refreshButton.addActionListener(
         evt -> {
           if (evt.getSource().equals(refreshButton)) {
-            RoomsState currentState = viewModel.getState();
             loadRoomsController.loadRooms();
           }
         });
@@ -137,14 +134,7 @@ public class RoomsView implements PropertyChangeListener {
           }
         });
 
-    Timer timer =
-        new Timer(
-            INTERVAL,
-            new ActionListener() {
-              public void actionPerformed(ActionEvent evt) {
-                loadRoomsController.loadRooms();
-              }
-            });
+    Timer timer = new Timer(INTERVAL, evt -> loadRoomsController.loadRooms());
     timer.start();
 
     addUserButton.addActionListener(
@@ -231,7 +221,7 @@ public class RoomsView implements PropertyChangeListener {
       }
     }
 
-    if (name.equals("")) {
+    if (name.isEmpty()) {
       roomNameLabel2.setText("Select a room");
     } else {
       roomNameLabel2.setText("Add friend to " + name);

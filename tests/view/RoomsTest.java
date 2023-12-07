@@ -18,7 +18,6 @@ import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search.StartSearchController;
 import interface_adapter.searched.SearchedViewModel;
-import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -91,7 +90,7 @@ public class RoomsTest extends ButtonTest {
     refreshButton.doClick();
 
     Assert.assertNull(roomsViewModel.getState().getError());
-    Assert.assertTrue(roomsViewModel.getState().getAvailableRooms().size() == 1);
+    assertEquals(1, roomsViewModel.getState().getAvailableRooms().size());
 
     // Remove from Firebase
     cleanUpRoom(idToken, dummyRoom, dummyUser);
@@ -291,8 +290,7 @@ public class RoomsTest extends ButtonTest {
     }
 
     Assert.assertNull(roomsViewModel.getState().getError());
-    Assert.assertTrue(
-        roomsViewModel.getState().getDisplayMessages().get(0).content.equals("Test Message!"));
+    assertEquals("Test Message!", roomsViewModel.getState().getDisplayMessages().get(0).content);
 
     // Remove from Firebase
     cleanUpRoom(idToken, dummyRoom, dummyUser);
@@ -514,7 +512,6 @@ public class RoomsTest extends ButtonTest {
             null);
     LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
     SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
-    SettingsViewModel settingsViewModel = new SettingsViewModel();
 
     LoggedInView loggedInView =
         new LoggedInView(loggedInViewModel, roomsView, switchViewController);
@@ -522,12 +519,12 @@ public class RoomsTest extends ButtonTest {
     assertEquals("settings", viewManagerModel.getActiveView());
   }
 
-  // TODO: Restructure tests folder to import this (after search, settings tests are merged)
+  /**
+   * This adds a dummy user to Firebase and returns that user The caller *must* clean up the user
+   * after use
+   */
   User addFirebaseDummyUser() {
-    /**
-     * This adds a dummy user to Firebase and returns that user The caller *must* clean up the user
-     * after use
-     */
+    // TODO: Restructure tests folder to import this (after search, settings tests are merged)
     User dummyUser = createDummyUser();
     OkHttpClient client = new OkHttpClient();
     SignupUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
@@ -547,18 +544,13 @@ public class RoomsTest extends ButtonTest {
     roomsDao.deleteRoom(idToken, user, room);
   }
 
+  /**
+   * This adds a dummy room to Firebase and returns that room The caller *must* clean up the room
+   * after use
+   */
   Room addFirebaseDummyRoom(String idToken, User user) {
-    /**
-     * This adds a dummy room to Firebase and returns that room The caller *must* clean up the room
-     * after use
-     */
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
-    Room room = roomsDao.addRoom(idToken, user, "Dummy Room");
-    return room;
-  }
-
-  Message createDummyMessage(DisplayUser dummyDisplayUser) {
-    return new Message(Instant.now(), "Dummy message", dummyDisplayUser);
+    return roomsDao.addRoom(idToken, user, "Dummy Room");
   }
 }

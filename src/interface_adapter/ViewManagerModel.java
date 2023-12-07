@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class ViewManagerModel {
-  public class ViewAndName {
-    public JPanel view;
-    public String name;
+  public static class ViewAndName {
+    public final JPanel view;
+    public final String name;
 
     public ViewAndName(JPanel view, String name) {
       this.view = view;
@@ -17,7 +17,7 @@ public class ViewManagerModel {
   }
 
   private String activeViewName;
-  private ArrayList<ViewAndName> views = new ArrayList<>();
+  private final ArrayList<ViewAndName> views = new ArrayList<>();
 
   private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 

@@ -24,16 +24,16 @@ public class FirebaseUserDataAccessObject
 
   private final OkHttpClient client;
 
-  private String token = null;
-  private User user = null;
+  private final String token = null;
+  private final User user = null;
 
   public FirebaseUserDataAccessObject(OkHttpClient client) {
     this.client = client;
   }
 
-  private class SignupResults {
-    String uid;
-    String idToken;
+  private static class SignupResults {
+    final String uid;
+    final String idToken;
 
     SignupResults(String uid, String idToken) {
       this.uid = uid;

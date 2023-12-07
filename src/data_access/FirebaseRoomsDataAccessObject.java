@@ -22,8 +22,6 @@ public class FirebaseRoomsDataAccessObject
     this.client = client;
   }
 
-  private void changeRoomDisplayName(User user, String roomId) {}
-
   public void propogateDisplayNameChange(String idToken, User user) {
     List<String> availableRoomIds = getAvailableRoomIds(user);
     for (String roomId : availableRoomIds) {
@@ -102,8 +100,7 @@ public class FirebaseRoomsDataAccessObject
         // Get name
         String roomName = rooms.getString("name");
 
-        Room room = new Room(roomId, roomName, displayUsers, messages);
-        return room;
+        return new Room(roomId, roomName, displayUsers, messages);
       } else {
         throw new IOException();
       }

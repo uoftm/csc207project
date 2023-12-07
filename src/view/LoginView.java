@@ -11,7 +11,6 @@ import javax.swing.*;
 public class LoginView implements PropertyChangeListener {
 
   public static final String viewName = "log in";
-  private final LoginViewModel loginViewModel;
 
   private JButton logIn;
   private JButton cancel;
@@ -26,8 +25,7 @@ public class LoginView implements PropertyChangeListener {
       LoginController controller,
       SwitchViewController switchViewController) {
     this.loginController = controller;
-    this.loginViewModel = loginViewModel;
-    this.loginViewModel.addPropertyChangeListener(this);
+    loginViewModel.addPropertyChangeListener(this);
 
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);

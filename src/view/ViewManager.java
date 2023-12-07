@@ -10,15 +10,13 @@ import javax.swing.*;
 public class ViewManager implements PropertyChangeListener {
   private final CardLayout cardLayout;
   private final JPanel views;
-  private final ViewManagerModel viewManagerModel;
 
   public ViewManager(ViewManagerModel viewManagerModel) {
     cardLayout = new CardLayout();
 
     // The various View objects. Only one view is visible at a time.
     views = new JPanel(cardLayout);
-    this.viewManagerModel = viewManagerModel;
-    this.viewManagerModel.addPropertyChangeListener(this);
+    viewManagerModel.addPropertyChangeListener(this);
   }
 
   @Override

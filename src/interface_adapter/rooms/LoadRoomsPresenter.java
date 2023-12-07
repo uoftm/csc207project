@@ -20,11 +20,9 @@ public class LoadRoomsPresenter implements LoadRoomsOutputBoundary {
 
     // Compare the two lists of rooms
     Set<String> newRooms =
-        output.getRooms().stream().map(room -> room.getName()).collect(Collectors.toSet());
+        output.getRooms().stream().map(Room::getName).collect(Collectors.toSet());
     Set<String> oldRooms =
-        roomsState.getAvailableRooms().stream()
-            .map(room -> room.getName())
-            .collect(Collectors.toSet());
+        roomsState.getAvailableRooms().stream().map(Room::getName).collect(Collectors.toSet());
     if (!newRooms.equals(oldRooms)) {
       // The rooms names have changed, so update the view
       shouldUpdateView = true;

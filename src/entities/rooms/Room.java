@@ -6,7 +6,7 @@ import java.util.List;
 public class Room {
   private final String uid;
   private String name;
-  private List<DisplayUser> users;
+  private final List<DisplayUser> users;
   private List<Message> messages;
 
   public Room(String uid, String name, List<DisplayUser> users, List<Message> messages) {

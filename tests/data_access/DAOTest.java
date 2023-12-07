@@ -38,11 +38,11 @@ public abstract class DAOTest {
     return new Room("dummyRoomUid", "Dummy Room", users, messages);
   }
 
+  /**
+   * This adds a dummy user to Firebase and returns that user The caller *must* clean up the user
+   * after use
+   */
   public static User addFirebaseDummyUser() {
-    /**
-     * This adds a dummy user to Firebase and returns that user The caller *must* clean up the user
-     * after use
-     */
     User dummyUser = createDummyUser();
     OkHttpClient client = new OkHttpClient();
     SignupUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
@@ -65,16 +65,15 @@ public abstract class DAOTest {
     roomsDao.deleteRoom(idToken, user, room);
   }
 
+  /**
+   * This adds a dummy room to Firebase and returns that room The caller *must* clean up the room
+   * after use
+   */
   public static Room addFirebaseDummyRoom(User user) {
-    /**
-     * This adds a dummy room to Firebase and returns that room The caller *must* clean up the room
-     * after use
-     */
     OkHttpClient client = new OkHttpClient();
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
     String idToken = userDao.getAccessToken(user.getEmail(), user.getPassword());
-    Room room = roomsDao.addRoom(idToken, user, "Dummy Room");
-    return room;
+    return roomsDao.addRoom(idToken, user, "Dummy Room");
   }
 }

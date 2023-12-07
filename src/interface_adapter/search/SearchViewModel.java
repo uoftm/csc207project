@@ -5,8 +5,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class SearchViewModel extends ViewModel {
-
-  private String highlightedText;
   private SearchState state = new SearchState();
 
   public SearchViewModel() {

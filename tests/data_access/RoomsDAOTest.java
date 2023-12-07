@@ -33,7 +33,6 @@ public class RoomsDAOTest extends DAOTest {
     signupDao.save(testUser);
 
     // Create test room
-    LoginUserDataAccessInterface loginDao = userDao;
     String idToken = userDao.getAccessToken(testUser.getEmail(), testUser.getPassword());
     Room testRoom = roomDao.addRoom(idToken, testUser, "Test Room");
 
@@ -81,7 +80,7 @@ public class RoomsDAOTest extends DAOTest {
     List<DisplayUser> retrievedUsers = retrievedRoom.getUsers();
     Assert.assertEquals(retrievedUsers.size(), 2);
     DisplayUser originalUser, newUser;
-    if (retrievedUsers.get(0).getEmail().toLowerCase().equals(dummyUser.getEmail().toLowerCase())) {
+    if (retrievedUsers.get(0).getEmail().equalsIgnoreCase(dummyUser.getEmail())) {
       // First retrieved user is the original user
       originalUser = retrievedUsers.get(0);
       newUser = retrievedUsers.get(1);

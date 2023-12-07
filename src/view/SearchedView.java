@@ -13,18 +13,15 @@ public class SearchedView implements PropertyChangeListener {
 
   public static final String viewName = "search results";
 
-  private final SearchedViewModel searchedViewModel;
-
   private JButton backButton;
   public JPanel contentPane;
   private JPanel rawPanel;
 
-  private JPanel paneInternals;
+  private final JPanel paneInternals;
 
   public SearchedView(
       SearchedViewModel searchedViewModel, SwitchViewController switchViewController) {
-    this.searchedViewModel = searchedViewModel;
-    this.searchedViewModel.addPropertyChangeListener(this);
+    searchedViewModel.addPropertyChangeListener(this);
 
     rawPanel.setLayout(new BoxLayout(rawPanel, BoxLayout.Y_AXIS));
 

@@ -4,7 +4,7 @@ import entities.rooms.Room;
 import java.util.List;
 
 public class LoadRoomsOutputData {
-  List<Room> rooms;
+  final List<Room> rooms;
   private final String error;
 
   public LoadRoomsOutputData(List<Room> rooms, String error) {

@@ -10,8 +10,8 @@ public class OpenRoomSettingsController {
   // In particular, we only need to modify the view model, and not use any data access objects or
   // other entities
 
-  RoomSettingsViewModel roomSettingsViewModel;
-  ViewManagerModel viewManagerModel;
+  final RoomSettingsViewModel roomSettingsViewModel;
+  final ViewManagerModel viewManagerModel;
 
   public OpenRoomSettingsController(
       RoomSettingsViewModel roomSettingsViewModel, ViewManagerModel viewManagerModel) {

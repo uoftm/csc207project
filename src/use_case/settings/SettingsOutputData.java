@@ -3,7 +3,7 @@ package use_case.settings;
 public class SettingsOutputData {
   private final String error;
 
-  private String username;
+  private final String username;
 
   public SettingsOutputData(String error, String username) {
     this.error = error;

@@ -20,7 +20,6 @@ import javax.swing.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import use_case.login.LoginUserDataAccessInterface;
 import use_case.room_settings.RoomSettingsInteractor;
 import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
@@ -31,7 +30,6 @@ public class RoomSettingsTest {
   RoomsViewModel roomsViewModel;
   ViewManagerModel viewManagerModel;
   SwitchViewController switchViewController;
-  LoginUserDataAccessInterface userDataAccessObject;
   LoggedInDataAccessInterface inMemoryDAO;
   JPanel views;
 
@@ -42,23 +40,6 @@ public class RoomSettingsTest {
     viewManagerModel = new ViewManagerModel();
 
     switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
-    userDataAccessObject =
-        new LoginUserDataAccessInterface() {
-          @Override
-          public User getUser(String idToken, String email, String password) {
-            return null;
-          }
-
-          @Override
-          public String getAccessToken(String email, String password) {
-            return null;
-          }
-
-          @Override
-          public DisplayUser getDisplayUser(String email) {
-            return null;
-          }
-        };
 
     roomSettingsViewModel = new RoomSettingsViewModel();
     roomsViewModel = new RoomsViewModel();
@@ -117,7 +98,7 @@ public class RoomSettingsTest {
         new RoomSettingsController(roomSettingsInteractor);
     RoomSettingsView roomSettingsView =
         new RoomSettingsView(roomSettingsViewModel, roomSettingsController, switchViewController);
-    views.add(roomSettingsView.contentPane, roomSettingsView.viewName);
+    views.add(roomSettingsView.contentPane, RoomSettingsView.viewName);
 
     JFrame jf = new JFrame();
     jf.setContentPane(roomSettingsView.contentPane);
@@ -204,7 +185,7 @@ public class RoomSettingsTest {
         new RoomSettingsController(roomSettingsInteractor);
     RoomSettingsView roomSettingsView =
         new RoomSettingsView(roomSettingsViewModel, roomSettingsController, switchViewController);
-    views.add(roomSettingsView.contentPane, roomSettingsView.viewName);
+    views.add(roomSettingsView.contentPane, RoomSettingsView.viewName);
 
     JFrame jf = new JFrame();
     jf.setContentPane(roomSettingsView.contentPane);
