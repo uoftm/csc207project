@@ -1,7 +1,10 @@
 package view;
 
+import static org.junit.Assert.assertEquals;
+
 import app.RoomsUseCaseFactory;
 import app.SearchUseCaseFactory;
+import app.SwitchViewUseCaseFactory;
 import data_access.ElasticsearchDataAccessObject;
 import data_access.FirebaseMessageDataAccessObject;
 import data_access.FirebaseRoomsDataAccessObject;
@@ -11,12 +14,16 @@ import entities.auth.User;
 import entities.rooms.Message;
 import entities.rooms.Room;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.rooms.RoomsState;
 import interface_adapter.rooms.RoomsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search.StartSearchController;
 import interface_adapter.searched.SearchedViewModel;
+import interface_adapter.settings.SettingsViewModel;
+import interface_adapter.settings.StartSettingsController;
+import interface_adapter.switch_view.SwitchViewController;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -424,6 +431,39 @@ public class RoomsTest extends ButtonTest {
     roomsViewModel.setState(currentstate);
     JButton searchButton = roomsView.getSearchButton();
     searchButton.doClick();
+  }
+
+  @Test
+  public void testClickSettings() {
+    OkHttpClient client = new OkHttpClient();
+    ViewManagerModel viewManagerModel = new ViewManagerModel();
+
+    MessageDataAccessInterface messageDao = new FirebaseMessageDataAccessObject(client);
+    RoomsDataAccessInterface roomDao = new FirebaseRoomsDataAccessObject(client);
+    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    User dummyUser = addFirebaseDummyUser();
+    Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+
+    SearchViewModel searchViewModel = new SearchViewModel();
+    SearchedViewModel searchedViewModel = new SearchedViewModel();
+    SearchDataAccessInterface searchDataAccessObject = new ElasticsearchDataAccessObject(client);
+    SearchController searchController =
+        SearchUseCaseFactory.createSearchController(
+            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+
+    RoomsViewModel roomsViewModel = new RoomsViewModel();
+    RoomsView roomsView =
+        RoomsUseCaseFactory.create(
+            roomDao, messageDao, userDao, roomsViewModel, searchController, null, null);
+    LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
+    SwitchViewController switchViewController = SwitchViewUseCaseFactory.create(viewManagerModel);
+    SettingsViewModel settingsViewModel = new SettingsViewModel();
+    StartSettingsController settingsController = new StartSettingsController(settingsViewModel);
+
+    LoggedInView loggedInView =
+        new LoggedInView(loggedInViewModel, roomsView, switchViewController, settingsController);
+    loggedInView.getSettingsButton().doClick();
+    assertEquals("settings", viewManagerModel.getActiveView());
   }
 
   // TODO: Restructure tests folder to import this (after search, settings tests are merged)

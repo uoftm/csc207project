@@ -79,6 +79,18 @@ public class SettingsView implements PropertyChangeListener {
             });
   }
 
+  public JButton getBackButton() {
+    return backButton;
+  }
+
+  public JButton getChangeUsernameButton() {
+    return changeUsernameButton;
+  }
+
+  public JTextField getChangeUsernameField() {
+    return changeUsernameField;
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SettingsState state = (SettingsState) evt.getNewValue();

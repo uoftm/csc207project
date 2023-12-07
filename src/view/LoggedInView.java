@@ -61,6 +61,10 @@ public class LoggedInView implements PropertyChangeListener {
     rooms.add(roomsView.contentPane);
   }
 
+  public JButton getSettingsButton() {
+    return settingsButton;
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     LoggedInState state = (LoggedInState) evt.getNewValue();

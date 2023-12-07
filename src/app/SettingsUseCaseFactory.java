@@ -5,7 +5,6 @@ import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-import java.io.IOException;
 import javax.swing.*;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.settings.*;
@@ -23,20 +22,15 @@ public class SettingsUseCaseFactory {
       LoginUserDataAccessInterface userDao,
       SwitchViewController switchViewController) {
 
-    try {
-      SettingsController settingsController =
-          createSettingsController(
-              settingsViewModel,
-              loggedInViewModel,
-              userSettingsDataAccessObject,
-              roomsSettingsDataAccessObject,
-              userDao);
+    SettingsController settingsController =
+        createSettingsController(
+            settingsViewModel,
+            loggedInViewModel,
+            userSettingsDataAccessObject,
+            roomsSettingsDataAccessObject,
+            userDao);
 
-      return new SettingsView(settingsViewModel, settingsController, switchViewController);
-    } catch (IOException e) {
-      JOptionPane.showMessageDialog(null, "Not available.");
-      return null;
-    }
+    return new SettingsView(settingsViewModel, settingsController, switchViewController);
   }
 
   private static SettingsController createSettingsController(
@@ -44,8 +38,7 @@ public class SettingsUseCaseFactory {
       LoggedInViewModel loggedInViewModel,
       UserSettingsDataAccessInterface userSettingsDataAccessObject,
       RoomsSettingsDataAccessInterface roomsSettingsDataAccessInterface,
-      LoginUserDataAccessInterface userDao)
-      throws IOException {
+      LoginUserDataAccessInterface userDao) {
 
     SettingsOutputBoundary settingsOutputBoundary =
         new SettingsPresenter(settingsViewModel, loggedInViewModel);
