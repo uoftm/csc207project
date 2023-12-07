@@ -4,9 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import entities.search.SearchChatMessage;
 import entities.search.SearchRequest;
-import java.awt.*;
 import java.time.Instant;
-import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Test;
 
@@ -14,7 +12,7 @@ public class SearchDAOTest {
 
   private final OkHttpClient okHttpClient = new OkHttpClient();
 
-  ElasticsearchDataAccessObject searchDataAccessObject =
+  final ElasticsearchDataAccessObject searchDataAccessObject =
       new ElasticsearchDataAccessObject(okHttpClient);
 
   @Test

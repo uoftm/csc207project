@@ -14,8 +14,6 @@ public class RoomsPresenter implements RoomsOutputBoundary {
 
   @Override
   public void prepareSuccessView(RoomsOutputData response) {
-    // RoomsState roomsState = roomsViewModel.getState();
-    // roomsState.setSuccess(response.getSuccess());
     roomsViewModel.firePropertyChanged();
   }
 

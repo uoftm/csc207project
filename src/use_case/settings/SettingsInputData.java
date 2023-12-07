@@ -1,7 +1,7 @@
 package use_case.settings;
 
 public class SettingsInputData {
-  private String newUsername;
+  private final String newUsername;
 
   public SettingsInputData(String newUsername) {
     this.newUsername = newUsername;

@@ -4,7 +4,6 @@ import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
@@ -12,7 +11,7 @@ import javax.swing.*;
 public class SignupView implements PropertyChangeListener {
   public static final String viewName = "sign up";
 
-  private SignupController signupController;
+  private final SignupController signupController;
 
   private JButton signUp;
   private JButton cancel;

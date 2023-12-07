@@ -8,13 +8,6 @@ public class SettingsState {
 
   private String updatedUsername;
 
-  public SettingsState(SettingsState state) {
-    message = state.message;
-    isError = state.isError;
-    isSuccess = state.isSuccess;
-    updatedUsername = state.updatedUsername;
-  }
-
   public SettingsState() {}
 
   public void setIsError(Boolean isError) {

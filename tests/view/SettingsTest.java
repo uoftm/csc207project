@@ -62,7 +62,7 @@ public class SettingsTest {
             roomsSettingsDataAccessObject,
             inMemoryDAO,
             switchViewController);
-    views.add(settingsView.contentPane, settingsView.viewName);
+    views.add(settingsView.contentPane, SettingsView.viewName);
 
     JFrame jf = new JFrame();
     jf.setContentPane(settingsView.contentPane);
@@ -92,9 +92,8 @@ public class SettingsTest {
             roomsSettingsDataAccessObject,
             inMemoryDAO,
             switchViewController);
-    views.add(settingsView.contentPane, settingsView.viewName);
+    views.add(settingsView.contentPane, SettingsView.viewName);
     settingsView.getChangeUsernameField().setText("TestName");
-    SettingsState currentstate = settingsViewModel.getState();
     settingsView.getChangeUsernameButton().doClick();
     SettingsState settingsState = settingsViewModel.getState();
     assertEquals("Successfully updated username", settingsState.getMessage());
@@ -120,7 +119,7 @@ public class SettingsTest {
             roomsDataAccessObject,
             inMemoryDAO,
             switchViewController);
-    views.add(settingsView.contentPane, settingsView.viewName);
+    views.add(settingsView.contentPane, SettingsView.viewName);
     settingsView.getChangeUsernameField().setText("TestName");
     SettingsState currentstate = settingsViewModel.getState();
     currentstate.setUpdatedUsername(user.getName());
@@ -139,7 +138,7 @@ public class SettingsTest {
             roomsSettingsDataAccessObject,
             inMemoryDAO,
             switchViewController);
-    views.add(settingsView.contentPane, settingsView.viewName);
+    views.add(settingsView.contentPane, SettingsView.viewName);
     settingsView.getBackButton().doClick();
     assertEquals("logged in", viewManagerModel.getActiveView());
   }

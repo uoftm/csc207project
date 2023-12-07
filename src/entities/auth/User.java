@@ -9,12 +9,7 @@ public class User implements AbstractUser {
   private final String password;
   private final LocalDateTime creationTime;
 
-  /**
-   * Requires: password is valid.
-   *
-   * @param name
-   * @param password
-   */
+  /** Requires: password is valid. */
   public User(String uid, String email, String name, String password, LocalDateTime creationTime) {
     this.uid = uid;
     this.email = email;

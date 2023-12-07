@@ -2,9 +2,9 @@ package data_access;
 
 public class Constants {
   public static final String FIREBASE_URL = "https://csc207-830a5-default-rtdb.firebaseio.com/";
-  public static String ELASTICSEARCH_URL =
+  public static final String ELASTICSEARCH_URL =
       "https://e56e32ed3da843c3ba35b67803bd19b4.us-central1.gcp.cloud.es.io:443";
-  public static String ELASTICSEARCH_API_KEY =
+  public static final String ELASTICSEARCH_API_KEY =
       "WjVmbl80c0JVOG1WUG5tNTFZREQ6SEFOVnU3QnlSczZud2FfMlk4RUxLdw==";
 
   public static final String SIGNUP_URL =

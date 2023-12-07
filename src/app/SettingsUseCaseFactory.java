@@ -5,7 +5,6 @@ import interface_adapter.settings.SettingsController;
 import interface_adapter.settings.SettingsPresenter;
 import interface_adapter.settings.SettingsViewModel;
 import interface_adapter.switch_view.SwitchViewController;
-import javax.swing.*;
 import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.settings.*;
 import view.SettingsView;

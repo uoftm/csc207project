@@ -29,7 +29,7 @@ public class SignupTest extends ButtonTest {
 
     // Check that our Firebase User Data Access Object returns an error (since we haven't provided
     // any sign in data)
-    Assert.assertTrue(signupViewModel.getState().getError() != null);
+    Assert.assertNotNull(signupViewModel.getState().getError());
   }
 
   @Test

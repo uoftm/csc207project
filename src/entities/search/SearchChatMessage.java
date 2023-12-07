@@ -3,9 +3,9 @@ package entities.search;
 import java.time.Instant;
 
 public class SearchChatMessage {
-  public String content;
-  public Instant timestamp;
-  public String email;
+  public final String content;
+  public final Instant timestamp;
+  public final String email;
   private final String roomUid;
 
   public SearchChatMessage(Instant time, String roomUid, String message, String email) {

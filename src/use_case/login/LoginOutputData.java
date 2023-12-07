@@ -1,7 +1,7 @@
 package use_case.login;
 
 public class LoginOutputData {
-  private String username;
+  private final String username;
 
   public LoginOutputData(String username) {
     this.username = username;
