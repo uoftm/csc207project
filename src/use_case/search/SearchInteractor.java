@@ -41,6 +41,10 @@ public class SearchInteractor implements SearchInputBoundary {
             searchInputData.getRoomUid(),
             searchInputData.getMessage(),
             authorUid);
-    searchDataAccessObject.saveData(chatMessage);
+    SearchOutputData outputData =
+        new SearchOutputData(searchDataAccessObject.saveData(chatMessage));
+    if (outputData.getResponse().getIsError()) {
+      searchPresenter.prepareFailedResponse(outputData);
+    }
   }
 }

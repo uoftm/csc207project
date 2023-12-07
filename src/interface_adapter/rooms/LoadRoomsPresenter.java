@@ -27,7 +27,8 @@ public class LoadRoomsPresenter implements LoadRoomsOutputBoundary {
 
   @Override
   public void prepareFailView(LoadRoomsOutputData response) {
-    // On error, switch back to the same view for now
-    System.out.println(response.getError());
+    RoomsState roomsState = roomsViewModel.getState();
+    roomsState.setError(response.getError());
+    roomsViewModel.firePropertyChanged();
   }
 }

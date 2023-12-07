@@ -110,7 +110,6 @@ public class RoomsView implements PropertyChangeListener {
             if (message != null && currentState.roomIsSelected()) {
               Room room = currentState.getRoomByUid();
               roomsController.sendMessage(room, message);
-              // TODO: Fix search controller call
               searchController.executeRecordData(Instant.now(), currentState.getRoomUid(), message);
             }
           }
@@ -120,7 +119,6 @@ public class RoomsView implements PropertyChangeListener {
         evt -> {
           if (evt.getSource().equals(refreshButton)) {
             RoomsState currentState = viewModel.getState();
-            // TODO: Fix load rooms
             loadRoomsController.loadRooms();
           }
         });
@@ -144,6 +142,7 @@ public class RoomsView implements PropertyChangeListener {
             String email = currentState.getUserToAddEmail();
             String roomUid = currentState.getRoomUid();
             if (email != null) {
+              User user = currentState.getUser();
               for (var room : currentState.getAvailableRooms()) {
                 if (room.getUid().equals(roomUid)) {
                   roomsController.addUserToRoom(room, email);
@@ -252,5 +251,9 @@ public class RoomsView implements PropertyChangeListener {
 
   public JButton getSendMessageButton() {
     return send;
+  }
+
+  public JButton getSearchButton() {
+    return searchButton;
   }
 }

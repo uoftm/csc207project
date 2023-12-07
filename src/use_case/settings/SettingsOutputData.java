@@ -1,13 +1,17 @@
 package use_case.settings;
 
 public class SettingsOutputData {
-  private String error;
+  private final String error;
 
   private String username;
 
   public SettingsOutputData(String error, String username) {
     this.error = error;
     this.username = username;
+  }
+
+  public boolean getIsError() {
+    return error != null;
   }
 
   public String getError() {

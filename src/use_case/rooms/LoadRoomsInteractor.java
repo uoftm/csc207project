@@ -30,10 +30,10 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
         Room room = roomsDataAccessObject.getRoomFromId(idToken, user, roomId);
         rooms.add(room);
       }
-      LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(rooms, false, null);
+      LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(rooms, null);
       roomsPresenter.prepareSuccessView(roomsOutputData);
     } catch (RuntimeException e) {
-      LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(null, true, e.getMessage());
+      LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(null, e.getMessage());
       roomsPresenter.prepareFailView(roomsOutputData);
     }
   }

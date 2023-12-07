@@ -56,6 +56,18 @@ public class SearchView implements PropertyChangeListener {
         });
   }
 
+  public JButton getSearchButton() {
+    return search;
+  }
+
+  public JTextField getSearchBoxText() {
+    return searchBoxText;
+  }
+
+  public JButton getBackButton() {
+    return backButton;
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SearchState state = (SearchState) evt.getNewValue();
