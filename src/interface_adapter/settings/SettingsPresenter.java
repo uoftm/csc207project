@@ -1,6 +1,5 @@
 package interface_adapter.settings;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.logged_in.LoggedInViewModel;
 import use_case.settings.SettingsOutputBoundary;
 import use_case.settings.SettingsOutputData;
@@ -10,7 +9,8 @@ public class SettingsPresenter implements SettingsOutputBoundary {
   private final SettingsViewModel settingsViewModel;
   private final LoggedInViewModel loggedInViewModel;
 
-  public SettingsPresenter(SettingsViewModel settingsViewModel, LoggedInViewModel loggedInViewModel) {
+  public SettingsPresenter(
+      SettingsViewModel settingsViewModel, LoggedInViewModel loggedInViewModel) {
     this.settingsViewModel = settingsViewModel;
     this.loggedInViewModel = loggedInViewModel;
   }
@@ -28,7 +28,7 @@ public class SettingsPresenter implements SettingsOutputBoundary {
   public void prepareFailView(SettingsOutputData outputData) {
     SettingsState settingsState = settingsViewModel.getState();
     settingsState.setMessage(outputData.getError());
-    settingsState.setIsError(true);
+    settingsState.setIsError(outputData.getIsError());
     settingsViewModel.firePropertyChanged();
   }
 }

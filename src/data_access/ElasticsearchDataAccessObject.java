@@ -65,7 +65,6 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
 
     try (Response response = client.newCall(request).execute()) {
       JSONObject rootNode = new JSONObject(response.body().string());
-      System.out.println(rootNode);
       JSONArray hitsArray = rootNode.getJSONObject("hits").getJSONArray("hits");
       if (hitsArray.isEmpty()) {
         return new SearchReponseArray(new ArrayList<>(), "No search results found.", true);

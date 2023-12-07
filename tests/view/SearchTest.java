@@ -1,10 +1,10 @@
+package view;
+
 import static org.junit.Assert.*;
 
 import app.SearchUseCaseFactory;
 import app.SwitchViewUseCaseFactory;
 import data_access.ElasticsearchDataAccessObject;
-import entities.search.SearchChatMessage;
-import entities.search.SearchRequest;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.search.*;
 import interface_adapter.searched.SearchedViewModel;
@@ -15,7 +15,6 @@ import javax.swing.*;
 import okhttp3.OkHttpClient;
 import org.junit.Before;
 import org.junit.Test;
-import view.*;
 
 public class SearchTest {
   private final OkHttpClient okHttpClient = new OkHttpClient();
@@ -43,36 +42,6 @@ public class SearchTest {
   }
 
   @Test
-  public void saveData() {
-    SearchChatMessage searchMessage =
-        new SearchChatMessage(Instant.now(), "-", "yaaaaa", "test-author-id");
-    searchDataAccessObject.saveData(searchMessage);
-  }
-
-  @Test
-  public void testGetData() {
-    SearchRequest searchRequest = new SearchRequest("Test message!", "dummyRoomUid");
-    assertEquals(
-        searchDataAccessObject.getData(searchRequest).getResponses().get(0).getFullText(),
-        "Test message!");
-  }
-
-  @Test
-  public void testGetNoData() {
-    SearchRequest searchRequest = new SearchRequest("a", "Bro");
-    assertEquals(
-        searchDataAccessObject.getData(searchRequest).getError(), "No search results found.");
-  }
-
-  @Test
-  public void testSave() {
-    SearchController searchController =
-        SearchUseCaseFactory.createSearchController(
-            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
-    searchController.executeRecordData(Instant.now(), "dummyRoomUid", "Test message!", "abc");
-  }
-
-  @Test
   public void testSearchViewBack() {
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
@@ -85,6 +54,14 @@ public class SearchTest {
     jf.setVisible(true);
     searchview.getBackButton().doClick();
     assertEquals("logged in", viewManagerModel.getActiveView());
+  }
+
+  @Test
+  public void testSavaDataFromController() {
+    SearchController searchController =
+        SearchUseCaseFactory.createSearchController(
+            searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
+    searchController.executeRecordData(Instant.now(), "dummyRoomUid-2-2", "Test message!", "abc");
   }
 
   @Test
@@ -101,7 +78,7 @@ public class SearchTest {
     searchview.getBackButton().doClick();
     assertEquals("logged in", viewManagerModel.getActiveView());
     SearchState state = searchViewModel.getState();
-    state.setRoomUid("dummyRoomUid");
+    state.setRoomUid("dummyRoomUid-2-2");
     searchViewModel.setState(state);
     searchViewModel.addPropertyChangeListener(searchview);
     searchview.getSearchBoxText().setText("Test essage!");
@@ -128,7 +105,7 @@ public class SearchTest {
   }
 
   @Test
-  public void testError() {
+  public void testNoDataErrorFromController() {
     SearchController searchController =
         SearchUseCaseFactory.createSearchController(
             searchViewModel, searchDataAccessObject, viewManagerModel, searchedViewModel);
