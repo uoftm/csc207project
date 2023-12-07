@@ -24,6 +24,7 @@ public class RoomSettingsView implements PropertyChangeListener {
       SwitchViewController switchViewController) {
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);
+    deleteRoomButton.setBackground(ViewConstants.softRed);
 
     viewModel.addPropertyChangeListener(this);
 
