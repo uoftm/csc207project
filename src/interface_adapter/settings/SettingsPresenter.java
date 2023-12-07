@@ -28,7 +28,7 @@ public class SettingsPresenter implements SettingsOutputBoundary {
   public void prepareFailView(SettingsOutputData outputData) {
     SettingsState settingsState = settingsViewModel.getState();
     settingsState.setMessage(outputData.getError());
-    settingsState.setIsError(true);
+    settingsState.setIsError(outputData.getIsError());
     settingsViewModel.firePropertyChanged();
   }
 }

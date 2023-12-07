@@ -25,17 +25,18 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
     String index = "search-chats";
 
     JSONObject roomIDQuery =
-        new JSONObject().put("term", new JSONObject().put("roomID", searchRequest.getRoomUid()));
+        new JSONObject()
+            .put("match_phrase", new JSONObject().put("roomID", searchRequest.getRoomUid()));
     JSONObject messageQuery =
         new JSONObject()
             .put(
-                "match",
+                "match_phrase",
                 new JSONObject()
                     .put(
                         "message",
                         new JSONObject()
                             .put("query", searchRequest.getQueryRequest())
-                            .put("fuzziness", "AUTO")));
+                            .put("slop", 2)));
 
     JSONObject boolQuery =
         new JSONObject().put("must", new JSONArray().put(roomIDQuery).put(messageQuery));
@@ -63,7 +64,6 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
             .build();
 
     try (Response response = client.newCall(request).execute()) {
-
       JSONObject rootNode = new JSONObject(response.body().string());
       JSONArray hitsArray = rootNode.getJSONObject("hits").getJSONArray("hits");
       if (hitsArray.isEmpty()) {
@@ -112,9 +112,7 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
           // the correspondent tags are removed. We need to indices to highlight the part of the
           // text
           // that is matched by elastic search in SearchedView.
-          System.out.println(fulltext);
           source.getString("roomID");
-          System.out.println();
           SearchResponse oneResponse =
               new SearchResponse(
                   fulltext,
@@ -135,7 +133,7 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
     }
   }
 
-  public void saveData(SearchChatMessage message) {
+  public SearchReponseArray saveData(SearchChatMessage message) {
     String esUrl = Constants.esUrl;
     String apiKey = Constants.apiKey;
 
@@ -159,19 +157,15 @@ public class ElasticsearchDataAccessObject implements SearchDataAccessInterface 
             .post(requestBody)
             .build();
 
-    System.out.println(jsonPayload);
     try (Response response = client.newCall(request).execute()) {
-      if (response.isSuccessful()) {
-        System.out.println("Request was successful");
-        System.out.println("Response code: " + response.code());
-        System.out.println("Response body:\n" + response.body().string());
+      if (!response.isSuccessful()) {
+        return new SearchReponseArray(new ArrayList<>(), "Failed to save current message", true);
       } else {
-        System.err.println("Request failed");
-        System.err.println("Response code: " + response.code());
-        System.err.println("Response body:\n" + response.body().string());
+        return new SearchReponseArray(new ArrayList<>(), "Success!", false);
       }
     } catch (Exception e) {
       e.printStackTrace();
+      return new SearchReponseArray(new ArrayList<>(), "Failed to save current message", true);
     }
   }
 }

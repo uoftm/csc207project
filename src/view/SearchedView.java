@@ -40,6 +40,9 @@ public class SearchedView implements PropertyChangeListener {
     backButton.addActionListener(
         evt -> {
           if (evt.getSource().equals(backButton)) {
+            paneInternals.removeAll();
+            paneInternals.revalidate();
+            paneInternals.repaint();
             switchViewController.switchTo(SearchView.viewName);
           }
         });
@@ -82,5 +85,9 @@ public class SearchedView implements PropertyChangeListener {
           paneInternals.revalidate();
           paneInternals.repaint();
         });
+  }
+
+  public JButton getBackButton() {
+    return backButton;
   }
 }
