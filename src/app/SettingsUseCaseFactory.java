@@ -10,9 +10,14 @@ import use_case.settings.*;
 import view.SettingsView;
 
 public class SettingsUseCaseFactory {
-
+  /** Prevent instantiation. */
   private SettingsUseCaseFactory() {}
 
+  /**
+   * Creates the Settings page and the use case for it
+   *
+   * @return The instance of the SettingsView
+   */
   public static SettingsView create(
       SettingsViewModel settingsViewModel,
       LoggedInViewModel loggedInViewModel,

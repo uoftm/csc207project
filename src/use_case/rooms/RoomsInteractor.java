@@ -29,10 +29,9 @@ public class RoomsInteractor implements RoomsInputBoundary {
   public void sendMessage(RoomsInputData roomsInputData) {
     try {
       Room room = roomsInputData.getRoom();
-      User user = inMemoryDAO.getUser();
 
       try {
-        messageDataAccessInterface.sendMessage(room, userDao, user, roomsInputData.getMessage());
+        messageDataAccessInterface.sendMessage(room, inMemoryDAO, roomsInputData.getMessage());
         RoomsOutputData roomsOutputData =
             new RoomsOutputData(room, null, roomsInputData.getMessage());
         roomsPresenter.prepareSendMessageSuccessView(roomsOutputData);
@@ -53,12 +52,11 @@ public class RoomsInteractor implements RoomsInputBoundary {
   public void addUserToRoom(RoomsInputData roomsInputData) {
     try {
       Room room = roomsInputData.getRoom();
-      User user = inMemoryDAO.getUser();
       String email = roomsInputData.getEmail();
 
       DisplayUser displayUserFromEmail = userDao.getDisplayUser(email);
       String idToken = inMemoryDAO.getIdToken();
-      roomsDataAccessObject.addUserToRoom(idToken, user, displayUserFromEmail, room);
+      roomsDataAccessObject.addUserToRoom(idToken, displayUserFromEmail, room);
       RoomsOutputData roomsOutputData =
           new RoomsOutputData(null, null, "Successfully added " + email);
       roomsPresenter.prepareSuccessView(roomsOutputData);

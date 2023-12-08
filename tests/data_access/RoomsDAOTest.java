@@ -37,7 +37,7 @@ public class RoomsDAOTest extends DAOTest {
     Room testRoom = roomDao.addRoom(idToken, testUser, "Test Room");
 
     // Get test room
-    Room retrievedRoom = roomDao.getRoomFromId(idToken, testUser, testRoom.getUid());
+    Room retrievedRoom = roomDao.getRoomFromId(idToken, testRoom.getUid());
 
     // Assert that the room details are equivalent
     Assert.assertEquals(testRoom.getName(), retrievedRoom.getName());
@@ -50,11 +50,11 @@ public class RoomsDAOTest extends DAOTest {
         testRoom.getUsers().get(0).getName(), retrievedRoom.getUsers().get(0).getName());
 
     // Delete test room
-    roomDao.deleteRoom(idToken, testUser, testRoom);
+    roomDao.deleteRoom(idToken, testRoom);
 
     // Confirm room deletion
     Assert.assertThrows(
-        RuntimeException.class, () -> roomDao.getRoomFromId(idToken, testUser, testRoom.getUid()));
+        RuntimeException.class, () -> roomDao.getRoomFromId(idToken, testRoom.getUid()));
 
     // Delete user
     DeleteUserDataAccessInterface deleteDao = userDao;
@@ -74,8 +74,8 @@ public class RoomsDAOTest extends DAOTest {
     DisplayUser dummyDisplayUser2 = new DisplayUser(dummyUser2.getEmail(), dummyUser2.getName());
 
     String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
-    dao.addUserToRoom(idToken, dummyUser, dummyDisplayUser2, dummyRoom);
-    Room retrievedRoom = dao.getRoomFromId(idToken, dummyUser, dummyRoom.getUid());
+    dao.addUserToRoom(idToken, dummyDisplayUser2, dummyRoom);
+    Room retrievedRoom = dao.getRoomFromId(idToken, dummyRoom.getUid());
 
     List<DisplayUser> retrievedUsers = retrievedRoom.getUsers();
     Assert.assertEquals(retrievedUsers.size(), 2);
@@ -113,11 +113,11 @@ public class RoomsDAOTest extends DAOTest {
     User dummyUser2 = addFirebaseDummyUser();
     DisplayUser dummyDisplayUser2 =
         new DisplayUser(dummyUser2.getEmail(), dummyUser2.getPassword());
-    dao.addUserToRoom(idToken, dummyUser, dummyDisplayUser2, dummyRoom);
+    dao.addUserToRoom(idToken, dummyDisplayUser2, dummyRoom);
 
-    dao.removeUserFromRoom(idToken, dummyUser, dummyDisplayUser2, dummyRoom);
+    dao.removeUserFromRoom(idToken, dummyDisplayUser2, dummyRoom);
 
-    Room retrievedRoom = dao.getRoomFromId(idToken, dummyUser, dummyRoom.getUid());
+    Room retrievedRoom = dao.getRoomFromId(idToken, dummyRoom.getUid());
     Assert.assertEquals(retrievedRoom.getUsers().size(), 1);
     DisplayUser retrievedUser = retrievedRoom.getUsers().get(0);
     Assert.assertEquals(retrievedUser.getName(), dummyUser.getName());
@@ -134,7 +134,7 @@ public class RoomsDAOTest extends DAOTest {
     RoomsDataAccessInterface dao =
         new FirebaseRoomsDataAccessObject(null) {
           @Override
-          public void addUserToRoom(String idToken, User user, DisplayUser displayUser, Room room) {
+          public void addUserToRoom(String idToken, DisplayUser displayUser, Room room) {
             throw new RuntimeException("Failed to add user.");
           }
         };
@@ -144,7 +144,7 @@ public class RoomsDAOTest extends DAOTest {
     assertThrows(
         "Failed to add user.",
         RuntimeException.class,
-        () -> dao.addUserToRoom(null, dummyUser, dummyDisplayUser, dummyRoom));
+        () -> dao.addUserToRoom(null, dummyDisplayUser, dummyRoom));
   }
 
   @Test
@@ -186,8 +186,8 @@ public class RoomsDAOTest extends DAOTest {
     User dummyUser = addFirebaseDummyUser();
     String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
     Room room = dao.addRoom(idToken, dummyUser, "New Room");
-    dao.changeRoomName(idToken, dummyUser, room, "Test Room 2");
-    Room retrievedRoom = dao.getRoomFromId(idToken, dummyUser, room.getUid());
+    dao.changeRoomName(idToken, room, "Test Room 2");
+    Room retrievedRoom = dao.getRoomFromId(idToken, room.getUid());
     Assert.assertEquals("Test Room 2", retrievedRoom.getName());
     cleanUpRoom(room, dummyUser);
     cleanUpUser(dummyUser);
@@ -198,15 +198,14 @@ public class RoomsDAOTest extends DAOTest {
     RoomsDataAccessInterface dao =
         new FirebaseRoomsDataAccessObject(null) {
           @Override
-          public void changeRoomName(String idToken, User user, Room activeRoom, String roomName) {
+          public void changeRoomName(String idToken, Room activeRoom, String roomName) {
             throw new RuntimeException("Unable to change room name. Please try again.");
           }
         };
-    User dummyUser = createDummyUser();
     Room room = createDummyRoom();
     assertThrows(
         "Failed to change room name.",
         RuntimeException.class,
-        () -> dao.changeRoomName(null, dummyUser, room, "Test Room 2"));
+        () -> dao.changeRoomName(null, room, "Test Room 2"));
   }
 }

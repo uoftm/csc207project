@@ -109,6 +109,22 @@ public class SignupView implements PropertyChangeListener {
     return cancel;
   }
 
+  public JTextField getEmailField() {
+    return email;
+  }
+
+  public JTextField getUsernameField() {
+    return username;
+  }
+
+  public JPasswordField getPasswordField() {
+    return password;
+  }
+
+  public JPasswordField getRepeatPasswordField() {
+    return repeatPassword;
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     SignupState state = (SignupState) evt.getNewValue();

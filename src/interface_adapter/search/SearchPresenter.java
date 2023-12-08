@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
+import view.SearchedView;
 
 public class SearchPresenter implements SearchOutputBoundary {
 
@@ -40,7 +41,6 @@ public class SearchPresenter implements SearchOutputBoundary {
               DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")
                   .format(
                       LocalDateTime.ofInstant(response.getTime(), ZoneId.of("America/New_York"))),
-              // TODO// needs to be modified to have names instead of IDs.
               response.getAuthUid(),
               response.getRoomUid(),
               response.getHighlightIndices(),
@@ -50,7 +50,7 @@ public class SearchPresenter implements SearchOutputBoundary {
     this.searchedViewModel.setState(searchedState);
     this.searchedViewModel.firePropertyChanged();
 
-    this.viewManagerModel.setActiveView(searchedViewModel.getViewName());
+    this.viewManagerModel.setActiveView(SearchedView.viewName);
   }
 
   @Override

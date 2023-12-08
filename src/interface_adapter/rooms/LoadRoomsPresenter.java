@@ -34,11 +34,11 @@ public class LoadRoomsPresenter implements LoadRoomsOutputBoundary {
     if (roomsState.roomIsSelected() && room != null) {
       Set<Long> oldMessages =
           roomsState.getDisplayMessages().stream()
-              .map(message -> message.timestamp.toEpochMilli())
+              .map(message -> message.getTimestamp().toEpochMilli())
               .collect(Collectors.toSet());
       Set<Long> newMessages =
           room.getMessages().stream()
-              .map(message -> message.timestamp.toEpochMilli())
+              .map(message -> message.getTimestamp().toEpochMilli())
               .collect(Collectors.toSet());
       if (!oldMessages.equals(newMessages)) {
         // The room messages have changed, so update the view

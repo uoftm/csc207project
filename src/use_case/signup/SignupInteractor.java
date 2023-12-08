@@ -1,21 +1,17 @@
 package use_case.signup;
 
 import entities.auth.User;
-import entities.auth.UserFactory;
 import java.time.LocalDateTime;
 
 public class SignupInteractor implements SignupInputBoundary {
   final SignupUserDataAccessInterface userDataAccessObject;
   final SignupOutputBoundary userPresenter;
-  final UserFactory userFactory;
 
   public SignupInteractor(
       SignupUserDataAccessInterface signupDataAccessInterface,
-      SignupOutputBoundary signupOutputBoundary,
-      UserFactory userFactory) {
+      SignupOutputBoundary signupOutputBoundary) {
     this.userDataAccessObject = signupDataAccessInterface;
     this.userPresenter = signupOutputBoundary;
-    this.userFactory = userFactory;
   }
 
   @Override
@@ -25,7 +21,7 @@ public class SignupInteractor implements SignupInputBoundary {
     } else {
       LocalDateTime now = LocalDateTime.now();
       User user =
-          userFactory.create(
+          new User(
               null,
               signupInputData.getEmail(),
               signupInputData.getUsername(),

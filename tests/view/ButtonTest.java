@@ -9,6 +9,7 @@ import use_case.switch_view.SwitchViewInputBoundary;
 import use_case.switch_view.SwitchViewInteractor;
 import use_case.switch_view.SwitchViewOutputBoundary;
 
+/** Helper class for testing switch view and button clicks */
 public abstract class ButtonTest {
   SwitchViewController initializeSwitchViewController(ViewManagerModel viewManagerModel) {
     SwitchViewOutputBoundary switchViewOutputBoundary = new SwitchViewPresenter(viewManagerModel);
@@ -19,7 +20,7 @@ public abstract class ButtonTest {
 
   boolean checkActiveView(ViewManagerModel viewManagerModel, String expectedViewName) {
     try {
-      sleep(1000);
+      sleep(100);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
     }

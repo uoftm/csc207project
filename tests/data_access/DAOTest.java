@@ -50,7 +50,7 @@ public abstract class DAOTest {
     return dummyUser;
   }
 
-  void cleanUpUser(User user) {
+  public static void cleanUpUser(User user) {
     OkHttpClient client = new OkHttpClient();
     FirebaseUserDataAccessObject userDao = new FirebaseUserDataAccessObject(client);
     String idToken = userDao.getAccessToken(user.getEmail(), user.getPassword());
@@ -62,7 +62,7 @@ public abstract class DAOTest {
     RoomsDataAccessInterface roomsDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface loginDao = new FirebaseUserDataAccessObject(client);
     String idToken = loginDao.getAccessToken(user.getEmail(), user.getPassword());
-    roomsDao.deleteRoom(idToken, user, room);
+    roomsDao.deleteRoom(idToken, room);
   }
 
   /**

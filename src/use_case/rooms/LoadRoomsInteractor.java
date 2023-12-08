@@ -5,11 +5,24 @@ import entities.rooms.Room;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The LoadRoomsInteractor class is responsible for loading rooms from the data source and sending
+ * them to the presenter
+ */
 public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
   final LoadRoomsOutputBoundary roomsPresenter;
   final RoomsDataAccessInterface roomsDataAccessObject;
   final LoggedInDataAccessInterface inMemoryDAO;
 
+  /**
+   * The LoadRoomsInteractor class is responsible for loading rooms from the data source and sending
+   * them to the presenter
+   *
+   * @param roomsDataAccessObject The data access object to use to load rooms
+   * @param inMemoryDAO The in memory data access object to use to get the logged in user and their
+   *     id token
+   * @param roomsOutputBoundary The output boundary to use to send the rooms to the presenter
+   */
   public LoadRoomsInteractor(
       RoomsDataAccessInterface roomsDataAccessObject,
       LoggedInDataAccessInterface inMemoryDAO,
@@ -33,7 +46,7 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
       List<Room> rooms = new ArrayList<>();
       for (String roomId : availableRoomIds) {
         String idToken = inMemoryDAO.getIdToken();
-        Room room = roomsDataAccessObject.getRoomFromId(idToken, user, roomId);
+        Room room = roomsDataAccessObject.getRoomFromId(idToken, roomId);
         rooms.add(room);
       }
       LoadRoomsOutputData roomsOutputData = new LoadRoomsOutputData(rooms, null);

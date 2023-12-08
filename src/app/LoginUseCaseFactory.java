@@ -15,11 +15,27 @@ import use_case.login.LoginUserDataAccessInterface;
 import use_case.rooms.LoggedInDataAccessInterface;
 import view.LoginView;
 
+/**
+ * The LoginUseCaseFactory class is responsible for creating instances of the LoginView class. It
+ * provides a static method that takes in various dependencies and returns a LoginView object.
+ */
 public class LoginUseCaseFactory {
 
   /** Prevent instantiation. */
   private LoginUseCaseFactory() {}
 
+  /**
+   * Creates a LoginView along with all the clean architecture components required to run it.
+   *
+   * @param inMemoryDAO for storing the logged in user
+   * @param userDataAccessObject for retrieving the user from the database
+   * @param viewManagerModel for switching views
+   * @param loggedInViewModel for updating the display once logged in
+   * @param roomsViewModel for updating the display once logged in
+   * @param loginViewModel passed in to allow for getting the loginViewModel in testing
+   * @param switchViewController for switching views
+   * @return a LoginView object
+   */
   public static LoginView create(
       ViewManagerModel viewManagerModel,
       LoginViewModel loginViewModel,

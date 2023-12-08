@@ -8,10 +8,6 @@ public class SearchedViewModel extends ViewModel {
 
   private SearchedState state = new SearchedState();
 
-  public SearchedViewModel() {
-    super("search results");
-  }
-
   public void setState(SearchedState state) {
     this.state = state;
   }

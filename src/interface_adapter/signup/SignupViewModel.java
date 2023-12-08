@@ -7,10 +7,6 @@ import java.beans.PropertyChangeSupport;
 public class SignupViewModel extends ViewModel {
   private SignupState state = new SignupState();
 
-  public SignupViewModel() {
-    super("sign up");
-  }
-
   public void setState(SignupState state) {
     this.state = state;
   }

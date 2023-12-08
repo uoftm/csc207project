@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient;
 import org.junit.Assert;
 import org.junit.Test;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.rooms.MessageDataAccessInterface;
 import use_case.rooms.RoomsDataAccessInterface;
 
@@ -20,23 +21,25 @@ public class MessagesDAOTest extends DAOTest {
     MessageDataAccessInterface messageDao = new FirebaseMessageDataAccessObject(client);
     RoomsDataAccessInterface roomDao = new FirebaseRoomsDataAccessObject(client);
     LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
     User dummyUser = addFirebaseDummyUser();
     Room dummyRoom = addFirebaseDummyRoom(dummyUser);
+    inMemoryDAO.setUser(dummyUser);
+    inMemoryDAO.setIdToken(userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword()));
 
     Message message = createDummyMessage(dummyUser.toDisplayUser());
-    messageDao.sendMessage(dummyRoom, userDao, dummyUser, message.content);
+    messageDao.sendMessage(dummyRoom, inMemoryDAO, message.getContent());
 
     String idToken = userDao.getAccessToken(dummyUser.getEmail(), dummyUser.getPassword());
-    List<Message> response =
-        roomDao.getRoomFromId(idToken, dummyUser, dummyRoom.getUid()).getMessages();
+    List<Message> response = roomDao.getRoomFromId(idToken, dummyRoom.getUid()).getMessages();
     Message retrievedMessage = response.get(0);
 
     Assert.assertTrue(
-        message.timestamp.toEpochMilli() <= retrievedMessage.timestamp.toEpochMilli());
-    Assert.assertEquals(message.content, retrievedMessage.content);
+        message.getTimestamp().toEpochMilli() <= retrievedMessage.getTimestamp().toEpochMilli());
+    Assert.assertEquals(message.getContent(), retrievedMessage.getContent());
     Assert.assertEquals(
-        message.displayUser.getEmail().toLowerCase(),
-        retrievedMessage.displayUser.getEmail().toLowerCase());
+        message.getDisplayUser().getEmail().toLowerCase(),
+        retrievedMessage.getDisplayUser().getEmail().toLowerCase());
 
     cleanUpRoom(dummyRoom, dummyUser);
     cleanUpUser(dummyUser);
@@ -46,13 +49,14 @@ public class MessagesDAOTest extends DAOTest {
   public void testSendMessageFailure() {
     OkHttpClient client = new OkHttpClient();
     MessageDataAccessInterface messageDao = new FirebaseMessageDataAccessObject(client);
-    LoginUserDataAccessInterface userDao = new FirebaseUserDataAccessObject(client);
+    LoggedInDataAccessInterface inMemoryDAO = new InMemoryUserDataAccessObject();
 
     User invalidUser = createDummyUser();
     Room invalidRoom = createDummyRoom();
+    inMemoryDAO.setUser(invalidUser);
 
     assertThrows(
         RuntimeException.class,
-        () -> messageDao.sendMessage(invalidRoom, userDao, invalidUser, "Invalid message"));
+        () -> messageDao.sendMessage(invalidRoom, inMemoryDAO, "Invalid message"));
   }
 }

@@ -4,19 +4,16 @@ import java.util.List;
 
 public class SearchResponseDisplay {
   private final String time;
-
   private final String userName;
-
   private final String roomName;
-
-  private final List<SearchIndicies> highlightIndices;
+  private final List<SearchIndices> highlightIndices;
   private final String message;
 
   public SearchResponseDisplay(
       String time,
       String userName,
       String roomName,
-      List<SearchIndicies> highlightIndices,
+      List<SearchIndices> highlightIndices,
       String message) {
     this.time = time;
     this.userName = userName;
@@ -37,7 +34,7 @@ public class SearchResponseDisplay {
     return roomName;
   }
 
-  public List<SearchIndicies> getHighlightIndices() {
+  public List<SearchIndices> getHighlightIndices() {
     return highlightIndices;
   }
 

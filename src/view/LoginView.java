@@ -81,6 +81,14 @@ public class LoginView implements PropertyChangeListener {
     return cancel;
   }
 
+  public JTextField getEmailField() {
+    return email;
+  }
+
+  public JPasswordField getPasswordField() {
+    return password;
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     LoginState state = (LoginState) evt.getNewValue();

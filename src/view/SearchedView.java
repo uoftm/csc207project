@@ -55,7 +55,6 @@ public class SearchedView implements PropertyChangeListener {
       JPanel eachMessagePanel = new JPanel();
       eachMessagePanel.setLayout(new FlowLayout());
       JLabel labelOne = new JLabel(response.getTime());
-      JLabel labelTwo = new JLabel(response.getRoomName());
       JLabel labelThree = new JLabel(response.getUserName());
       JTextPane textPane = new JTextPane();
       textPane.setText(response.getMessage());
@@ -70,7 +69,6 @@ public class SearchedView implements PropertyChangeListener {
       }
 
       eachMessagePanel.add(labelOne);
-      eachMessagePanel.add(labelTwo);
       eachMessagePanel.add(labelThree);
       eachMessagePanel.add(textPane);
 

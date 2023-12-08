@@ -6,20 +6,30 @@ import java.io.IOException;
 import java.util.*;
 import okhttp3.*;
 import org.json.JSONObject;
-import use_case.login.LoginUserDataAccessInterface;
+import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.rooms.MessageDataAccessInterface;
 
+/**
+ * The FirebaseMessageDataAccessObject class provides methods for saving a message to the Firebase
+ * database.
+ */
 public class FirebaseMessageDataAccessObject implements MessageDataAccessInterface {
   private final OkHttpClient client;
 
+  /**
+   * The FirebaseMessageDataAccessObject class provides a method for initializing a new instance of
+   * the class.
+   *
+   * @param client The OkHttpClient instance used for making HTTP requests.
+   */
   public FirebaseMessageDataAccessObject(OkHttpClient client) {
     this.client = client;
   }
 
   @Override
-  public void sendMessage(
-      Room room, LoginUserDataAccessInterface userDAO, User user, String messageBody) {
-    String idToken = userDAO.getAccessToken(user.getEmail(), user.getPassword());
+  public void sendMessage(Room room, LoggedInDataAccessInterface userDAO, String messageBody) {
+    String idToken = userDAO.getIdToken();
+    User user = userDAO.getUser();
     String messageJSON =
         new JSONObject().put("contents", messageBody).put("author", user.getEmail()).toString();
 

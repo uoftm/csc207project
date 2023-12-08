@@ -111,6 +111,7 @@ public class RoomsView implements PropertyChangeListener {
             if (message != null && currentState.roomIsSelected()) {
               Room room = currentState.getRoomByUid();
               roomsController.sendMessage(room, message);
+              messageTextField.setText("");
               searchController.executeRecordData(Instant.now(), currentState.getRoomUid(), message);
             }
           }
@@ -205,7 +206,8 @@ public class RoomsView implements PropertyChangeListener {
         messagesPaneInternals.repaint();
 
         for (var message : messages) {
-          var messageView = new MessageView(message.content, message.displayUser.getName());
+          var messageView =
+              new MessageView(message.getContent(), message.getDisplayUser().getName());
           messagesPaneInternals.add(messageView);
         }
 
