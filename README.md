@@ -1,29 +1,13 @@
-# csc207project
-## Project Plan, Description & Example API Usage
-The problem domain we want to focus on is communication. 
-More specifically, we are thinking of developing a real-time desktop messaging app with additional support for sending photos and interacting with chatbots.
+# 💥 MSGR 💥
+It's a messaging app - Alex (2x), Milo, Justus
 
-We are considering using Firebase Cloud Database to store our messages in the cloud. 
-Firebase Cloud Database is scalable, reliable, and has a good RESTful interface.
-Here is the Firebase Cloud Database API documentation: https://firebase.google.com/docs/database. 
+## 🌟 Running the Project 🌟
+Just run `Main.java`
 
-Below is an image of us trying it out in postman below:
+## 🤖 Tests 🤖
+1. Click ok a bunch of times
+2. Click Yes, Ok, No, Yes (you'll know)
+3. Run away and let them finish
 
-![A GET request to Firebase Cloud Database in Postman](assets/Firebase%20Cloud%20Database%20Postman.png)
-
-Java code example output:
-
-![IntelliJ IDEA run output](assets/Running%20Program.png)
-
-We have not faced any technical problems so far. The following are some of our runner up project ideas:
-- Cryptocurrency wallet
-- 2FA helper app
-- Malware
-- VPN
-
-
-## VSCode
-
-1. `mvn package`
-2. `java -cp target/csc207project-1.0-SNAPSHOT.jar app.Main`
-3. `mvn com.spotify.fmt:fmt-maven-plugin:format`
+## 🧹 Linter 🧹
+`mvn com.spotify.fmt:fmt-maven-plugin:format`
