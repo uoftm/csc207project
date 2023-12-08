@@ -15,7 +15,8 @@ public class SearchResponse {
   private final List<SearchIndices> highlightIndices;
 
   /**
-   * The SearchResponse class represents a single response of search chat messages from Elasticsearch.
+   * The SearchResponse class represents a single response of search chat messages from
+   * Elasticsearch.
    */
   public SearchResponse(
       String fullText,

@@ -18,7 +18,7 @@ public class LoginController {
   /**
    * Attempts to log in with the given email and password.
    *
-   * @param email    The email used for login.
+   * @param email The email used for login.
    * @param password The password used for login.
    */
   public void execute(String email, String password) {

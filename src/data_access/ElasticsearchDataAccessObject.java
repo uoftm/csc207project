@@ -9,6 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import use_case.search.SearchDataAccessInterface;
 
+/**
+ * The ElasticsearchDataAccessObject class provides methods to retrieve and save search chat data
+ * from the Elasticsearch index.
+ */
 public class ElasticsearchDataAccessObject implements SearchDataAccessInterface {
 
   private final OkHttpClient client;

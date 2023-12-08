@@ -5,23 +5,53 @@ import java.awt.*;
 import java.util.Random;
 import javax.swing.*;
 
+/**
+ * This class represents the Welcome view in the application.
+ * It displays a random welcome message, along with buttons to navigate to the login and signup views.
+ */
 public class WelcomeView {
+
+  /**
+   * The name of the Welcome view/page in the application.
+   * This variable is used as a parameter when calling the `switchTo` method in `SwitchViewController` to navigate to a specific view.
+   */
   public static final String viewName = "initial welcome";
 
+  /**
+   * The content pane for the WelcomeView class.
+   * This JPanel is used to contain all the UI elements for the Welcome view/page.
+   * It includes a caption label, login button, signup button, and body panel.
+   * We add this JPanel to the JCardLayout in Main class.
+   */
   public JPanel contentPane;
   private JLabel captionLabel;
   private JButton login;
   private JButton signup;
   private JPanel body;
 
+  /**
+   * Used for testing
+   *
+   * @return The login button from the Welcome view.
+   */
   public JButton getLoginButton() {
     return login;
   }
 
+  /**
+   * Used for testing
+   *
+   * @return The signup button from the WelcomeView class.
+   */
   public JButton getSignupButton() {
     return signup;
   }
 
+  /**
+   * Constructs a WelcomeView object with the given SwitchViewController.
+   *
+   * @param switchViewController the SwitchViewController used for navigation between views
+   */
   public WelcomeView(SwitchViewController switchViewController) {
     contentPane.setBackground(ViewConstants.background);
     contentPane.setPreferredSize(ViewConstants.windowSize);

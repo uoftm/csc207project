@@ -9,14 +9,22 @@ import org.json.JSONObject;
 import use_case.rooms.LoggedInDataAccessInterface;
 import use_case.rooms.MessageDataAccessInterface;
 
+/**
+ * The FirebaseMessageDataAccessObject class provides methods for saving a message to the Firebase
+ * database.
+ */
 public class FirebaseMessageDataAccessObject implements MessageDataAccessInterface {
   private final OkHttpClient client;
 
+  /**
+   * The FirebaseMessageDataAccessObject class provides a method for initializing a new instance of the class.
+   *
+   * @param client The OkHttpClient instance used for making HTTP requests.
+   */
   public FirebaseMessageDataAccessObject(OkHttpClient client) {
     this.client = client;
   }
 
-  /** Saves a message to the Firebase database. */
   @Override
   public void sendMessage(Room room, LoggedInDataAccessInterface userDAO, String messageBody) {
     String idToken = userDAO.getIdToken();

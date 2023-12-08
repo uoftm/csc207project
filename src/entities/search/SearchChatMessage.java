@@ -8,9 +8,7 @@ public class SearchChatMessage {
   private final String email;
   private final String roomUid;
 
-  /**
-   * Represents a search chat message. This is a message stored in Elasticsearch for indexing
-   */
+  /** Represents a search chat message. This is a message stored in Elasticsearch for indexing */
   public SearchChatMessage(Instant time, String roomUid, String message, String email) {
     this.timestamp = time;
     this.content = message;

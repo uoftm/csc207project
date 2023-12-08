@@ -1,8 +1,6 @@
 package entities.search;
 
-/**
- * The SearchIndices class represents the start and end indices of a search highlight in a text.
- */
+/** The SearchIndices class represents the start and end indices of a search highlight in a text. */
 public class SearchIndices {
   private final Integer start;
   private final Integer end;

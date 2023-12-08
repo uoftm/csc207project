@@ -16,7 +16,7 @@ public class SettingsUseCaseFactory {
   /**
    * Creates the Settings page and the use case for it
    *
-   * @return
+   * @return The instance of the SettingsView
    */
   public static SettingsView create(
       SettingsViewModel settingsViewModel,
@@ -37,11 +37,6 @@ public class SettingsUseCaseFactory {
     return new SettingsView(settingsViewModel, settingsController, switchViewController);
   }
 
-  /**
-   * Create the settings controller, for internal use
-   *
-   * @return The instance of the SettingsController
-   */
   private static SettingsController createSettingsController(
       SettingsViewModel settingsViewModel,
       LoggedInViewModel loggedInViewModel,

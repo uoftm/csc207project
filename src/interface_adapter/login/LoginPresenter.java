@@ -28,8 +28,8 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
   }
 
   /**
-   * Prepares the success view after a successful login.
-   * Sets the logged-in user, and updates the view to display the Rooms view,
+   * Prepares the success view after a successful login. Sets the logged-in user, and updates the
+   * view to display the Rooms view,
    *
    * @param loginOutputData The login output data containing the username of the logged-in user.
    */
@@ -53,9 +53,7 @@ public class LoginPresenter implements LoginOutputBoundary, SwitchViewOutputBoun
     loginViewModel.firePropertyChanged();
   }
 
-  /**
-   * Sets the active view in the view manager model based on the provided output data.
-   */
+  /** Sets the active view in the view manager model based on the provided output data. */
   @Override
   public void present(SwitchViewOutputData outputData) {
     this.viewManagerModel.setActiveView(outputData.getViewName());

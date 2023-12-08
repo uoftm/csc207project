@@ -15,6 +15,12 @@ import use_case.settings.DeleteUserDataAccessInterface;
 import use_case.settings.UserSettingsDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
+/**
+ * The FirebaseUserDataAccessObject class is responsible for signing up, logging in, deleting user, and
+ * managing user settings with Firebase and identitytoolkit.
+ *
+ * This also allows us to manage user details like display user in firebase.
+ */
 public class FirebaseUserDataAccessObject
     implements SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
@@ -26,6 +32,8 @@ public class FirebaseUserDataAccessObject
   /**
    * The FirebaseUserDataAccessObject class is responsible for signing up and logging in with
    * Firebase/identitytoolkit.
+   *
+   * @param client The OkHttpClient instance used for making HTTP requests.
    */
   public FirebaseUserDataAccessObject(OkHttpClient client) {
     this.client = client;

@@ -13,11 +13,21 @@ import org.json.JSONObject;
 import use_case.rooms.RoomsDataAccessInterface;
 import use_case.settings.RoomsSettingsDataAccessInterface;
 
+/**
+ * The FirebaseRoomsDataAccessObject class is responsible for interacting with the Firebase
+ * database to perform various operations related to rooms and room settings.
+ */
 public class FirebaseRoomsDataAccessObject
     implements RoomsDataAccessInterface, RoomsSettingsDataAccessInterface {
 
   private final OkHttpClient client;
 
+  /**
+   * FirebaseRoomsDataAccessObject is a class that handles data access operations related to rooms in Firebase.
+   * It provides methods to interact with the Firebase Realtime Database to perform CRUD operations on room objects.
+   *
+   * @param client The OkHttpClient instance used for making HTTP requests.
+   */
   public FirebaseRoomsDataAccessObject(OkHttpClient client) {
     this.client = client;
   }
@@ -131,6 +141,10 @@ public class FirebaseRoomsDataAccessObject
         String.format(Constants.SPECIFIC_ROOM_DATA_URL, encodedEmail, room.getUid())
             + "?auth="
             + idToken;
+    postToFirebase(jsonBody, url);
+  }
+
+  private void postToFirebase(String jsonBody, String url) {
     RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
     Request request = new Request.Builder().url(url).put(body).build();
 
@@ -169,18 +183,7 @@ public class FirebaseRoomsDataAccessObject
     String encodedEmail =
         Base64.getEncoder().encodeToString(newUser.getEmail().toLowerCase().getBytes());
     String url = String.format(Constants.ROOM_USERS_URL, roomId, encodedEmail) + "?auth=" + idToken;
-    RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
-
-    Request request = new Request.Builder().url(url).put(body).build();
-
-    try {
-      Response response = client.newCall(request).execute();
-      if (!response.isSuccessful()) {
-        throw new IOException();
-      }
-    } catch (IOException | JSONException e) {
-      throw new RuntimeException("Unable to add user to room. Please try again.");
-    }
+    postToFirebase(jsonBody, url);
   }
 
   @Override
