@@ -14,8 +14,8 @@ import use_case.rooms.RoomsDataAccessInterface;
 import use_case.settings.RoomsSettingsDataAccessInterface;
 
 /**
- * The FirebaseRoomsDataAccessObject class is responsible for interacting with the Firebase
- * database to perform various operations related to rooms and room settings.
+ * The FirebaseRoomsDataAccessObject class is responsible for interacting with the Firebase database
+ * to perform various operations related to rooms and room settings.
  */
 public class FirebaseRoomsDataAccessObject
     implements RoomsDataAccessInterface, RoomsSettingsDataAccessInterface {
@@ -23,8 +23,9 @@ public class FirebaseRoomsDataAccessObject
   private final OkHttpClient client;
 
   /**
-   * FirebaseRoomsDataAccessObject is a class that handles data access operations related to rooms in Firebase.
-   * It provides methods to interact with the Firebase Realtime Database to perform CRUD operations on room objects.
+   * FirebaseRoomsDataAccessObject is a class that handles data access operations related to rooms
+   * in Firebase. It provides methods to interact with the Firebase Realtime Database to perform
+   * CRUD operations on room objects.
    *
    * @param client The OkHttpClient instance used for making HTTP requests.
    */

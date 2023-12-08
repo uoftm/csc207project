@@ -3,7 +3,8 @@ package use_case.settings;
 import entities.auth.User;
 
 /**
- * The DeleteUserDataAccessInterface is an interface that defines the SOLID interface for deleting user data.
+ * The DeleteUserDataAccessInterface is an interface that defines the SOLID interface for deleting
+ * user data.
  */
 public interface DeleteUserDataAccessInterface {
   /**

@@ -6,24 +6,24 @@ import java.util.Random;
 import javax.swing.*;
 
 /**
- * This class represents the Welcome view in the application.
- * It displays a random welcome message, along with buttons to navigate to the login and signup views.
+ * This class represents the Welcome view in the application. It displays a random welcome message,
+ * along with buttons to navigate to the login and signup views.
  */
 public class WelcomeView {
 
   /**
-   * The name of the Welcome view/page in the application.
-   * This variable is used as a parameter when calling the `switchTo` method in `SwitchViewController` to navigate to a specific view.
+   * The name of the Welcome view/page in the application. This variable is used as a parameter when
+   * calling the `switchTo` method in `SwitchViewController` to navigate to a specific view.
    */
   public static final String viewName = "initial welcome";
 
   /**
-   * The content pane for the WelcomeView class.
-   * This JPanel is used to contain all the UI elements for the Welcome view/page.
-   * It includes a caption label, login button, signup button, and body panel.
-   * We add this JPanel to the JCardLayout in Main class.
+   * The content pane for the WelcomeView class. This JPanel is used to contain all the UI elements
+   * for the Welcome view/page. It includes a caption label, login button, signup button, and body
+   * panel. We add this JPanel to the JCardLayout in Main class.
    */
   public JPanel contentPane;
+
   private JLabel captionLabel;
   private JButton login;
   private JButton signup;

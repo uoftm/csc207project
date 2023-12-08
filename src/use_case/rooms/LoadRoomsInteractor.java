@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The LoadRoomsInteractor class is responsible for loading rooms from the data source and sending them to the presenter
+ * The LoadRoomsInteractor class is responsible for loading rooms from the data source and sending
+ * them to the presenter
  */
 public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
   final LoadRoomsOutputBoundary roomsPresenter;
@@ -14,10 +15,12 @@ public class LoadRoomsInteractor implements LoadRoomsInputBoundary {
   final LoggedInDataAccessInterface inMemoryDAO;
 
   /**
-   * The LoadRoomsInteractor class is responsible for loading rooms from the data source and sending them to the presenter
+   * The LoadRoomsInteractor class is responsible for loading rooms from the data source and sending
+   * them to the presenter
    *
    * @param roomsDataAccessObject The data access object to use to load rooms
-   * @param inMemoryDAO The in memory data access object to use to get the logged in user and their id token
+   * @param inMemoryDAO The in memory data access object to use to get the logged in user and their
+   *     id token
    * @param roomsOutputBoundary The output boundary to use to send the rooms to the presenter
    */
   public LoadRoomsInteractor(

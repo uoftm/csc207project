@@ -17,7 +17,8 @@ public class FirebaseMessageDataAccessObject implements MessageDataAccessInterfa
   private final OkHttpClient client;
 
   /**
-   * The FirebaseMessageDataAccessObject class provides a method for initializing a new instance of the class.
+   * The FirebaseMessageDataAccessObject class provides a method for initializing a new instance of
+   * the class.
    *
    * @param client The OkHttpClient instance used for making HTTP requests.
    */

@@ -9,8 +9,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 /**
- * The ListedRoom class represents a graphical panel that displays information about a room.
- * It extends JPanel and provides a clickable label to select the room.
+ * The ListedRoom class represents a graphical panel that displays information about a room. It
+ * extends JPanel and provides a clickable label to select the room.
  */
 public class ListedRoom extends JPanel {
   /**

@@ -9,9 +9,7 @@ import use_case.switch_view.SwitchViewInputBoundary;
 import use_case.switch_view.SwitchViewInteractor;
 import use_case.switch_view.SwitchViewOutputBoundary;
 
-/**
-* Helper class for testing switch view and button clicks
-*/
+/** Helper class for testing switch view and button clicks */
 public abstract class ButtonTest {
   SwitchViewController initializeSwitchViewController(ViewManagerModel viewManagerModel) {
     SwitchViewOutputBoundary switchViewOutputBoundary = new SwitchViewPresenter(viewManagerModel);

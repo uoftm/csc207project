@@ -1,8 +1,8 @@
 package use_case.rooms;
 
 /**
- * The interface for the output boundary of the LoadRooms use case.
- * It defines methods for preparing success and fail views.
+ * The interface for the output boundary of the LoadRooms use case. It defines methods for preparing
+ * success and fail views.
  */
 public interface LoadRoomsOutputBoundary {
   /**

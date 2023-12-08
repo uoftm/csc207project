@@ -1,8 +1,8 @@
 package entities.auth;
 
 /**
- * The DisplayUser class represents a user in the system with their email and name.
- * It implements the AbstractUser interface and provides methods to retrieve the user's email and name.
+ * The DisplayUser class represents a user in the system with their email and name. It implements
+ * the AbstractUser interface and provides methods to retrieve the user's email and name.
  */
 public class DisplayUser implements AbstractUser {
   private final String email;

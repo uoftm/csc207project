@@ -6,8 +6,8 @@ import org.junit.Test;
 import use_case.rooms.LoggedInDataAccessInterface;
 
 /**
- * This class is the test class for the InMemoryUserDataAccessObject class. It contains test
- * methods to verify the functionality of the InMemoryUserDataAccessObject class.
+ * This class is the test class for the InMemoryUserDataAccessObject class. It contains test methods
+ * to verify the functionality of the InMemoryUserDataAccessObject class.
  */
 public class InMemoryDAOTest extends DAOTest {
   @Test

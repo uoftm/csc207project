@@ -2,9 +2,7 @@ package interface_adapter.rooms;
 
 import use_case.rooms.LoadRoomsInputBoundary;
 
-/**
- * The LoadRoomsController class is responsible for handling the automatic room loading queries
- */
+/** The LoadRoomsController class is responsible for handling the automatic room loading queries */
 public class LoadRoomsController {
   final LoadRoomsInputBoundary loadRooms;
 
@@ -17,9 +15,7 @@ public class LoadRoomsController {
     this.loadRooms = roomsUseCaseInteractor;
   }
 
-  /**
-   * Loads the rooms through the loadRooms interactor.
-   */
+  /** Loads the rooms through the loadRooms interactor. */
   public void loadRooms() {
     loadRooms.loadRooms();
   }
